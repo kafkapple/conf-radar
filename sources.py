@@ -30,11 +30,12 @@ SOURCES = {   # 이름: (tarball, 캐시파일)
 # T2 = 한 축만 충족.  T3 = 둘 다 아니지만 마감 캘린더에는 남긴다.
 TIER_AI = {
     1: ["neurips", "icml", "iclr", "aaai", "colm", "aistats",          # 머신러닝
-        "cvpr", "iccv", "eccv", "3dv", "wacv", "siggraph",             # 비전·3D
+        "cvpr", "iccv", "eccv", "wacv", "siggraph",                    # 비전·3D
         "acl", "emnlp", "naacl",                                       # 언어
         "icra", "corl",                                                # 로보틱스
         "miccai"],                                                     # 의료영상
-    2: ["ijcai", "iros", "rss", "uai", "colt", "kdd", "icassp", "interspeech"],
+    # 3DV: 사용자가 T1 승격 대상으로 지목하지 않았는데 내가 임의로 올렸던 것을 260902 되돌림.
+    2: ["3dv", "ijcai", "iros", "rss", "uai", "colt", "kdd", "icassp", "interspeech"],
 }
 TRACKED_AI = {slug: t for t, slugs in TIER_AI.items() for slug in slugs}
 
