@@ -175,7 +175,7 @@ def build(offline: bool = False) -> dict:
         s["id"], s["link"] = e["id"], e["link"]
         s["kind"] = e.get("kind", "conference")
         s["parent"] = e.get("parent", "")
-        if s["kind"] == "workshop":
+        if s["kind"] != "conference":
             s["group"] = next((x["group"] for x in series if x["title"] == e.get("parent")), "ai")
         series.append(s)
 
@@ -306,9 +306,9 @@ def check(d: dict) -> None:
     nodate = [e for e in eds if not e["start"]]
     assert len(nodate) / len(eds) < 0.1, \
         f"개최일 미상 회차 {len(nodate)}/{len(eds)} — parse_range 확인: {[e['date_text'] for e in nodate[:4]]}"
-    ws = [x for x in s if x["kind"] == "workshop"]
-    assert ws, "워크샵 0건 — workshops.yml 로드 확인"
-    assert all(x["parent"] for x in ws), "워크샵에 parent 미지정"
+    ws = [x for x in s if x["kind"] != "conference"]
+    assert len(ws) >= 3, f"워크샵·트랙 {len(ws)}건 — workshops.yml 로드 확인"
+    assert all(x["parent"] and x["kind"] in ("workshop", "track") for x in ws), "워크샵 parent/kind 미지정"
     no_next = [x["title"] for x in s if not x["next"]]
     print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
 

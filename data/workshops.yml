@@ -3,9 +3,10 @@
 # 뷰어 안에서는 학회와 **같은 모양**으로 다룬다(kind: workshop + parent 만 추가).
 # 그래야 목록·칸반·표·타임라인·지도·캘린더가 전부 코드 변경 없이 워크샵도 처리한다.
 #
-# 아직 안 넣은 후보 (NeurIPS 2026 accepted, 마감·URL 미확인):
-#   - The BabyVLM Workshop: Toward Developmentally Plausible Multimodal Systems (Atlanta)
-#   - DevAI: Developmental Perspectives on AI (Atlanta)
+# kind: workshop(부설 워크샵) | track(본 학회의 별도 트랙)
+#
+# 아직 안 넣은 후보 (마감·URL 미확인):
+#   - DevAI: Developmental Perspectives on AI (NeurIPS 2026, Atlanta)
 #   출처 https://blog.neurips.cc/2026/08/10/announcing-the-neurips-2026-workshops/
 
 - title: BrainBodyFM
@@ -36,4 +37,76 @@
   end: '2026-12-12'
   tags: [neuroai, foundation-models, workshop]
   source: https://brainbodyfm-workshop.github.io/
+  verified: '2026-09-02'
+
+- title: BabyVLM
+  year: 2026
+  id: babyvlm26
+  parent: NeurIPS
+  kind: workshop
+  tier: 1
+  field: ml
+  full_name: 'The BabyVLM Workshop: Toward Developmentally Plausible Multimodal Systems'
+  link: https://babyvlm.github.io/
+  deadlines:
+    - type: paper
+      label: Paper 마감
+      date: '2026-09-08 23:59:59'
+      timezone: AoE     # 사이트에 시각·시간대 표기 없음. 워크샵 관행상 AoE 로 두되 확인 필요
+      status: confirmed
+    - type: notification
+      label: Notification
+      date: '2026-09-29 23:59:59'
+      timezone: AoE
+      status: confirmed
+  city: Atlanta
+  country: USA
+  venue: NeurIPS 2026 부설 (Atlanta 위성)
+  date: December 12-13, 2026
+  start: '2026-12-12'
+  end: '2026-12-13'
+  tags: [multimodal, developmental, workshop]
+  source: https://babyvlm.github.io/
+  verified: '2026-09-02'
+
+# 본 학회의 별도 트랙. 제출은 이미 끝났고 추적할 값은 9/24 결정 통보다.
+# 날짜는 메인 트랙과 동일함을 공식 CFP 에서 확인했다.
+- title: NeurIPS Position
+  year: 2026
+  id: neurips26position
+  parent: NeurIPS
+  kind: track
+  tier: 1
+  field: ml
+  full_name: NeurIPS 2026 Position Paper Track
+  link: https://neurips.cc/Conferences/2026/CallForPositionPapers
+  deadlines:
+    - type: abstract
+      label: Abstract 마감 (종료)
+      date: '2026-05-04 23:59:59'
+      timezone: AoE
+      status: confirmed
+    - type: paper
+      label: Full paper 마감 (종료)
+      date: '2026-05-06 23:59:59'
+      timezone: AoE
+      status: confirmed
+    - type: review_release
+      label: Reviews released (종료)
+      date: '2026-07-22 23:59:59'
+      timezone: AoE
+      status: confirmed
+    - type: notification
+      label: Final decisions
+      date: '2026-09-24 23:59:59'
+      timezone: AoE
+      status: confirmed
+  city: Sydney
+  country: Australia
+  venue: International Convention Centre, Sydney
+  date: December 6-12, 2026
+  start: '2026-12-06'
+  end: '2026-12-12'
+  tags: [position-paper, track]
+  source: https://neurips.cc/Conferences/2026/CallForPositionPapers
   verified: '2026-09-02'

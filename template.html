@@ -309,7 +309,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-s="field">분야별</button>
     <span class="sep"></span>
     <button id="fav">★ 즐겨찾기</button>
-    <button id="ws" aria-pressed="true">워크샵 포함</button>
+    <button id="ws" aria-pressed="true">워크샵·트랙 포함</button>
     <button id="sub-only" aria-pressed="true">제출 마감만</button>
     <input type="search" id="q" placeholder="학회 검색">
   </div>
@@ -407,8 +407,8 @@ function scalePct(sc){
 }
 const rankChip = c => c.rank.core ? `<span class="chip r">CORE ${esc(c.rank.core)}</span>` : "";
 // 워크샵은 본 학회와 마감이 완전히 다르다. 어느 학회 부설인지 같이 안 보이면 오해한다.
-const wsChip = c => c.kind === "workshop"
-  ? `<span class="chip w">W · ${esc(c.parent)} 부설</span>` : "";
+const wsChip = c => c.kind === "workshop" ? `<span class="chip w">W · ${esc(c.parent)} 부설</span>`
+  : c.kind === "track" ? `<span class="chip w">T · ${esc(c.parent)} 트랙</span>` : "";
 const progChip = c => c.programs.length
   ? `<span class="chip p" title="${esc(c.programs[0].name)}">${esc(KIND[c.programs[0].kind] || "연계")}</span>` : "";
 
@@ -418,7 +418,7 @@ function visible(){
     (state.group === "all" || c.group === state.group) &&
     c.tier <= state.tier &&
     (!state.favOnly || state.fav.has(c.id)) &&
-    (state.withWs || c.kind !== "workshop") &&
+    (state.withWs || c.kind === "conference") &&
     (!q || c.search.includes(q) || (FIELD[c.field]||"").includes(q)));
 }
 
@@ -677,7 +677,7 @@ function cycActual(){
 
   document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, dl, from, to, ms, me, trunc}) => {
     const w = to - from;
-    const label = `${c.kind === "workshop" ? "W " : ""}${c.title}${c.next ? " " + c.next : ""}`;
+    const label = `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title}${c.next ? " " + c.next : ""}`;
     // 막대가 좁으면 글자가 잘린다 — 그럴 때만 이름을 막대 밖 오른쪽에 둔다
     const inside = w * (state.months <= 6 ? 12 : 7) > label.length * 8;
     const meetW = (ms !== null && me !== null)
@@ -942,9 +942,9 @@ if ("serviceWorker" in navigator)
 
 const n = DATA.series.length, nn = DATA.series.filter(c => c.group === "neuro").length;
 const noNext = DATA.series.filter(c => !c.next).length;
-const nw = DATA.series.filter(c => c.kind === "workshop").length;
+const nw = DATA.series.filter(c => c.kind !== "conference").length;
 document.getElementById("sub").textContent =
-  `${DATA.generated} 갱신 · ${n}개 (학회 ${n-nw} · 워크샵 ${nw}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
+  `${DATA.generated} 갱신 · ${n}개 (학회 ${n-nw} · 워크샵·트랙 ${nw}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
 document.getElementById("foot").innerHTML =
   `<b>티어 기준</b> — 두 축의 조합이고 객관 축은 내가 정하지 않는다.<br>
    · 객관 축 = CORE 등급(외부 정본, 배지로 표시). 신경과학 학회에는 등급이 부여되지 않아 분야 대표성으로 대신한다.<br>
