@@ -131,7 +131,48 @@ table.dense td.w{white-space:normal;min-width:150px}
 .cityrow .c{font-weight:650;font-size:13.5px}
 .cityrow .l{color:var(--dim);font-size:11.5px;margin-top:2px;line-height:1.45}
 
+/* ── 타임라인: 구글 캘린더 일정 보기식. 막대 하나가 '마감 → 개최 종료' 구간이고
+   막대 안에 학회 이름이 들어간다. 점 격자보다 '언제부터 언제까지'가 즉시 읽힌다 ── */
+.tl{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow-x:auto;
+  -webkit-overflow-scrolling:touch}
+.tlin{position:relative;min-width:760px;padding:0 0 10px}
+.tlhead{position:sticky;top:0;z-index:3;display:flex;background:var(--card);
+  border-bottom:1px solid var(--line)}
+.tlhead div{flex:1 0 0;font-size:11px;color:var(--dim);padding:7px 0 6px 7px;
+  border-left:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.tlhead div:first-child{border-left:0}
+.tlbody{position:relative}
+.tlgrid{position:absolute;inset:0;display:flex;pointer-events:none}
+.tlgrid span{flex:1 0 0;border-left:1px solid var(--line);opacity:.55}
+.tlgrid span:first-child{border-left:0}
+.tlnow{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--urgent);
+  opacity:.8;pointer-events:none;z-index:2}
+.tlnow::after{content:"오늘";position:absolute;top:2px;left:4px;font-size:9.5px;
+  color:var(--urgent);font-weight:700}
+.tlrow{position:relative;height:30px}
+.tlrow:nth-child(even){background:color-mix(in srgb,var(--fg) 3%,transparent)}
+.tlbar{position:absolute;top:4px;height:22px;border-radius:5px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;padding:0 7px;overflow:visible;
+  font-size:11.5px;font-weight:650;white-space:nowrap}
+.tlbar .lab{overflow:hidden;text-overflow:ellipsis}
+.tlbar .out{position:absolute;left:calc(100% + 6px);color:var(--fg);font-weight:650}
+.tlbar .out.l{left:auto;right:calc(100% + 6px)}
+.tlbar.ai{background:color-mix(in srgb,var(--ai) 26%,transparent);
+  border:1px solid color-mix(in srgb,var(--ai) 60%,transparent);color:var(--fg)}
+.tlbar.neuro{background:color-mix(in srgb,var(--neuro) 26%,transparent);
+  border:1px solid color-mix(in srgb,var(--neuro) 60%,transparent);color:var(--fg)}
+.tlbar.est{border-style:dashed}
+/* 화면 왼쪽 밖에서 시작한 막대 — 왼쪽 모서리를 각지게 해 "이어짐"을 표시 */
+.tlbar.trunc{border-left:0;border-radius:0 5px 5px 0}
+.tlbar:hover{filter:brightness(1.25)}
+/* 오른쪽 끝의 진한 조각 = 실제 개최 기간. 막대 전체는 마감부터의 준비 구간이다 */
+.tlmeet{position:absolute;top:-1px;bottom:-1px;right:-1px;min-width:5px;border-radius:0 5px 5px 0}
+.tlbar.ai .tlmeet{background:var(--ai)} .tlbar.neuro .tlmeet{background:var(--neuro)}
+.tlcap{position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;border-radius:5px 0 0 5px}
+.tlbar.ai .tlcap{background:var(--ai)} .tlbar.neuro .tlcap{background:var(--neuro)}
+
 /* ── 연간 사이클 ── */
+.tl[hidden],.cyc[hidden]{display:none}
 .cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px}
 #v-cyc table{min-width:calc(140px + var(--cols,12) * 44px)}
@@ -296,7 +337,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 <section id="v-cyc" hidden>
   <div class="bar" style="margin-bottom:9px">
     <span class="lbl">축</span>
-    <button data-c="actual" aria-pressed="true">실제 일정</button>
+    <button data-c="actual" aria-pressed="true">타임라인</button>
     <button data-c="typical">전형 주기</button>
     <span class="sep"></span>
     <span class="lbl">기간</span>
@@ -304,6 +345,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-mo="12" aria-pressed="true">12개월</button>
     <button data-mo="24">24개월</button>
   </div>
+  <div class="tl"><div class="tlin"><div class="tlhead"></div><div class="tlbody"></div></div></div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
   <p class="legend" id="cyc-legend"></p>
 </section>
@@ -555,13 +597,16 @@ function renderMap(){
 }
 
 function renderCycle(){
-  const shown = (state.cycMode === "actual" ? cycActual : cycTypical)();
+  const actual = state.cycMode === "actual";
+  document.querySelector("#v-cyc .tl").hidden  = !actual;
+  document.querySelector("#v-cyc .cyc").hidden =  actual;
+  const shown = (actual ? cycActual : cycTypical)();
   // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다. 이유를 같이 적는다.
   const hidden = visible().length - shown;
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
     ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
-       <span style="opacity:.7">달력 시간축 · 월 안에서 날짜 위치까지 반영</span>
+       <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        ${hidden > 0 ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없는 학회 ${hidden}건은
          빠져 있다 — 전형 주기 축에서 볼 것</span>` : ""}`
     : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
@@ -592,50 +637,55 @@ function cycTypical(){
 }
 
 function cycActual(){
-  // 실제 달력 축. "지금부터 N개월 동안 무엇이 언제" — 전형 주기가 답하지 못하는 질문이다.
-  // 표 구조·CSS 는 전형 주기 뷰 것을 그대로 쓴다. 새 렌더러를 따로 만들지 않는다.
+  // 구글 캘린더 일정 보기식 막대. 막대 하나 = 제출 마감 → 개최 종료.
+  // 왼쪽 끝 세로선 = 마감, 오른쪽 진한 조각 = 실제 개최 기간, 그 사이 = 심사·준비 구간.
   const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+  const t1 = new Date(t0.getFullYear(), t0.getMonth() + state.months, 1);
+  const span = t1 - t0;
+  const pct = iso => ((new Date(iso + "T00:00:00") - t0) / span) * 100;
   const cols = Array.from({length: state.months}, (_, i) =>
     new Date(t0.getFullYear(), t0.getMonth() + i, 1));
-  const colOf = iso => {                       // 열 index + 그 달 안에서의 날짜 비율
-    const d = new Date(iso + "T00:00:00");
-    const i = (d.getFullYear() - t0.getFullYear()) * 12 + d.getMonth() - t0.getMonth();
-    if (i < 0 || i >= cols.length) return null;
-    const dim = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-    return {i, pct: ((d.getDate() - 0.5) / dim) * 100};
-  };
+
   const rows = visible().map(c => {
-    const dls = c.deadlines.filter(d => SUBMIT.has(d.type))
-      .map(d => ({...d, at: colOf(d.date)})).filter(d => d.at);
-    const meet = c.start ? colOf(c.start) : null;
-    return {c, dls, meet};
-  }).filter(r => r.dls.length || r.meet)
-    .sort((a,b) => {
-      const k = r => Math.min(...[...r.dls.map(d => d.at.i + d.at.pct/100),
-                                 r.meet ? r.meet.i + r.meet.pct/100 : 99]);
-      return k(a) - k(b) || a.c.title.localeCompare(b.c.title);
-    });
-  document.querySelector("#v-cyc table").style.setProperty("--cols", cols.length);
-  document.querySelector("#v-cyc thead tr").innerHTML = `<th class="nm">학회</th>` +
-    cols.map(d => `<th>${d.getMonth() === 0 || d === cols[0]
-      ? `${String(d.getFullYear()).slice(2)}.${d.getMonth()+1}` : d.getMonth()+1+"월"}</th>`).join("");
-  const tb = document.querySelector("#v-cyc tbody");
-  tb.innerHTML = rows.map(({c, dls, meet}) => {
-    const idx = [...dls.map(d => d.at.i), ...(meet ? [meet.i] : [])];
-    const lo = Math.min(...idx), hi = Math.max(...idx);
-    const cells = cols.map((_, i) => {
-      const line = (i >= lo && i <= hi) ? `<span class="span"></span>` : "";
-      let mk = "";
-      for (const d of dls.filter(d => d.at.i === i))
-        mk += `<span class="mk dl ${d.status !== "confirmed" ? "est" : ""}"
-          style="left:${d.at.pct.toFixed(0)}%" title="${esc(d.label)} ${d.date}">●</span>`;
-      if (meet && meet.i === i)
-        mk += `<span class="mk" style="left:${meet.pct.toFixed(0)}%"
-          title="${esc(c.date_text)}">■</span>`;
-      return `<td class="cell">${line}${mk}</td>`;
-    }).join("");
-    return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}${c.next?" "+c.next:""}</span></td>${cells}</tr>`;
-  }).join("") || `<tr><td class="nm">해당 없음</td></tr>`;
+    const dl = c.deadlines.filter(d => SUBMIT.has(d.type))
+      .map(d => ({...d, p: pct(d.date)})).sort((x, y) => x.p - y.p)
+      .find(d => d.p < 100);                       // 창 안에서 가장 이른 마감
+    const ms = c.start ? pct(c.start) : null, me = c.end ? pct(c.end) : null;
+    if ((ms === null || ms >= 100) && !dl) return null;
+    if (ms !== null && me < 0 && (!dl || dl.p < 0)) return null;   // 통째로 과거
+    const from = Math.max(0, dl ? dl.p : ms);
+    const to   = Math.min(100, me !== null ? me : (dl ? dl.p : 0));
+    if (to <= 0 || from >= 100) return null;
+    return {c, dl, from, to: Math.max(to, from + 0.4), ms, me,
+            anchor: ms !== null ? ms : (dl ? dl.p : 999),
+            trunc: from === 0 && (dl ? dl.p : ms) < 0};   // 창 이전에 시작한 막대
+  }).filter(Boolean).sort((a, b) => a.anchor - b.anchor || a.c.title.localeCompare(b.c.title));
+
+  document.querySelector("#v-cyc .tlhead").innerHTML = cols.map(d =>
+    `<div>${d.getMonth() === 0 || d === cols[0]
+      ? `${String(d.getFullYear()).slice(2)}년 ${d.getMonth()+1}월` : (d.getMonth()+1)+"월"}</div>`).join("");
+
+  const now = pct(TODAY.toISOString().slice(0, 10));
+  const grid = `<div class="tlgrid">${cols.map(() => "<span></span>").join("")}</div>` +
+    (now >= 0 && now <= 100 ? `<div class="tlnow" style="left:${now.toFixed(2)}%"></div>` : "");
+
+  document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, dl, from, to, ms, me, trunc}) => {
+    const w = to - from;
+    const label = `${c.title}${c.next ? " " + c.next : ""}`;
+    // 막대가 좁으면 글자가 잘린다 — 그럴 때만 이름을 막대 밖 오른쪽에 둔다
+    const inside = w * (state.months <= 6 ? 12 : 7) > label.length * 8;
+    const meetW = (ms !== null && me !== null)
+      ? Math.max(0.5, Math.min(100, me) - Math.max(from, ms)) : 0;
+    const tip = `${dl ? dl.date + " 마감 · " : ""}${c.date_text}`;
+    return `<div class="tlrow"><div class="tlbar ${c.group} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
+      data-id="${c.id}" title="${esc(tip)}"
+      style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
+      ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
+      ${meetW ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
+      ${inside ? `<span class="lab">${esc(label)}</span>`
+               : `<span class="out ${to > 78 ? "l" : ""}">${esc(label)}</span>`}
+    </div></div>`;
+  }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
   return rows.length;
 }
 

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -26,6 +27,37 @@ ROOT = Path(__file__).parent
 DATA = ROOT / "data"
 
 SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
+
+
+MON = {m[:3]: i for i, m in enumerate(
+    "january february march april may june july august september october november december".split(), 1)}
+RANGE = re.compile(r"([A-Za-z]{3,})\.?\s*(\d{1,2})\s*[-–~]\s*(?:([A-Za-z]{3,})\.?\s*)?(\d{1,2})")
+ONE = re.compile(r"([A-Za-z]{3,})\.?\s*(\d{1,2})\b")
+
+
+def parse_range(text: str, year: int) -> tuple[str, str]:
+    """'May 16-21, 2027' → ('2027-05-16', '2027-05-21').
+
+    ccf 출신 회차는 ISO 날짜가 없고 자유 문장만 있다. 그대로 두면 타임라인에서 막대가
+    길이 0으로 뭉개지고 표에는 개최일이 '—' 로 뜬다. 유도 실패하면 빈 문자열을 돌려준다.
+    """
+    t = (text or "").replace("\u2013", "-")
+    m = RANGE.search(t)
+    try:
+        if m:
+            m1 = MON.get(m.group(1)[:3].lower())
+            m2 = MON.get((m.group(3) or m.group(1))[:3].lower())
+            if not (m1 and m2):
+                return "", ""
+            y2 = year + 1 if m2 < m1 else year          # 12월 → 1월 같은 연말 걸침
+            return (f"{year}-{m1:02d}-{int(m.group(2)):02d}", f"{y2}-{m2:02d}-{int(m.group(4)):02d}")
+        m = ONE.search(t)
+        if m and (mo := MON.get(m.group(1)[:3].lower())):
+            d = f"{year}-{mo:02d}-{int(m.group(2)):02d}"
+            return d, d
+    except ValueError:
+        pass
+    return "", ""
 
 
 def merge_editions(a: list[dict], b: list[dict]) -> list[dict]:
@@ -139,6 +171,14 @@ def build(offline: bool = False) -> dict:
                          rank, rates, programs, e, today)
         s["id"], s["link"] = e["id"], e["link"]
         series.append(s)
+
+    for s in series:                                     # ISO 날짜가 없으면 자유 문장에서 유도
+        for e in s["editions"]:
+            if not e["start"]:
+                e["start"], e["end"] = parse_range(e["date_text"], e["year"])
+                e["date_src"] = "text" if e["start"] else "none"
+            else:
+                e.setdefault("date_src", "iso")
 
     for s in series:                                     # 회차마다 좌표를 붙인다(지도 뷰)
         for e in s["editions"]:
@@ -255,6 +295,10 @@ def check(d: dict) -> None:
     assert len(located) / len(eds) > 0.85, \
         f"좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} — python prep.py --geo 실행 필요"
     assert d["world"]["paths"], "world.json 비어 있음"
+    # 개최일을 못 얻은 회차가 많으면 타임라인 막대가 길이 0으로 뭉개진다
+    nodate = [e for e in eds if not e["start"]]
+    assert len(nodate) / len(eds) < 0.1, \
+        f"개최일 미상 회차 {len(nodate)}/{len(eds)} — parse_range 확인: {[e['date_text'] for e in nodate[:4]]}"
     no_next = [x["title"] for x in s if not x["next"]]
     print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
 
