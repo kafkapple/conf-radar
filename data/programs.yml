@@ -36,12 +36,15 @@ IROS:
     verified: '2026-09-02'
 
 CVPR: &ijcv
-  - name: IJCV 특집호 초청
+  - name: IJCV·TPAMI 확장판 (자동 이관 아님)
     kind: journal_invite
     url: https://link.springer.com/journal/11263/collections
     note: >-
-      수상·명예언급 논문과 리뷰·AC 추천으로 선정된 oral/spotlight 이 확장판 투고에 초청된다.
-      확장판은 원논문 대비 신규 내용 30% 이상을 요구하며 저널 기준으로 다시 심사한다.
+      경로가 둘이다. (1) "Best of" 특집 초청 — 수상·명예언급과 선정된 oral/spotlight 대상.
+      (2) 정규 투고 — 포스터를 포함해 누구나 확장판을 IJCV·TPAMI 에 낼 수 있다.
+      어느 쪽이든 자동 이관이 아니라 새로 쓰고 새로 심사받는 별개 투고이며, 확장판은 원논문
+      대비 신규 내용 30% 이상과 학회판 대비 차이 진술을 요구한다. CVPR 규정의 이중투고 금지
+      (내용 20% 이상 중복)는 **심사 기간**에 적용되고, 게재 후 저널 확장은 막지 않는다.
     verified: '2026-09-02'
 ICCV: *ijcv
 
