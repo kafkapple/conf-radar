@@ -176,6 +176,52 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 .note{color:var(--faint);font-size:11.5px;margin-top:7px;line-height:1.6}
 .foot{color:var(--dim);font-size:11.5px;margin-top:26px;line-height:1.7}
 .foot a{color:var(--dim)}
+.toprow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.toprow>.bar{display:contents}
+.toprow>.bar.views::after{content:"";width:1px;height:18px;background:var(--line);margin:0 3px}
+.bar.views i{display:none}
+.bar.views b{font-weight:inherit}
+.bar.views s{display:none;text-decoration:none}
+
+/* ── 폰 UX (≤600px) ─────────────────────────────────────────────────────────
+   같은 파일 안에서 CSS 로만 가른다. 프레임워크도, 두 번째 코드베이스도 쓰지 않는다.
+   1) 뷰 전환 = 하단 고정 탭바 — 엄지 위치에 맞고, 위쪽 6개 버튼이 두 줄로 깨지지 않는다
+   2) 필터·정렬 = 가로 스크롤 한 줄 — 줄바꿈으로 헤더가 화면 절반을 먹던 문제
+   3) 지도 = 도시 목록을 위로 — 폰에서 지도 점은 사실상 누를 수 없다            */
+@media (max-width:600px){
+  .wrap{padding-bottom:74px}
+  .bars{padding-top:6px}
+  .bar.filters,#bar2{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding-bottom:2px}
+  .bar.filters::-webkit-scrollbar,#bar2::-webkit-scrollbar{display:none}
+  .bar.filters>*,#bar2>*{flex:0 0 auto}
+  #q{min-width:120px}
+
+  .toprow{display:block}
+  .toprow>.bar{display:flex}
+  .toprow>.bar.views::after{display:none}
+  .bar.views{position:fixed;left:0;right:0;bottom:0;z-index:12;margin:0;gap:0;
+    background:var(--card);border-top:1px solid var(--line);
+    padding:5px 4px calc(5px + env(safe-area-inset-bottom));
+    justify-content:space-around;flex-wrap:nowrap}
+  .bar.views button{border:0;background:none;border-radius:9px;padding:5px 4px;flex:1;
+    display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;min-width:0}
+  .bar.views button[aria-pressed="true"]{background:none;color:var(--ai)}
+  .bar.views i{display:block;font-style:normal;font-size:17px;line-height:1}
+  .bar.views b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .bar.views button:has(s) b{display:none}
+  .bar.views s{display:block;font-weight:600}
+
+  #v-map{display:flex;flex-direction:column}
+  #v-map .citylist{order:1;margin-top:0}
+  #v-map .bar{order:0}
+  #v-map .mapwrap{order:3;margin-top:12px}
+  #v-map .legend{order:4}
+  .citylist{grid-template-columns:1fr}
+  .kbcol{flex:0 0 84vw;min-width:84vw}
+  .sheet{max-height:92vh}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -184,14 +230,16 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 <p class="sub" id="sub"></p>
 
 <div class="bars">
-  <div class="bar">
-    <button data-v="list" aria-pressed="true">목록</button>
-    <button data-v="kb">칸반</button>
-    <button data-v="tbl">표</button>
-    <button data-v="map">지도</button>
-    <button data-v="cyc">연간 사이클</button>
-    <button data-v="src">정보원</button>
-    <span class="sep"></span>
+  <div class="toprow">
+  <div class="bar views">
+    <button data-v="list" aria-pressed="true"><i>▤</i><b>목록</b></button>
+    <button data-v="kb"><i>▥</i><b>칸반</b></button>
+    <button data-v="tbl"><i>▦</i><b>표</b></button>
+    <button data-v="map"><i>◍</i><b>지도</b></button>
+    <button data-v="cyc"><i>◷</i><b>연간 사이클</b><s>주기</s></button>
+    <button data-v="src"><i>⚑</i><b>정보원</b><s>정보</s></button>
+  </div>
+  <div class="bar filters">
     <button data-g="all" aria-pressed="true">전체</button>
     <button data-g="neuro">뇌과학</button>
     <button data-g="ai">AI</button>
@@ -199,6 +247,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-t="2" aria-pressed="true">T1·2</button>
     <button data-t="1">T1만</button>
     <button data-t="3">전체 티어</button>
+  </div>
   </div>
   <div class="bar" id="bar2">
     <span class="lbl">정렬</span>
