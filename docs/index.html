@@ -134,6 +134,7 @@ table.dense td.w{white-space:normal;min-width:150px}
 /* ── 연간 사이클 ── */
 .cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px}
+#v-cyc table{min-width:calc(140px + var(--cols,12) * 44px)}
 th,td{padding:0;text-align:center}
 thead th{color:var(--dim);font-weight:500;font-size:11px;padding:7px 0;border-bottom:1px solid var(--line)}
 th.nm,td.nm{position:sticky;left:0;background:var(--card);text-align:left;padding:0 10px;
@@ -293,10 +294,18 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 </section>
 
 <section id="v-cyc" hidden>
+  <div class="bar" style="margin-bottom:9px">
+    <span class="lbl">축</span>
+    <button data-c="actual" aria-pressed="true">실제 일정</button>
+    <button data-c="typical">전형 주기</button>
+    <span class="sep"></span>
+    <span class="lbl">기간</span>
+    <button data-mo="6">6개월</button>
+    <button data-mo="12" aria-pressed="true">12개월</button>
+    <button data-mo="24">24개월</button>
+  </div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
-  <p class="legend"><span>● 제출 마감</span><span>■ 개최</span>
-    <span style="opacity:.5">흐림 = 추정/미공지</span>
-    <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span></p>
+  <p class="legend" id="cyc-legend"></p>
 </section>
 
 <section id="v-src" hidden></section>
@@ -325,7 +334,7 @@ const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV
 const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
 
 const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
-               favOnly:false, mapMode:"next", fav:loadFav()};
+               favOnly:false, mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -546,9 +555,25 @@ function renderMap(){
 }
 
 function renderCycle(){
-  // 전형 시기(과거 회차에서 유도)로 그린다. 차기 회차가 없는 학회도 자리를 갖는다.
+  const shown = (state.cycMode === "actual" ? cycActual : cycTypical)();
+  // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다. 이유를 같이 적는다.
+  const hidden = visible().length - shown;
+  document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
+    ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
+       <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
+       <span style="opacity:.7">달력 시간축 · 월 안에서 날짜 위치까지 반영</span>
+       ${hidden > 0 ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없는 학회 ${hidden}건은
+         빠져 있다 — 전형 주기 축에서 볼 것</span>` : ""}`
+    : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
+       <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
+       <span style="opacity:.7">과거 회차에서 유도한 연 주기 · 연도를 접은 그림</span>`;
+}
+
+function cycTypical(){
+  // 연도를 접어 "매년 대략 언제인가" 를 본다. 차기 회차가 없는 학회도 자리를 갖는다.
   const rows = visible().slice().sort((a,b) =>
     a.typical.meeting_month - b.typical.meeting_month || a.title.localeCompare(b.title));
+  document.querySelector("#v-cyc table").style.setProperty("--cols", 12);
   document.querySelector("#v-cyc thead tr").innerHTML =
     `<th class="nm">학회</th>` + MONTHS.map(m => `<th>${m}</th>`).join("");
   document.querySelector("#v-cyc tbody").innerHTML = rows.map(c => {
@@ -563,6 +588,55 @@ function renderCycle(){
     }).join("");
     return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}</span></td>${cells}</tr>`;
   }).join("");
+  return rows.length;
+}
+
+function cycActual(){
+  // 실제 달력 축. "지금부터 N개월 동안 무엇이 언제" — 전형 주기가 답하지 못하는 질문이다.
+  // 표 구조·CSS 는 전형 주기 뷰 것을 그대로 쓴다. 새 렌더러를 따로 만들지 않는다.
+  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+  const cols = Array.from({length: state.months}, (_, i) =>
+    new Date(t0.getFullYear(), t0.getMonth() + i, 1));
+  const colOf = iso => {                       // 열 index + 그 달 안에서의 날짜 비율
+    const d = new Date(iso + "T00:00:00");
+    const i = (d.getFullYear() - t0.getFullYear()) * 12 + d.getMonth() - t0.getMonth();
+    if (i < 0 || i >= cols.length) return null;
+    const dim = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    return {i, pct: ((d.getDate() - 0.5) / dim) * 100};
+  };
+  const rows = visible().map(c => {
+    const dls = c.deadlines.filter(d => SUBMIT.has(d.type))
+      .map(d => ({...d, at: colOf(d.date)})).filter(d => d.at);
+    const meet = c.start ? colOf(c.start) : null;
+    return {c, dls, meet};
+  }).filter(r => r.dls.length || r.meet)
+    .sort((a,b) => {
+      const k = r => Math.min(...[...r.dls.map(d => d.at.i + d.at.pct/100),
+                                 r.meet ? r.meet.i + r.meet.pct/100 : 99]);
+      return k(a) - k(b) || a.c.title.localeCompare(b.c.title);
+    });
+  document.querySelector("#v-cyc table").style.setProperty("--cols", cols.length);
+  document.querySelector("#v-cyc thead tr").innerHTML = `<th class="nm">학회</th>` +
+    cols.map(d => `<th>${d.getMonth() === 0 || d === cols[0]
+      ? `${String(d.getFullYear()).slice(2)}.${d.getMonth()+1}` : d.getMonth()+1+"월"}</th>`).join("");
+  const tb = document.querySelector("#v-cyc tbody");
+  tb.innerHTML = rows.map(({c, dls, meet}) => {
+    const idx = [...dls.map(d => d.at.i), ...(meet ? [meet.i] : [])];
+    const lo = Math.min(...idx), hi = Math.max(...idx);
+    const cells = cols.map((_, i) => {
+      const line = (i >= lo && i <= hi) ? `<span class="span"></span>` : "";
+      let mk = "";
+      for (const d of dls.filter(d => d.at.i === i))
+        mk += `<span class="mk dl ${d.status !== "confirmed" ? "est" : ""}"
+          style="left:${d.at.pct.toFixed(0)}%" title="${esc(d.label)} ${d.date}">●</span>`;
+      if (meet && meet.i === i)
+        mk += `<span class="mk" style="left:${meet.pct.toFixed(0)}%"
+          title="${esc(c.date_text)}">■</span>`;
+      return `<td class="cell">${line}${mk}</td>`;
+    }).join("");
+    return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}${c.next?" "+c.next:""}</span></td>${cells}</tr>`;
+  }).join("") || `<tr><td class="nm">해당 없음</td></tr>`;
+  return rows.length;
 }
 
 function renderSources(){
@@ -706,6 +780,8 @@ bindGroup("[data-g]", b => state.group = b.dataset.g);
 bindGroup("[data-t]", b => state.tier  = +b.dataset.t);
 bindGroup("[data-s]", b => state.sort  = b.dataset.s);
 bindGroup("[data-m]", b => state.mapMode = b.dataset.m);
+bindGroup("[data-c]", b => state.cycMode = b.dataset.c);
+bindGroup("[data-mo]", b => state.months = +b.dataset.mo);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
   e.target.setAttribute("aria-pressed", state.favOnly); render();
