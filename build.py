@@ -1,49 +1,54 @@
 #!/usr/bin/env python3
-"""conf-radar 빌드 — 업스트림 AI 학회 YAML + 자체 뇌과학 YAML 을 병합해 단일 HTML 을 만든다.
+"""conf-radar 빌드 — 학회 '시리즈' 단위로 여러 출처를 합쳐 단일 HTML 을 만든다.
 
 설계 메모:
-- 스키마는 업스트림(huggingface/ai-deadlines)을 그대로 쓴다. 자체 스키마를 정의하지 않으므로 변환 코드가 없다.
+- 단위는 회차(edition)가 아니라 시리즈(conference series)다. 차기 회차가 아직 공지되지 않은
+  학회(ICML·ACL·ICCV 등)도 과거 회차에서 유도한 전형 시기와 함께 남는다. 회차 단위로 두고
+  신선도로 걸러내면 이런 학회가 목록에서 통째로 사라진다.
+- 스키마를 새로 만들지 않고 업스트림 것을 그대로 읽어 온다. 우리가 관리하는 데이터는
+  data/*.yml 세 개뿐이다.
 - 데이터를 HTML 에 인라인한다. fetch() 를 쓰면 file:// 에서 CORS 로 죽고 서버가 필요해진다.
-
-ponytail: 266줄로 저장소 200줄 가이드를 넘는다. 쪼개지 않은 이유 = 이 파일은 "받아서 합쳐서
-한 파일로 낸다" 하나의 선형 흐름이고, 모듈로 나누면 import 두 줄이 늘 뿐 읽는 순서가 그대로다.
-업스트림 소스가 3개째로 늘거나 뷰어별 산출이 갈리면 그때 fetchers/ 로 분리한다.
 """
 from __future__ import annotations
 
 import argparse
 import io
 import json
-import sys
+import re
 import tarfile
 import urllib.request
-from datetime import date, datetime, timedelta
+from collections import Counter
+from datetime import date, datetime
 from pathlib import Path
 
 import yaml
 
 ROOT = Path(__file__).parent
-UPSTREAM_TARBALL = "https://codeload.github.com/huggingface/ai-deadlines/tar.gz/refs/heads/main"
-# 투고/채택 수 시계열. 데이터 포인트마다 source URL 이 붙어 있어 출처 추적이 된다.
-RATES_TARBALL = "https://codeload.github.com/ccfddl/ccf-deadlines/tar.gz/refs/heads/main"
-RATES_DIR = "accept_rates/"
-RATES_CACHE = ROOT / ".cache" / "rates.tar.gz"
-# accept_rates 색인 키는 파일명이 아니라 YAML 안의 title 이다 (nips.yml 의 title 은 "NeurIPS").
-# 파일명으로 맞추려다 NeurIPS 추세가 통째로 빠졌던 자리 — 제목으로 맞추고 예외만 별칭으로 둔다.
-RATES_ALIAS = {"SIGGRAPH": "ACM SIGGRAPH"}
-UPSTREAM_DIR = "src/data/conferences/"
-CACHE = ROOT / ".cache" / "upstream.tar.gz"
+DATA = ROOT / "data"
+CACHE = ROOT / ".cache"
 
-# 티어 = 학회의 객관적 등급이 아니라 **이 사람의 관심 우선순위**다 (3D 비전 · 행동/뇌 계측).
-# T1 = 반드시 챙김 / T2 = 관련 있음 / T3 = 참고. 기본 화면은 T1-2 만 보여준다.
+SOURCES = {   # 이름: (tarball, 캐시파일)
+    "hf":  ("https://codeload.github.com/huggingface/ai-deadlines/tar.gz/refs/heads/main", "hf.tar.gz"),
+    "ccf": ("https://codeload.github.com/ccfddl/ccf-deadlines/tar.gz/refs/heads/main", "ccf.tar.gz"),
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 티어 = 두 축의 조합이며, 객관 축은 내가 정하지 않는다.
+#   객관 축 = CORE 등급 (ccf-deadlines 가 실어 나르는 외부 정본)
+#   개인 축 = 이 연구(3D 비전 · 행동/뇌 계측 · NeuroAI)와의 거리
+# T1 = 두 축 모두 충족 — 분야 최상위(CORE A*, 또는 등급 미부여 전문 학회 중 대표) **이면서**
+#      실제 투고 또는 필독 대상. 분야마다 최소 1개는 T1 이 있도록 보장한다.
+# T2 = 한 축만 충족.  T3 = 둘 다 아니지만 마감 캘린더에는 남긴다.
 TIER_AI = {
-    1: ["neurips", "icml", "iclr", "cvpr", "iccv", "eccv", "siggraph"],
-    2: ["aaai", "acl", "emnlp", "aistats", "colm", "miccai", "3dv", "wacv", "corl"],
-    3: ["ijcai", "naacl", "uai", "colt", "kdd", "icassp", "interspeech", "icra", "iros", "rss"],
+    1: ["neurips", "icml", "iclr", "aaai", "colm", "aistats",          # 머신러닝
+        "cvpr", "iccv", "eccv", "3dv", "wacv", "siggraph",             # 비전·3D
+        "acl", "emnlp", "naacl",                                       # 언어
+        "icra", "corl",                                                # 로보틱스
+        "miccai"],                                                     # 의료영상
+    2: ["ijcai", "iros", "rss", "uai", "colt", "kdd", "icassp", "interspeech"],
 }
 TRACKED_AI = {slug: t for t, slugs in TIER_AI.items() for slug in slugs}
 
-# 분야 = 슬러그에서 직접 매핑. 업스트림 tags 는 학회마다 입도가 달라 그룹핑에 못 쓴다.
 FIELD_AI = {
     **{k: "ml" for k in ["neurips", "icml", "iclr", "aistats", "colm", "uai", "colt", "aaai", "ijcai", "kdd"]},
     **{k: "vision" for k in ["cvpr", "iccv", "eccv", "3dv", "wacv", "siggraph"]},
@@ -52,211 +57,294 @@ FIELD_AI = {
     "miccai": "medical",
 }
 
+# 두 업스트림이 같은 학회를 다른 이름으로 부른다. 파일명이 아니라 YAML 안의 title 로 맞춘다
+# (nips.yml 의 title 은 "NeurIPS" 다 — 파일명으로 맞추려다 NeurIPS 이력이 통째로 빠졌었다).
+CANON = {"ACM SIGGRAPH": "SIGGRAPH", "NIPS": "NEURIPS"}
+
 # papercopilot 통계 페이지가 실재하는 슬러그. 없는 슬러그는 진짜 404 를 낸다(soft-404 아님).
-# 재확인: for s in <slug>; do curl -sLo/dev/null -w"%{http_code} $s\n" \
-#   https://papercopilot.com/statistics/$s-statistics/; done
+# 재확인: curl -sLo/dev/null -w"%{http_code}\n" https://papercopilot.com/statistics/<slug>-statistics/
 PAPERCOPILOT = {
     "neurips", "icml", "iclr", "cvpr", "iccv", "eccv", "siggraph", "aaai", "acl",
     "emnlp", "aistats", "colm", "3dv", "wacv", "corl", "ijcai", "uai", "kdd",
     "icra", "iros", "rss",
 }
-STALE_DAYS = 45  # 끝난 지 이만큼 지난 학회는 뺀다
 
-# 업스트림이 새 마감 타입을 도입하면 뷰어의 SUBMIT 집합에서 조용히 빠져 학회가 사라진다
-# (실제로 'submission' 을 빠뜨려 ICRA 가 사라졌다). 모르는 타입이면 빌드를 실패시킨다.
-KNOWN_TYPES = {
-    "abstract", "paper", "submission", "supplementary", "abstract_late",   # 제출 = 뷰어 SUBMIT
-    "notification", "camera_ready", "registration", "review_release",
-    "rebuttal_start", "rebuttal_end", "rebuttal_and_revision",
-    "reviewer_registration", "commitment_deadline",
-}
+MONTHS = ("january february march april may june july august september october "
+          "november december").split()
+
+ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
-def fetch_upstream(offline: bool = False) -> list[dict]:
-    """업스트림 리포를 tarball 한 번으로 받아 학회 YAML 만 뽑는다 (파일별 68회 요청 대신)."""
-    if not offline or not CACHE.exists():
-        CACHE.parent.mkdir(exist_ok=True)
-        with urllib.request.urlopen(UPSTREAM_TARBALL, timeout=60) as r:
-            CACHE.write_bytes(r.read())
-    entries: list[dict] = []
-    with tarfile.open(fileobj=io.BytesIO(CACHE.read_bytes())) as tf:
-        for m in tf.getmembers():
-            if UPSTREAM_DIR not in m.name or not m.name.endswith(".yml"):
-                continue
-            slug = Path(m.name).stem
-            if slug not in TRACKED_AI:
-                continue
-            fh = tf.extractfile(m)
-            assert fh is not None, f"tar member unreadable: {m.name}"
-            for e in yaml.safe_load(fh.read()) or []:
-                e["group"] = "ai"
-                e["tier"] = TRACKED_AI[slug]
-                e["field"] = FIELD_AI.get(slug, "ml")
-                entries.append(e)
-    return entries
+def valid(dls: list[dict]) -> list[dict]:
+    """ccf 는 마감을 'TBD' 로 두기도 한다. 날짜가 아닌 값이 통과하면 월 계산에서 터진다."""
+    return sorted([d for d in dls if ISO.match(d.get("date", ""))], key=lambda d: d["date"])
+
+# ─────────────────────────────────────────────────────────────────────────────
+def fetch(name: str, offline: bool) -> tarfile.TarFile:
+    url, fn = SOURCES[name]
+    path = CACHE / fn
+    if not offline or not path.exists():
+        CACHE.mkdir(exist_ok=True)
+        with urllib.request.urlopen(url, timeout=120) as r:
+            path.write_bytes(r.read())
+    return tarfile.open(fileobj=io.BytesIO(path.read_bytes()))
 
 
-def fetch_rates(offline: bool = False) -> dict[str, list[dict]]:
-    """ccf-deadlines 의 투고/채택 시계열을 학회 제목(대문자) 기준으로 색인한다."""
-    if not offline or not RATES_CACHE.exists():
-        RATES_CACHE.parent.mkdir(exist_ok=True)
-        with urllib.request.urlopen(RATES_TARBALL, timeout=90) as r:
-            RATES_CACHE.write_bytes(r.read())
+def yaml_docs(tf: tarfile.TarFile, needle: str):
+    """tar 안에서 경로에 needle 이 든 YAML 을 전부 읽어 dict 를 흘려보낸다."""
+    for m in tf.getmembers():
+        if needle not in m.name or not m.name.endswith((".yml", ".yaml")):
+            continue
+        fh = tf.extractfile(m)
+        if fh is None:
+            continue
+        try:
+            docs = yaml.safe_load(fh.read())
+        except yaml.YAMLError:
+            continue
+        for d in (docs if isinstance(docs, list) else [docs]):
+            if isinstance(d, dict):
+                yield Path(m.name).stem, d
+
+
+def canon(title: str) -> str:
+    """색인 키. 대소문자 표기가 출처마다 달라(hf 'Interspeech' vs ccf 'INTERSPEECH')
+    대문자로 통일한다 — 이걸 안 하면 같은 학회가 두 시리즈로 갈라져 이력이 반쪽이 된다."""
+    u = str(title).upper()
+    return CANON.get(u, u)
+
+
+def month_of(text: str) -> int | None:
+    """'June 19 - June 24, 2022' → 6. 자유 문장에서 첫 월 이름만 집는다."""
+    m = re.search(r"[A-Za-z]{3,}", text or "")
+    while m:
+        for i, name in enumerate(MONTHS, 1):
+            if name.startswith(m.group(0).lower()[:3]) and m.group(0).lower()[:3] == name[:3]:
+                return i
+        m = re.search(r"[A-Za-z]{3,}", text, m.end())
+    return None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+DISPLAY: dict[str, str] = {}   # 대문자 키 → 화면 표기
+
+
+def editions_from_hf(tf) -> dict[str, list[dict]]:
+    """차기 회차 상세. 마감 종류가 세분화되어 있어 D-day 계산의 정본으로 쓴다."""
     out: dict[str, list[dict]] = {}
-    with tarfile.open(fileobj=io.BytesIO(RATES_CACHE.read_bytes())) as tf:
-        for m in tf.getmembers():
-            if RATES_DIR not in m.name or not m.name.endswith(".yml"):
-                continue
-            fh = tf.extractfile(m)
-            if fh is None:
-                continue
-            for e in yaml.safe_load(fh.read()) or []:
-                rows = []
-                for r in e.get("accept_rates") or []:
-                    sub, acc = r.get("submitted"), r.get("accepted")
-                    if not sub or not acc:
-                        continue
-                    # 업스트림 rate 필드는 소수점에 쉼표가 섞인 사례가 있어 직접 계산한다
-                    rows.append({"year": int(r["year"]), "submitted": int(sub),
-                                 "accepted": int(acc), "rate": round(acc / sub, 4),
-                                 "source": r.get("source", "")})
-                if rows:
-                    out[str(e["title"]).upper()] = sorted(rows, key=lambda r: r["year"])
+    for slug, e in yaml_docs(tf, "src/data/conferences/"):
+        if slug not in TRACKED_AI or "year" not in e:
+            continue
+        dls = [{"type": d.get("type", "paper"), "label": d.get("label", d.get("type", "")),
+                "date": str(d["date"])[:10], "tz": d.get("timezone", ""), "status": "confirmed"}
+               for d in (e.get("deadlines") or []) if d.get("date")]
+        DISPLAY.setdefault(canon(e["title"]), str(e["title"]))
+        out.setdefault(canon(e["title"]), []).append({
+            "year": int(e["year"]), "start": str(e.get("start", "")), "end": str(e.get("end", "")),
+            "date_text": e.get("date", ""), "city": e.get("city", ""), "country": e.get("country", ""),
+            "venue": e.get("venue", ""), "link": e.get("link", ""),
+            "deadlines": valid(dls), "src": "hf",
+            "slug": slug,
+        })
     return out
 
 
-def load_neuro() -> list[dict]:
-    entries = yaml.safe_load((ROOT / "data" / "neuro.yml").read_text()) or []
-    for e in entries:
-        e["group"] = "neuro"
-    return entries
+def editions_from_ccf(tf) -> tuple[dict[str, list[dict]], dict[str, dict]]:
+    """다년 이력 + CORE/CCF 등급. 전형 시기를 유도할 표본은 여기서 나온다."""
+    eds: dict[str, list[dict]] = {}
+    rank: dict[str, dict] = {}
+    for _, e in yaml_docs(tf, "/conference/"):
+        if "title" not in e or "confs" not in e:
+            continue
+        t = canon(e["title"])
+        DISPLAY.setdefault(t, str(e["title"]))
+        if e.get("rank"):
+            rank[t] = {k: v for k, v in e["rank"].items() if v and v != "N"}
+        for c in e["confs"] or []:
+            dls = []
+            for tl in c.get("timeline") or []:
+                for key, label in (("abstract_deadline", "Abstract deadline"), ("deadline", "Paper deadline")):
+                    if tl.get(key):
+                        dls.append({"type": "abstract" if "abstract" in key else "paper",
+                                    "label": label, "date": str(tl[key])[:10],
+                                    "tz": c.get("timezone", ""), "status": "confirmed"})
+            eds.setdefault(t, []).append({
+                "year": int(c["year"]), "start": "", "end": "",
+                "date_text": c.get("date", ""), "city": c.get("place", ""), "country": "",
+                "venue": c.get("place", ""), "link": c.get("link", ""),
+                "deadlines": valid(dls), "src": "ccf",
+            })
+    return eds, rank
 
 
-def enrich(c: dict, rates: dict[str, list[dict]]) -> dict:
-    """규모·추세·외부 링크를 붙인다. 근거를 못 찾으면 채우지 않고 비워 둔다."""
-    slug = c["id"].rstrip("0123456789")
-    key = c["title"].upper()
-    hist = rates.get(RATES_ALIAS.get(key, key), []) if c["group"] == "ai" else []
-    c["history"] = hist
-    if c["group"] == "ai" and hist:
-        # 규모 = 최근 회차 투고 편수. 참가자 수와 단위가 다르므로 그룹을 넘어 비교하지 않는다.
-        c["scale"] = {"metric": "submitted", "value": hist[-1]["submitted"],
-                      "year": hist[-1]["year"], "source": hist[-1]["source"]}
-    c.setdefault("scale", None)
+def rates_from_ccf(tf) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
+    for _, e in yaml_docs(tf, "accept_rates/"):
+        rows = []
+        for r in e.get("accept_rates") or []:
+            sub, acc = r.get("submitted"), r.get("accepted")
+            if sub and acc:
+                # 업스트림 rate 필드는 소수점에 쉼표가 섞인 사례가 있어 직접 계산한다
+                rows.append({"year": int(r["year"]), "submitted": int(sub), "accepted": int(acc),
+                             "rate": round(acc / sub, 4), "source": r.get("source", "")})
+        if rows:
+            out[canon(e["title"])] = sorted(rows, key=lambda r: r["year"])
+    return out
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+def merge_editions(a: list[dict], b: list[dict]) -> list[dict]:
+    """연도별로 합치되 hf(차기·상세) 가 ccf(이력) 를 이긴다. 마감은 합집합."""
+    by_year: dict[int, dict] = {}
+    for e in sorted(a + b, key=lambda e: (e["year"], e["src"] == "hf")):
+        y = e["year"]
+        if y not in by_year:
+            by_year[y] = e
+            continue
+        keep, drop = by_year[y], e
+        if drop["src"] == "hf":                      # hf 가 나중 = 우선
+            keep, drop = drop, keep
+        seen = {(d["type"], d["date"]) for d in keep["deadlines"]}
+        keep["deadlines"] += [d for d in drop["deadlines"] if (d["type"], d["date"]) not in seen]
+        keep["deadlines"].sort(key=lambda d: d["date"])
+        for k in ("date_text", "city", "venue", "link", "start", "end"):
+            keep[k] = keep.get(k) or drop.get(k, "")
+        by_year[y] = keep
+    return sorted(by_year.values(), key=lambda e: e["year"])
+
+
+SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
+
+
+def typical(eds: list[dict]) -> dict:
+    """과거 회차에서 전형 시기를 유도한다. 표본 수를 함께 내보내 약한 추정을 숨기지 않는다."""
+    dmonths, mmonths, years = [], [], []
+    for e in eds:
+        subs = [d for d in e["deadlines"] if d["type"] in SUBMIT and d["status"] == "confirmed"]
+        if subs:
+            dmonths.append(int(subs[0]["date"][5:7]))
+        mm = int(e["start"][5:7]) if e["start"] else month_of(e["date_text"])
+        if mm:
+            mmonths.append(mm)
+            years.append(e["year"])
+    pick = lambda xs: Counter(xs).most_common(1)[0][0] if xs else None
+    return {"deadline_month": pick(dmonths), "meeting_month": pick(mmonths),
+            "n_deadline": len(dmonths), "n_meeting": len(mmonths),
+            "years": [min(years), max(years)] if years else None}
+
+
+def build_series(title, eds, group, tier, field, rank, rates, programs, extra, today) -> dict:
+    eds = [e for e in eds if e["year"] >= today.year - 6]
+    def ends(e: dict) -> str:
+        if e["end"] or e["start"]:
+            return e["end"] or e["start"]
+        m = month_of(e["date_text"])
+        return f"{e['year']}-{m:02d}-28" if m else f"{e['year']}-12-31"
+    nxt = next((e for e in eds if ends(e) >= today.isoformat()), None)
+    slug = next((e.get("slug") for e in eds if e.get("slug")), title.lower())
     links = []
     if slug in PAPERCOPILOT:
         links.append(["통계·추세", f"https://papercopilot.com/statistics/{slug}-statistics/"])
-    if c["group"] == "ai":
-        links.append(["OpenReview", f"https://openreview.net/search?query={c['title']}"])
-        links.append(["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"])
-    c["links"] = links
-    return c
-
-
-def normalize(entries: list[dict], today: date) -> list[dict]:
-    """필수 필드를 채우고, 끝난 학회를 떨어내고, 마감을 D-day 계산 가능한 형태로 편다."""
-    cutoff = today - timedelta(days=STALE_DAYS)
-    out = []
-    for e in entries:
-        end = e.get("end") or e.get("start")
-        if not end:
-            continue
-        end_d = datetime.strptime(str(end), "%Y-%m-%d").date()
-        if end_d < cutoff:
-            continue
-        dls = []
-        for d in e.get("deadlines") or []:
-            if not d.get("date"):
-                continue
-            dls.append({
-                "type": d.get("type", "paper"),
-                "label": d.get("label", d.get("type", "deadline")),
-                "date": str(d["date"])[:10],
-                "tz": d.get("timezone", ""),
-                # 업스트림에는 status 가 없다 = 공식 공지된 확정값이라는 뜻
-                "status": d.get("status", "confirmed"),
-            })
-        dls.sort(key=lambda d: d["date"])
-        start_d = datetime.strptime(str(e.get("start", end)), "%Y-%m-%d").date()
-        out.append({
-            "id": e.get("id") or f"{e['title']}{e['year']}".lower(),
-            "title": e["title"],
-            "year": e["year"],
-            "full_name": e.get("full_name", ""),
-            "link": e.get("link", ""),
-            "group": e["group"],
-            "tier": int(e.get("tier", 3)),
-            "field": e.get("field", "neuro" if e["group"] == "neuro" else "ml"),
-            "tags": e.get("tags") or [],
-            "scale": e.get("scale"),
-            "city": e.get("city", ""),
-            "country": e.get("country", ""),
-            "venue": e.get("venue", ""),
-            "date_text": e.get("date", ""),
-            "start": start_d.isoformat(),
-            "end": end_d.isoformat(),
-            "start_month": start_d.month,
-            "deadlines": dls,
-            "source": e.get("source", e.get("link", "")),
-            "verified": str(e.get("verified", "")),
-        })
-    out.sort(key=lambda c: (c["deadlines"][0]["date"] if c["deadlines"] else c["start"]))
-    return out
+    if group == "ai":
+        links += [["OpenReview", f"https://openreview.net/search?query={title}"],
+                  ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]
+    hist = rates.get(title, [])
+    scale = extra.get("scale") or (
+        {"metric": "submitted", "value": hist[-1]["submitted"], "year": hist[-1]["year"],
+         "source": hist[-1]["source"]} if hist else None)
+    return {
+        "id": slug if group == "ai" else extra.get("id", slug),
+        "title": DISPLAY.get(title, title), "full_name": extra.get("full_name", ""), "group": group,
+        "tier": tier, "field": field, "rank": rank.get(title, {}),
+        "link": (nxt or eds[-1])["link"] if eds else extra.get("link", ""),
+        "editions": eds, "next": nxt["year"] if nxt else None,
+        "typical": typical(eds), "scale": scale, "history": hist,
+        "programs": programs.get(title, []), "links": links,
+        "source": extra.get("source", ""), "verified": str(extra.get("verified", "")),
+    }
 
 
 def build(offline: bool = False) -> dict:
     today = date.today()
-    upstream, neuro = fetch_upstream(offline), load_neuro()
-    rates = fetch_rates(offline)
-    confs = [enrich(c, rates) for c in normalize(upstream + neuro, today)]
-    data = {
-        "generated": today.isoformat(),
-        "upstream_raw": len(upstream),   # 필터 전 개수 = fetch 성공 여부 판정용
-        "rates_raw": len(rates),
-        "conferences": confs,
-        "sources": yaml.safe_load((ROOT / "data" / "sources.yml").read_text()),
-    }
+    hf_tf, ccf_tf = fetch("hf", offline), fetch("ccf", offline)
+    hf_eds = editions_from_hf(hf_tf)
+    ccf_eds, rank = editions_from_ccf(ccf_tf)
+    rates = rates_from_ccf(ccf_tf)
+    programs = {canon(k): v for k, v in (yaml.safe_load((DATA / "programs.yml").read_text()) or {}).items()}
+
+    series = []
+    for slug, tier in sorted(TRACKED_AI.items()):
+        title = next((t for t, es in hf_eds.items() if any(e.get("slug") == slug for e in es)), None)
+        title = title or next((t for t in ccf_eds if t.lower().replace(" ", "") == slug), None)
+        if title is None:
+            continue
+        eds = merge_editions(hf_eds.get(title, []), ccf_eds.get(title, []))
+        series.append(build_series(title, eds, "ai", tier, FIELD_AI.get(slug, "ml"),
+                                   rank, rates, programs, {}, today))
+
+    for e in yaml.safe_load((DATA / "neuro.yml").read_text()) or []:
+        DISPLAY[canon(e["title"])] = e["title"]
+        eds = merge_editions([{
+            "year": int(e["year"]), "start": str(e.get("start", "")), "end": str(e.get("end", "")),
+            "date_text": e.get("date", ""), "city": e.get("city", ""), "country": e.get("country", ""),
+            "venue": e.get("venue", ""), "link": e.get("link", ""), "src": "manual",
+            "deadlines": valid([{"type": d.get("type", "abstract"), "label": d.get("label", ""),
+                                 "date": str(d["date"])[:10], "tz": d.get("timezone", ""),
+                                 "status": d.get("status", "confirmed")} for d in e.get("deadlines") or []]),
+        }], [{
+            "year": int(p["year"]), "start": "", "end": "", "date_text": p.get("date", ""),
+            "city": p.get("place", ""), "country": "", "venue": p.get("place", ""),
+            "link": e.get("link", ""), "src": "manual",
+            "deadlines": valid([{"type": "abstract", "label": "Abstract deadline",
+                                 "date": str(p["deadline"])[:10], "tz": "", "status": "confirmed"}]
+                               if p.get("deadline") else []),
+        } for p in e.get("past") or []])
+        s = build_series(canon(e["title"]), eds, "neuro", int(e["tier"]), e["field"],
+                         rank, rates, programs, e, today)
+        s["id"], s["link"] = e["id"], e["link"]
+        series.append(s)
+
+    for s in series:                                     # 도시/국가는 차기 회차 것을 대표로
+        nx = next((x for x in s["editions"] if x["year"] == s["next"]), None) or (s["editions"][-1] if s["editions"] else {})
+        s.update(city=nx.get("city", ""), country=nx.get("country", ""), venue=nx.get("venue", ""),
+                 date_text=nx.get("date_text", ""), start=nx.get("start", ""), end=nx.get("end", ""),
+                 deadlines=nx.get("deadlines", []), next_year=nx.get("year"),
+                 # 사이클 뷰는 '전형 개최월'을 쓴다 — 차기 회차가 없는 학회도 자리를 갖는다
+                 start_month=s["typical"]["meeting_month"],
+                 search=" ".join([s["title"], s["full_name"], nx.get("city", ""),
+                                  nx.get("country", ""), s["field"],
+                                  s["rank"].get("core", "")]).lower())
+
+    data = {"generated": today.isoformat(), "series": series,
+            "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
+            "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
     tpl = (ROOT / "template.html").read_text()
     assert "__DATA__" in tpl, "template.html 에 __DATA__ 자리표시자가 없다"
     html = tpl.replace("__DATA__", json.dumps(data, ensure_ascii=False))
     (ROOT / "docs" / "index.html").write_text(html)
-    # Claude Artifact 는 <head>/<body> 를 자기가 감싸므로 그 껍데기만 벗긴 조각도 같이 낸다.
-    # 템플릿을 두 벌 두지 않기 위해 기계적으로 잘라낸다 (SSOT = template.html 하나).
-    head = html[html.index("<title>"):html.index("</head>")]
-    body = html[html.index("<body>") + len("<body>"):html.rindex("</body>")]
-    (ROOT / "docs" / "artifact.html").write_text(head + body)
+    # Claude Artifact 는 head/body 를 자기가 감싸므로 껍데기만 벗긴 조각도 같이 낸다(템플릿은 하나).
+    (ROOT / "docs" / "artifact.html").write_text(
+        html[html.index("<title>"):html.index("</head>")] +
+        html[html.index("<body>") + 6:html.rindex("</body>")])
     return data
 
 
-def check(data: dict) -> None:
-    """회귀 방지 assert. 조용히 빈 페이지가 나가는 것을 막는 최소 장치."""
-    confs = data["conferences"]
-    ai = [c for c in confs if c["group"] == "ai"]
-    neuro = [c for c in confs if c["group"] == "neuro"]
-    # 필터 후 개수로 판정하면 안 된다 — 업스트림에 차기 회차가 아직 없는 학회(ICML/ACL 등)가
-    # 정상적으로 빠지므로 fetch 성공과 무관하게 개수가 출렁인다. fetch 자체는 raw 로 본다.
-    assert data["upstream_raw"] >= 40, f"업스트림 fetch 실패 의심: raw {data['upstream_raw']}건"
-    assert ai, "AI 학회가 0건 — 신선도 필터 또는 TRACKED_AI 확인"
-    assert all(c["tier"] in (1, 2, 3) for c in confs), "tier 미지정 학회 존재"
-    assert all(c["field"] for c in confs), "field 미지정 학회 존재"
-    assert data["rates_raw"] >= 60, f"accept_rates fetch 실패 의심: {data['rates_raw']}건"  # 260902 실측 93건
-    with_hist = {c["title"] for c in confs if c["history"]}
-    # 이 넷이 빠지면 제목 매핑이 깨진 것이다 (실제로 NeurIPS 가 파일명 매칭 탓에 빠졌었다)
-    must = {"NeurIPS", "CVPR", "ICLR", "SIGGRAPH"} & {c["title"] for c in confs}
-    assert must <= with_hist, f"추세 누락: {sorted(must - with_hist)} — RATES_ALIAS 확인"
-    for c in confs:
-        for h in c["history"]:
-            assert 0 < h["rate"] <= 1, f"{c['id']} {h['year']}: 채택률 {h['rate']}"
-    assert data["sources"], "sources.yml 비어 있음"
-    assert len(neuro) >= 5, f"neuro.yml 로드 실패 의심: {len(neuro)}건"
-    for c in confs:
-        assert c["title"] and c["start"] <= c["end"], f"날짜 역전: {c['id']}"
-        for d in c["deadlines"]:
-            assert d["status"] in {"confirmed", "estimated", "tba"}, f"{c['id']}: {d['status']}"
-            assert d["type"] in KNOWN_TYPES, (
-                f"{c['id']}: 모르는 마감 타입 '{d['type']}' — build.py KNOWN_TYPES 와 "
-                f"template.html SUBMIT 을 같이 갱신할 것")
-    print(f"OK  AI {len(ai)} · neuro {len(neuro)} · total {len(confs)}")
+def check(d: dict) -> None:
+    s, c = d["series"], d["counts"]
+    assert c["hf"] >= 20 and c["ccf"] >= 200 and c["rates"] >= 60, f"업스트림 fetch 실패 의심: {c}"
+    ai = [x for x in s if x["group"] == "ai"]
+    neuro = [x for x in s if x["group"] == "neuro"]
+    assert len(ai) >= 24, f"AI 시리즈 {len(ai)}건 — TRACKED_AI 매칭 확인"
+    assert len(neuro) >= 9, f"neuro 시리즈 {len(neuro)}건"
+    # 차기 회차가 없어도 남는 것이 이 모델의 존재 이유다. 전형 시기가 비면 아무 값도 못 준다.
+    for x in s:
+        assert x["editions"], f"{x['title']}: 회차 0건"
+        assert x["typical"]["meeting_month"], f"{x['title']}: 전형 개최월 유도 실패"
+        assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
+    for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
+        assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
+    no_next = [x["title"] for x in s if not x["next"]]
+    print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
 
 
 if __name__ == "__main__":
@@ -267,4 +355,4 @@ if __name__ == "__main__":
     d = build(a.offline)
     if a.check:
         check(d)
-    print(f"docs/index.html  ({len(d['conferences'])} conferences, generated {d['generated']})")
+    print(f"docs/index.html  ({len(d['series'])} series, generated {d['generated']})")

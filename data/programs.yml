@@ -1,0 +1,73 @@
+# 학회-저널 연계 · 학회 간 리뷰 이관 제도.
+# 2026-09-02 웹 확인분만 기록한다. 확인 못 한 학회는 항목을 만들지 않는다 —
+# "제도 없음"과 "내가 못 찾음"은 다른 말이므로 뷰어에서도 "미확인"으로 표시한다.
+#
+# kind: shared_review(공용 리뷰 풀) | journal_option(저널 동시/발표 옵션)
+#     | journal_invite(초청 확장) | society_journal(학회 공식 저널) | none(제도 없음 확인)
+
+ACL: &arr
+  - name: ACL Rolling Review (ARR)
+    kind: shared_review
+    url: https://aclrollingreview.org/
+    note: >-
+      ARR 에 먼저 투고해 리뷰·메타리뷰를 받고, 그 리뷰를 원하는 학회에 commit 한다.
+      2024년부터 주요 *ACL 학회가 ARR 전용. 리뷰 사이클 진행 중에는 commit 불가이고,
+      commit 후 결정·철회 전까지 ARR 재투고 불가. 플랫폼은 OpenReview.
+    verified: '2026-09-02'
+EMNLP: *arr
+NAACL: *arr
+
+ICRA:
+  - name: IEEE 저널 논문 학회 발표 자격
+    kind: journal_option
+    url: https://www.ieee-ras.org/publications/ra-l/information-for-ra-l-option-conference-organizers/
+    note: >-
+      게재된 RA-L · T-RO · T-ASE · T-FR · RAM 논문은 일정 기간(eligibility window) 안에
+      ICRA 에서 발표할 수 있다.
+    verified: '2026-09-02'
+
+IROS:
+  - name: RA-L+IROS 동시투고 옵션 (폐지)
+    kind: journal_option
+    url: https://2026.ieee-iros.org/contribute/call-for-papers/
+    note: >-
+      🔴 IROS 는 RA-L 동시투고 옵션을 더 이상 제공하지 않는다. 게재된 RA-L 등 IEEE 저널 논문의
+      IROS 발표 자격 창은 유지된다.
+    verified: '2026-09-02'
+
+CVPR: &ijcv
+  - name: IJCV 특집호 초청
+    kind: journal_invite
+    url: https://link.springer.com/journal/11263/collections
+    note: >-
+      수상·명예언급 논문과 리뷰·AC 추천으로 선정된 oral/spotlight 이 확장판 투고에 초청된다.
+      확장판은 원논문 대비 신규 내용 30% 이상을 요구하며 저널 기준으로 다시 심사한다.
+    verified: '2026-09-02'
+ICCV: *ijcv
+
+MICCAI:
+  - name: 저널 확장 초청 (CLINICCAI · Open Data)
+    kind: journal_invite
+    url: https://conferences.miccai.org/2026/en/CLINICAL-DAY.html
+    note: >-
+      CLINICCAI 선정 초록은 full-length 원고로 확장해 동료심사 저널에 투고하도록 초청된다.
+      Open Data 트랙 채택 논문은 MELBA Resource Track 특집호에 게재된다.
+    verified: '2026-09-02'
+
+OHBM:
+  - name: Aperture Neuro (학회 공식 저널)
+    kind: society_journal
+    url: https://apertureneuro.org/
+    note: >-
+      OHBM 공식 오픈액세스 저널. 연례학술대회 초록집도 여기에 발행되며, 코드·데이터셋·프로토콜
+      기술 같은 비전형 산출물도 받는다.
+    verified: '2026-09-02'
+
+NeurIPS:
+  - name: 워크샵 → 메인 트랙 이관 (제도 없음)
+    kind: none
+    url: https://neurips.cc/Conferences/2026/CallForPapers
+    note: >-
+      워크샵 논문을 메인 트랙으로 넘기는 공식 경로는 없다. 비아카이벌 워크샵과의 이중투고는
+      허용되지만, 심사에서 다른 아카이벌 투고는 선행연구로 취급된다.
+    verified: '2026-09-02'

@@ -5,7 +5,9 @@
 # source  : 근거 URL. 근거 없는 날짜는 입력 금지.
 # verified: 그 URL 을 마지막으로 확인한 날짜
 #
-# tier    : 관심 우선순위(이 사람 기준). 1=반드시 챙김 2=관련 있음. 학회 등급이 아니다.
+# tier    : 두 축 조합. T1 = 분야 최상위 **이면서** 실제 투고·필독 대상.
+#           객관 축(CORE 등급)은 AI 학회에만 존재하므로 뇌과학은 분야 대표성으로 대신한다.
+# past    : 과거 회차. 전형 마감월·개최월을 유도하는 표본이 된다. 근거 있는 것만 넣는다.
 # field   : 그룹핑 축. neuro / neuroimaging / cognitive
 # scale   : 규모. metric 은 attendees(참가자). AI 학회의 submitted(투고 편수)와 단위가 달라
 #           그룹을 넘어 비교하면 안 된다. 근거 URL 없으면 비워 둔다.
@@ -15,6 +17,13 @@
 - title: COSYNE
   year: 2027
   id: cosyne27
+  past:
+    - year: 2026
+      date: March 2026
+      deadline: '2025-10-16'   # https://x.com/CosyneMeeting/status/1975564152006713689
+    - year: 2025
+      date: March 2025
+      deadline: '2024-10-23'   # https://x.com/CosyneMeeting/status/1839771493594738724
   tier: 1
   field: neuro
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
@@ -44,6 +53,10 @@
 - title: CCN
   year: 2027
   id: ccn27
+  past:
+    - year: 2026
+      date: August 3-6, 2026
+      place: New York University
   tier: 1
   field: neuro
   scale:
@@ -72,6 +85,10 @@
 - title: SfN
   year: 2026
   id: sfn26
+  past:
+    - year: 2025
+      date: November 15-19, 2025
+      place: San Diego Convention Center
   tier: 1
   field: neuro
   scale:
@@ -105,7 +122,7 @@
 - title: Bernstein
   year: 2026
   id: bernstein26
-  tier: 2
+  tier: 1
   field: neuro
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Bernstein Conference on Computational Neuroscience
@@ -134,7 +151,7 @@
 - title: CNS*
   year: 2027
   id: cns27
-  tier: 2
+  tier: 1
   field: neuro
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: OCNS Annual Computational Neuroscience Meeting
@@ -158,6 +175,10 @@
 - title: OHBM
   year: 2027
   id: ohbm27
+  past:
+    - year: 2026
+      date: June 14-18, 2026
+      place: Bordeaux, France
   tier: 1
   field: neuroimaging
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
@@ -215,7 +236,7 @@
 - title: VSS
   year: 2027
   id: vss27
-  tier: 2
+  tier: 1
   field: cognitive
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Vision Sciences Society Annual Meeting
@@ -239,7 +260,7 @@
 - title: CogSci
   year: 2027
   id: cogsci27
-  tier: 2
+  tier: 1
   field: cognitive
   scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Annual Meeting of the Cognitive Science Society
