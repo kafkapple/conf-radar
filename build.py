@@ -131,6 +131,11 @@ def build(offline: bool = False) -> dict:
     assert "__DATA__" in tpl, "template.html 에 __DATA__ 자리표시자가 없다"
     html = tpl.replace("__DATA__", json.dumps(data, ensure_ascii=False))
     (ROOT / "docs" / "index.html").write_text(html)
+    # Claude Artifact 는 <head>/<body> 를 자기가 감싸므로 그 껍데기만 벗긴 조각도 같이 낸다.
+    # 템플릿을 두 벌 두지 않기 위해 기계적으로 잘라낸다 (SSOT = template.html 하나).
+    head = html[html.index("<title>"):html.index("</head>")]
+    body = html[html.index("<body>") + len("<body>"):html.rindex("</body>")]
+    (ROOT / "docs" / "artifact.html").write_text(head + body)
     return data
 
 
