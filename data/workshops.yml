@@ -1,0 +1,39 @@
+# 학회 부설 워크샵. 본 학회와 마감이 다르고 훨씬 빠듯해서 따로 추적할 값이 있다.
+#
+# 뷰어 안에서는 학회와 **같은 모양**으로 다룬다(kind: workshop + parent 만 추가).
+# 그래야 목록·칸반·표·타임라인·지도·캘린더가 전부 코드 변경 없이 워크샵도 처리한다.
+#
+# 아직 안 넣은 후보 (NeurIPS 2026 accepted, 마감·URL 미확인):
+#   - The BabyVLM Workshop: Toward Developmentally Plausible Multimodal Systems (Atlanta)
+#   - DevAI: Developmental Perspectives on AI (Atlanta)
+#   출처 https://blog.neurips.cc/2026/08/10/announcing-the-neurips-2026-workshops/
+
+- title: BrainBodyFM
+  year: 2026
+  id: brainbodyfm26
+  parent: NeurIPS
+  kind: workshop
+  tier: 1
+  field: neuro
+  full_name: Foundation Models for the Brain and Body (NeurIPS 2026 Workshop)
+  link: https://brainbodyfm-workshop.github.io/
+  deadlines:
+    - type: paper
+      label: Paper · travel award 마감 (KST 9/6 20:59)
+      date: '2026-09-05 23:59:59'
+      timezone: AoE
+      status: confirmed
+    - type: submission
+      label: Demo 마감
+      date: '2026-09-19 23:59:59'
+      timezone: AoE
+      status: confirmed
+  city: Sydney
+  country: Australia
+  venue: NeurIPS 2026 부설 (Sydney)
+  date: December 11 or 12, 2026
+  start: '2026-12-11'
+  end: '2026-12-12'
+  tags: [neuroai, foundation-models, workshop]
+  source: https://brainbodyfm-workshop.github.io/
+  verified: '2026-09-02'

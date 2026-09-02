@@ -72,6 +72,7 @@ h2.grp{font-size:11.5px;color:var(--dim);font-weight:600;margin:19px 0 7px;lette
 .chip.est{background:transparent;border:1px dashed var(--line);color:var(--dim)}
 .chip.r{background:transparent;border:1px solid var(--line);color:var(--dim);font-family:var(--mono);font-size:10px}
 .chip.p{background:color-mix(in srgb,var(--neuro) 14%,transparent);color:var(--neuro)}
+.chip.w{background:color-mix(in srgb,var(--fg) 12%,transparent);color:var(--fg)}
 .meta{color:var(--dim);font-size:12.5px;margin-top:2px}
 .meta b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg)}
 /* 규모 = 로그 스케일 막대. 참가자 수와 투고 편수는 단위가 달라 색으로 구분한다. */
@@ -308,6 +309,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-s="field">분야별</button>
     <span class="sep"></span>
     <button id="fav">★ 즐겨찾기</button>
+    <button id="ws" aria-pressed="true">워크샵 포함</button>
     <button id="sub-only" aria-pressed="true">제출 마감만</button>
     <input type="search" id="q" placeholder="학회 검색">
   </div>
@@ -376,7 +378,7 @@ const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV
 const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
 
 const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
-               favOnly:false, mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
+               favOnly:false, withWs:true, mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -404,6 +406,9 @@ function scalePct(sc){
   return Math.max(6, Math.min(100, Math.round(p*100)));
 }
 const rankChip = c => c.rank.core ? `<span class="chip r">CORE ${esc(c.rank.core)}</span>` : "";
+// 워크샵은 본 학회와 마감이 완전히 다르다. 어느 학회 부설인지 같이 안 보이면 오해한다.
+const wsChip = c => c.kind === "workshop"
+  ? `<span class="chip w">W · ${esc(c.parent)} 부설</span>` : "";
 const progChip = c => c.programs.length
   ? `<span class="chip p" title="${esc(c.programs[0].name)}">${esc(KIND[c.programs[0].kind] || "연계")}</span>` : "";
 
@@ -413,6 +418,7 @@ function visible(){
     (state.group === "all" || c.group === state.group) &&
     c.tier <= state.tier &&
     (!state.favOnly || state.fav.has(c.id)) &&
+    (state.withWs || c.kind !== "workshop") &&
     (!q || c.search.includes(q) || (FIELD[c.field]||"").includes(q)));
 }
 
@@ -430,7 +436,7 @@ function cardHTML(c){
           aria-label="즐겨찾기">${state.fav.has(c.id)?"★":"☆"}</button>
         ${esc(c.title)}${c.next?" "+c.next:""}
         <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
-        <span class="chip t">T${c.tier}</span>${rankChip(c)}${progChip(c)}
+        <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${progChip(c)}
         ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}
       </div>
       <div class="meta">${d ? `<b>${fmt(d.date)}</b> ${esc(d.label)}`
@@ -514,7 +520,7 @@ function renderKanban(){
           <div class="top"><span class="dd ${d && n<=14?"hot":""}">${d?dday(n):(meetState(c)||"미공지")}</span>
             <span class="nm2">${esc(c.title)}${c.next?" "+c.next:""}</span>
             <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
-            <span class="chip t">T${c.tier}</span>${rankChip(c)}
+            <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}
             ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
           <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:(c.next?"제출 마감 종료":"차기 회차 미공지")}</div>
           <div class="sm">${c.next?`📍 ${esc(c.date_text)} · ${esc(c.city)}`:`🔁 ${esc(typicalText(c))}`}</div>
@@ -535,7 +541,7 @@ function renderTable(){
     const est = d && d.status !== "confirmed";
     return `<tr data-id="${c.id}">
       <td class="w"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
-        <b>${esc(c.title)}${c.next?" "+c.next:""}</b> <span class="chip t">T${c.tier}</span></td>
+        <b>${esc(c.title)}${c.next?" "+c.next:""}</b> <span class="chip t">T${c.tier}</span>${wsChip(c)}</td>
       <td>${esc(c.rank.core || "—")}</td>
       <td>${esc(FIELD[c.field]||c.field)}</td>
       <td class="n">${d?fmt(d.date):"—"} ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</td>
@@ -671,7 +677,7 @@ function cycActual(){
 
   document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, dl, from, to, ms, me, trunc}) => {
     const w = to - from;
-    const label = `${c.title}${c.next ? " " + c.next : ""}`;
+    const label = `${c.kind === "workshop" ? "W " : ""}${c.title}${c.next ? " " + c.next : ""}`;
     // 막대가 좁으면 글자가 잘린다 — 그럴 때만 이름을 막대 밖 오른쪽에 둔다
     const inside = w * (state.months <= 6 ? 12 : 7) > label.length * 8;
     const meetW = (ms !== null && me !== null)
@@ -773,7 +779,7 @@ function openDetail(id){
     ${c.next ? `<p class="meta">📍 ${esc(c.date_text)} · ${esc(c.venue || [c.city,c.country].filter(Boolean).join(", "))}</p>`
              : `<p class="meta">차기 회차 미공지 · 🔁 ${esc(typicalText(c))}</p>`}
     <p class="meta"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
-      <span class="chip t">T${c.tier}</span>${rankChip(c)}
+      <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}
       ${esc(FIELD[c.field]||c.field)}</p>
 
     <h4>${c.next ? "차기 회차 일정" : "최근 회차 일정 (지난 회차)"}</h4>${dls}
@@ -835,6 +841,10 @@ bindGroup("[data-mo]", b => state.months = +b.dataset.mo);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
   e.target.setAttribute("aria-pressed", state.favOnly); render();
+};
+document.getElementById("ws").onclick = e => {
+  state.withWs = !state.withWs;
+  e.target.setAttribute("aria-pressed", state.withWs); render();
 };
 document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
@@ -932,8 +942,9 @@ if ("serviceWorker" in navigator)
 
 const n = DATA.series.length, nn = DATA.series.filter(c => c.group === "neuro").length;
 const noNext = DATA.series.filter(c => !c.next).length;
+const nw = DATA.series.filter(c => c.kind === "workshop").length;
 document.getElementById("sub").textContent =
-  `${DATA.generated} 갱신 · ${n}개 학회 (뇌과학 ${nn} · AI ${n-nn}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
+  `${DATA.generated} 갱신 · ${n}개 (학회 ${n-nw} · 워크샵 ${nw}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
 document.getElementById("foot").innerHTML =
   `<b>티어 기준</b> — 두 축의 조합이고 객관 축은 내가 정하지 않는다.<br>
    · 객관 축 = CORE 등급(외부 정본, 배지로 표시). 신경과학 학회에는 등급이 부여되지 않아 분야 대표성으로 대신한다.<br>

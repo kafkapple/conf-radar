@@ -127,6 +127,7 @@ def build_series(title, eds, group, tier, field, rank, rates, programs, extra, t
         "editions": eds, "next": nxt["year"] if nxt else None,
         "typical": typical(eds), "scale": scale, "history": hist,
         "programs": programs.get(title, []), "links": links,
+        "kind": "conference", "parent": "",
         "source": extra.get("source", ""), "verified": str(extra.get("verified", "")),
     }
 
@@ -150,7 +151,9 @@ def build(offline: bool = False) -> dict:
         series.append(build_series(title, eds, "ai", tier, FIELD_AI.get(slug, "ml"),
                                    rank, rates, programs, {}, today))
 
-    for e in yaml.safe_load((DATA / "neuro.yml").read_text()) or []:
+    manual = (yaml.safe_load((DATA / "neuro.yml").read_text()) or []) + \
+             (yaml.safe_load((DATA / "workshops.yml").read_text()) or [])
+    for e in manual:
         DISPLAY[canon(e["title"])] = e["title"]
         eds = merge_editions([{
             "year": int(e["year"]), "start": str(e.get("start", "")), "end": str(e.get("end", "")),
@@ -170,6 +173,10 @@ def build(offline: bool = False) -> dict:
         s = build_series(canon(e["title"]), eds, "neuro", int(e["tier"]), e["field"],
                          rank, rates, programs, e, today)
         s["id"], s["link"] = e["id"], e["link"]
+        s["kind"] = e.get("kind", "conference")
+        s["parent"] = e.get("parent", "")
+        if s["kind"] == "workshop":
+            s["group"] = next((x["group"] for x in series if x["title"] == e.get("parent")), "ai")
         series.append(s)
 
     for s in series:                                     # ISO 날짜가 없으면 자유 문장에서 유도
@@ -299,6 +306,9 @@ def check(d: dict) -> None:
     nodate = [e for e in eds if not e["start"]]
     assert len(nodate) / len(eds) < 0.1, \
         f"개최일 미상 회차 {len(nodate)}/{len(eds)} — parse_range 확인: {[e['date_text'] for e in nodate[:4]]}"
+    ws = [x for x in s if x["kind"] == "workshop"]
+    assert ws, "워크샵 0건 — workshops.yml 로드 확인"
+    assert all(x["parent"] for x in ws), "워크샵에 parent 미지정"
     no_next = [x["title"] for x in s if not x["next"]]
     print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
 

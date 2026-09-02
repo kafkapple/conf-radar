@@ -13,6 +13,18 @@
       url: https://world-wide.org/
       note: 계산신경과학 학회·세미나 캘린더
 
+- group: 워크샵
+  items:
+    - name: AI Workshop Tracker (NeurIPS)
+      url: https://aiworkshoptracker.com/conference/neurips/
+      note: 워크샵별 마감 집계. 본 학회 마감보다 훨씬 빠듯하고 공지가 흩어져 있어 따로 봐야 한다
+    - name: NeurIPS 2026 채택 워크샵 목록
+      url: https://blog.neurips.cc/2026/08/10/announcing-the-neurips-2026-workshops/
+      note: 102개 채택(Sydney 48 · Paris 28 · Atlanta 26). 관심 워크샵을 여기서 골라 data/workshops.yml 에 추가
+    - name: BrainBodyFM (Foundation Models for the Brain and Body)
+      url: https://brainbodyfm-workshop.github.io/
+      note: NeurIPS 2026 Sydney 부설. 현재 추적 중인 워크샵
+
 - group: 통계 · 추세 · 순위
   items:
     - name: Paper Copilot
