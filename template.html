@@ -111,6 +111,26 @@ table.dense tbody tr:hover{background:color-mix(in srgb,var(--fg) 4%,transparent
 table.dense .n{font-family:var(--mono);font-variant-numeric:tabular-nums}
 table.dense td.w{white-space:normal;min-width:150px}
 
+/* ── 지도: equirectangular. 타일 지도는 아티팩트 CSP 가 외부 이미지를 막으므로 쓸 수 없다.
+   육지 윤곽을 SVG 로 인라인하면 오프라인·아티팩트·Pages 어디서나 같게 뜬다 ── */
+.mapwrap{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow-x:auto;
+  -webkit-overflow-scrolling:touch}
+.mapwrap svg{display:block;min-width:860px;width:100%;height:auto}
+.land{fill:color-mix(in srgb,var(--fg) 9%,transparent);stroke:var(--line);stroke-width:.5}
+.pt{cursor:pointer}
+.pt circle{stroke:var(--card);stroke-width:1.2}
+.pt.ai circle{fill:var(--ai)} .pt.neuro circle{fill:var(--neuro)}
+.pt.mixed circle{fill:var(--neuro);stroke:var(--ai);stroke-width:2}
+.pt text{fill:var(--fg);font-size:9px;font-weight:600;paint-order:stroke;
+  stroke:var(--card);stroke-width:2.5px;pointer-events:none}
+.pt:hover circle{stroke:var(--fg);stroke-width:2}
+.citylist{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:7px;margin-top:12px}
+.cityrow{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 11px;
+  cursor:pointer;box-shadow:var(--shadow)}
+.cityrow:hover{border-color:var(--faint)}
+.cityrow .c{font-weight:650;font-size:13.5px}
+.cityrow .l{color:var(--dim);font-size:11.5px;margin-top:2px;line-height:1.45}
+
 /* ── 연간 사이클 ── */
 .cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px}
@@ -174,6 +194,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-v="list" aria-pressed="true">목록</button>
     <button data-v="kb">칸반</button>
     <button data-v="tbl">표</button>
+    <button data-v="map">지도</button>
     <button data-v="cyc">연간 사이클</button>
     <button data-v="src">정보원</button>
     <span class="sep"></span>
@@ -208,6 +229,20 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 <section id="v-tbl" hidden><div class="tbl"><table class="dense">
   <thead><tr></tr></thead><tbody></tbody></table></div></section>
 
+<section id="v-map" hidden>
+  <div class="bar" style="margin-bottom:9px">
+    <span class="lbl">지도</span>
+    <button data-m="next" aria-pressed="true">차기 개최</button>
+    <button data-m="all">역대 전체</button>
+  </div>
+  <div class="mapwrap"></div>
+  <p class="legend"><span style="color:var(--ai)">● AI</span>
+    <span style="color:var(--neuro)">● 뇌과학</span>
+    <span>원 크기 = 그 도시에서 열린 회차 수</span>
+    <span style="opacity:.7">온라인 회차는 좌표가 없어 지도에 없다</span></p>
+  <div class="citylist"></div>
+</section>
+
 <section id="v-cyc" hidden>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
   <p class="legend"><span>● 제출 마감</span><span>■ 개최</span>
@@ -241,7 +276,7 @@ const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV
 const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
 
 const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
-               favOnly:false, fav:loadFav()};
+               favOnly:false, mapMode:"next", fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -415,6 +450,52 @@ function renderTable(){
   }).join("");
 }
 
+function renderMap(){
+  const W = DATA.world.w, H = DATA.world.h;
+  const rows = visible();
+  // 도시 단위로 묶는다. 같은 도시의 여러 회차·여러 학회가 한 점이 되어야 읽힌다.
+  const cities = new Map();
+  for (const c of rows){
+    const eds = state.mapMode === "all" ? c.editions
+              : c.editions.filter(e => e.year === (c.next ?? c.next_year));
+    for (const e of eds){
+      if (e.lat === null) continue;                      // 온라인 회차 = 좌표 없음
+      // 좌표를 소수 1자리(~11km)로 묶는다. "Singapore" 와 "Singapore, Singapore" 처럼
+      // 표기만 다른 같은 도시가 지오코더에서 미세하게 다른 좌표로 오는 경우가 있다.
+      const k = `${e.lat.toFixed(1)},${e.lon.toFixed(1)}`;
+      const g = cities.get(k) ?? cities.set(k, {lat:e.lat, lon:e.lon, place:e.place,
+                                               places:new Set(), items:[], groups:new Set()}).get(k);
+      g.places.add(e.place);
+      if (e.place.length < g.place.length) g.place = e.place;   // 가장 짧은 표기를 대표로
+      g.items.push({title:c.title, year:e.year, id:c.id, group:c.group});
+      g.groups.add(c.group);
+    }
+  }
+  const list = [...cities.values()].sort((a,b) => b.items.length - a.items.length);
+  const x = lon => (lon + 180) * W / 360, y = lat => (90 - lat) * H / 180;
+  const pts = list.map(g => {
+    const n = g.items.length, r = Math.min(11, 3.2 + Math.sqrt(n) * 1.9);
+    const cls = g.groups.size > 1 ? "mixed" : [...g.groups][0];
+    // 라벨은 밀도에 따라 줄인다. 유럽처럼 점이 몰린 곳에서 전부 찍으면 서로 겹쳐 못 읽는다.
+    const minN = state.mapMode === "all" ? 3 : 1;
+    const label = n >= minN ? g.place.split(",")[0] : "";
+    return `<g class="pt ${cls}" data-city="${esc(g.place)}">
+      <title>${esc(g.place)} — ${g.items.map(i => i.title+" "+i.year).join(", ")}</title>
+      <circle cx="${x(g.lon).toFixed(1)}" cy="${y(g.lat).toFixed(1)}" r="${r.toFixed(1)}"></circle>
+      ${label ? `<text x="${x(g.lon).toFixed(1)}" y="${(y(g.lat)-r-3).toFixed(1)}"
+        text-anchor="middle">${esc(label)}</text>` : ""}</g>`;
+  }).join("");
+  document.querySelector("#v-map .mapwrap").innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회 개최지 세계 지도">
+      <path class="land" d="${DATA.world.paths.join(" ")}"></path>${pts}</svg>`;
+  document.querySelector("#v-map .citylist").innerHTML = list.map(g => `
+    <div class="cityrow" data-city="${esc(g.place)}">
+      <div class="c">${esc(g.place)} <span style="color:var(--faint)">${g.items.length}</span></div>
+      <div class="l">${g.items.sort((a,b) => b.year - a.year)
+        .map(i => `<span style="color:var(--${i.group})">${esc(i.title)}</span> ${i.year}`).join(" · ")}</div>
+    </div>`).join("") || `<p class="meta">표시할 개최지 없음</p>`;
+}
+
 function renderCycle(){
   // 전형 시기(과거 회차에서 유도)로 그린다. 차기 회차가 없는 학회도 자리를 갖는다.
   const rows = visible().slice().sort((a,b) =>
@@ -532,10 +613,12 @@ document.getElementById("veil").onclick = e => { if (e.target.id === "veil") clo
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 
 function render(){
-  for (const v of ["list","kb","tbl","cyc","src"])
+  for (const v of ["list","kb","tbl","map","cyc","src"])
     document.getElementById("v-"+v).hidden = state.view !== v;
-  document.getElementById("bar2").style.display = (state.view === "src") ? "none" : "";
-  ({list:renderList, kb:renderKanban, tbl:renderTable, cyc:renderCycle, src:renderSources})[state.view]();
+  document.getElementById("bar2").style.display =
+    (state.view === "src" || state.view === "map") ? "none" : "";
+  ({list:renderList, kb:renderKanban, tbl:renderTable, map:renderMap,
+    cyc:renderCycle, src:renderSources})[state.view]();
 }
 
 function bindGroup(sel, apply){
@@ -549,6 +632,7 @@ bindGroup("[data-v]", b => state.view  = b.dataset.v);
 bindGroup("[data-g]", b => state.group = b.dataset.g);
 bindGroup("[data-t]", b => state.tier  = +b.dataset.t);
 bindGroup("[data-s]", b => state.sort  = b.dataset.s);
+bindGroup("[data-m]", b => state.mapMode = b.dataset.m);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
   e.target.setAttribute("aria-pressed", state.favOnly); render();
@@ -567,6 +651,17 @@ document.addEventListener("click", e => {
     const id = star.dataset.fav;
     state.fav.has(id) ? state.fav.delete(id) : state.fav.add(id);
     saveFav(state.fav); render(); return;
+  }
+  const city = e.target.closest("[data-city]");
+  if (city){
+    const hits = DATA.series.filter(c => c.editions.some(x => x.place === city.dataset.city));
+    if (hits.length === 1) openDetail(hits[0].id);
+    else { state.q = city.dataset.city.split(",")[0]; document.getElementById("q").value = state.q;
+           state.view = "list";
+           for (const o of document.querySelectorAll("[data-v]"))
+             o.setAttribute("aria-pressed", o.dataset.v === "list");
+           render(); }
+    return;
   }
   const row = e.target.closest("[data-id]");
   if (row && !e.target.closest("a")) openDetail(row.dataset.id);

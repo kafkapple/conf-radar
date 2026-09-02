@@ -106,6 +106,7 @@ def build(offline: bool = False) -> dict:
     ccf_eds, rank = editions_from_ccf(ccf_tf)
     rates = rates_from_ccf(ccf_tf)
     programs = {canon(k): v for k, v in (yaml.safe_load((DATA / "programs.yml").read_text()) or {}).items()}
+    geo = yaml.safe_load((DATA / "geo.yml").read_text()) or {}
 
     series = []
     for slug, tier in sorted(TRACKED_AI.items()):
@@ -139,6 +140,13 @@ def build(offline: bool = False) -> dict:
         s["id"], s["link"] = e["id"], e["link"]
         series.append(s)
 
+    for s in series:                                     # 회차마다 좌표를 붙인다(지도 뷰)
+        for e in s["editions"]:
+            place = ", ".join(x for x in [e.get("city", ""), e.get("country", "")] if x) or e.get("venue", "")
+            hit = geo.get(place.strip())
+            e["place"] = place.strip()
+            e["lat"], e["lon"] = (hit["lat"], hit["lon"]) if hit else (None, None)
+
     for s in series:                                     # 도시/국가는 차기 회차 것을 대표로
         nx = next((x for x in s["editions"] if x["year"] == s["next"]), None) or (s["editions"][-1] if s["editions"] else {})
         s.update(city=nx.get("city", ""), country=nx.get("country", ""), venue=nx.get("venue", ""),
@@ -151,6 +159,7 @@ def build(offline: bool = False) -> dict:
                                   s["rank"].get("core", "")]).lower())
 
     data = {"generated": today.isoformat(), "series": series,
+            "world": json.loads((DATA / "world.json").read_text()),
             "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
             "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
     tpl = (ROOT / "template.html").read_text()
@@ -178,6 +187,12 @@ def check(d: dict) -> None:
         assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
     for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
+    eds = [e for x in s for e in x["editions"]]
+    located = [e for e in eds if e["lat"] is not None]
+    # 좌표가 대량으로 비면 지도가 조용히 빈 화면이 된다. 캐시 미스는 prep.py --geo 로 채운다.
+    assert len(located) / len(eds) > 0.85, \
+        f"좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} — python prep.py --geo 실행 필요"
+    assert d["world"]["paths"], "world.json 비어 있음"
     no_next = [x["title"] for x in s if not x["next"]]
     print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
 
