@@ -1,0 +1,217 @@
+# 뇌과학 / 계산신경과학 / NeuroAI / 국내 학회 — 수동 큐레이션
+# 스키마 = huggingface/ai-deadlines 와 동일 + 우리 확장 3필드(status/source/verified)
+#
+# status  : confirmed(공식 공지된 날짜) | estimated(과거 패턴 기반 추정) | tba(미공지)
+# source  : 근거 URL. 근거 없는 날짜는 입력 금지.
+# verified: 그 URL 을 마지막으로 확인한 날짜
+#
+# 갱신 요령: 연 1회 가을에 전체 훑기 + estimated 가 confirmed 로 바뀌면 즉시 승격.
+
+- title: COSYNE
+  year: 2027
+  id: cosyne27
+  full_name: Computational and Systems Neuroscience
+  link: https://www.cosyne.org/
+  deadlines:
+    - type: abstract
+      label: Abstract submission deadline
+      date: '2026-10-16 23:59:59'
+      timezone: AoE
+      status: estimated   # 2026판 10/16, 2025판 10/23 → 10월 중순 패턴
+    - type: notification
+      label: Author notification
+      date: '2026-12-15 23:59:59'
+      timezone: AoE
+      status: tba         # 공식 표기 "TBA December 2026"
+  city: Montréal
+  country: Canada
+  venue: Fairmont The Queen Elizabeth (main) / Le Westin Montréal (workshops 15-16 Mar)
+  date: March 11-14, 2027 (workshops 15-16)
+  start: '2027-03-11'
+  end: '2027-03-16'
+  tags: [computational-neuroscience, systems-neuroscience, neuroai]
+  source: https://www.cosyne.org/abstracts-submission
+  verified: '2026-09-02'
+
+- title: CCN
+  year: 2027
+  id: ccn27
+  full_name: Cognitive Computational Neuroscience
+  link: https://2027.ccneuro.org/
+  deadlines:
+    - type: paper
+      label: Submission deadline
+      date: '2027-04-15 23:59:59'
+      timezone: AoE
+      status: estimated   # CCN 은 통상 4월 마감 / 7월 개최
+  city: Edinburgh
+  country: UK
+  venue: Edinburgh, UK
+  date: July 26-29, 2027
+  start: '2027-07-26'
+  end: '2027-07-29'
+  tags: [computational-neuroscience, cognitive-science, neuroai]
+  source: https://2027.ccneuro.org/
+  verified: '2026-09-02'
+
+- title: SfN
+  year: 2026
+  id: sfn26
+  full_name: Society for Neuroscience Annual Meeting (Neuroscience 2026)
+  link: https://www.sfn.org/meetings/neuroscience-2026
+  deadlines:
+    - type: abstract
+      label: Regular abstract deadline (closed)
+      date: '2026-06-10 17:00:00'
+      timezone: UTC-4
+      status: confirmed
+    - type: abstract_late
+      label: Late-breaking abstract deadline
+      date: '2026-09-15 23:59:59'
+      timezone: UTC-4
+      status: confirmed   # 접수 창 9/8-9/15
+  city: Washington, D.C.
+  country: USA
+  venue: Walter E. Washington Convention Center
+  date: November 14-18, 2026
+  start: '2026-11-14'
+  end: '2026-11-18'
+  tags: [neuroscience]
+  source: https://www.sfn.org/meetings/neuroscience-2026/general-information/dates-and-deadlines
+  verified: '2026-09-02'
+
+- title: Bernstein
+  year: 2026
+  id: bernstein26
+  full_name: Bernstein Conference on Computational Neuroscience
+  link: https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/
+  deadlines:
+    - type: abstract
+      label: Contributed talk abstract (closed)
+      date: '2026-05-27 15:00:00'
+      timezone: CEST
+      status: confirmed
+    - type: abstract_late
+      label: Poster abstract (closed)
+      date: '2026-07-01 15:00:00'
+      timezone: CEST
+      status: confirmed
+  city: Frankfurt am Main
+  country: Germany
+  venue: Goethe University Campus Westend
+  date: September 28 - October 1, 2026
+  start: '2026-09-28'
+  end: '2026-10-01'
+  tags: [computational-neuroscience]
+  source: https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/
+  verified: '2026-09-02'
+
+- title: CNS*
+  year: 2027
+  id: cns27
+  full_name: OCNS Annual Computational Neuroscience Meeting
+  link: https://www.cnsorg.org/future-meetings
+  deadlines:
+    - type: abstract
+      label: Abstract submission deadline
+      date: '2027-02-15 23:59:59'
+      timezone: AoE
+      status: estimated   # OCNS 통상 2월 마감 / 7월 개최
+  city: Gran Canaria
+  country: Spain
+  venue: Gran Canaria, Spain
+  date: July 10-14, 2027
+  start: '2027-07-10'
+  end: '2027-07-14'
+  tags: [computational-neuroscience]
+  source: https://www.cnsorg.org/future-meetings
+  verified: '2026-09-02'
+
+- title: OHBM
+  year: 2027
+  id: ohbm27
+  full_name: Organization for Human Brain Mapping Annual Meeting
+  link: https://www.humanbrainmapping.org/ohbm-2027/
+  deadlines:
+    - type: abstract
+      label: Abstract submission deadline
+      date: '2026-12-10 23:59:59'
+      timezone: AoE
+      status: estimated   # 통보가 2027-02 → 마감은 그 전. OHBM 통상 12월 마감
+    - type: notification
+      label: Poster accept/reject notification
+      date: '2027-02-15 23:59:59'
+      timezone: AoE
+      status: tba
+  city: Toronto
+  country: Canada
+  venue: Metro Toronto Convention Centre
+  date: June 26-30, 2027
+  start: '2027-06-26'
+  end: '2027-06-30'
+  tags: [neuroimaging]
+  source: https://www.humanbrainmapping.org/ohbm-2027/
+  verified: '2026-09-02'
+
+- title: KSBNS
+  year: 2026
+  id: ksbns26
+  full_name: 한국뇌신경과학회 제29회 정기학술대회 (K-Brain 2026)
+  link: https://www.ksbns2026.org/
+  deadlines:
+    - type: abstract
+      label: 초록 접수 마감 (마감됨)
+      date: '2026-06-12 18:00:00'
+      timezone: KST
+      status: confirmed
+  city: 대전
+  country: Korea
+  venue: 대전컨벤션센터 (DCC)
+  date: September 6-8, 2026
+  start: '2026-09-06'
+  end: '2026-09-08'
+  tags: [neuroscience, korea]
+  source: https://www.ksbns2026.org/
+  verified: '2026-09-02'
+
+- title: VSS
+  year: 2027
+  id: vss27
+  full_name: Vision Sciences Society Annual Meeting
+  link: https://www.visionsciences.org/future-meetings/
+  deadlines:
+    - type: abstract
+      label: Abstract submission deadline
+      date: '2026-12-04 23:59:59'
+      timezone: UTC-5
+      status: estimated   # VSS 통상 12월 초 마감
+  city: Seattle
+  country: USA
+  venue: Seattle, Washington
+  date: May 21-25, 2027
+  start: '2027-05-21'
+  end: '2027-05-25'
+  tags: [vision, cognitive-science]
+  source: https://www.visionsciences.org/future-meetings/
+  verified: '2026-09-02'
+
+- title: CogSci
+  year: 2027
+  id: cogsci27
+  full_name: Annual Meeting of the Cognitive Science Society
+  link: https://cognitivesciencesociety.org/
+  deadlines:
+    - type: paper
+      label: Paper submission deadline
+      date: '2027-02-01 23:59:59'
+      timezone: AoE
+      status: estimated   # CogSci 통상 2월 초 마감 / 7-8월 개최
+  city: San Francisco
+  country: USA
+  venue: San Francisco, USA
+  date: July 30 - August 2, 2027
+  start: '2027-07-30'
+  end: '2027-08-02'
+  tags: [cognitive-science]
+  source: https://cognitivesciencesociety.org/future-conference-organizers/
+  verified: '2026-09-02'
