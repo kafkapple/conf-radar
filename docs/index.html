@@ -11,55 +11,82 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* 팔레트: 종이/잉크 중립색에 파랑 쪽으로 살짝 치우친 회색.
-   AI=인디고 / 뇌과학=앰버 — 이 도구의 존재 이유인 두 영역 구분에 색을 쓴다. */
+/* 팔레트: 잉크/종이 중립색을 파랑 쪽으로 살짝 치우치게. 색은 두 영역 구분에만 쓴다 —
+   AI=인디고, 뇌과학=앰버. 급함(urgent)만 별도 의미색. */
 :root{
-  --bg:#f6f7f9; --card:#fff; --fg:#161a1f; --dim:#5a6673; --line:#e2e6ec;
+  --bg:#f6f7f9; --card:#fff; --fg:#161a1f; --dim:#5a6673; --faint:#8d97a4; --line:#e2e6ec;
   --ai:#3055b8; --ai-bg:#e7edfb; --neuro:#9a5a06; --neuro-bg:#fbeed8;
-  --urgent:#b8302a; --shadow:0 1px 2px rgba(20,26,34,.05);
+  --urgent:#b8302a; --shadow:0 1px 2px rgba(20,26,34,.06); --veil:rgba(22,26,31,.45);
   --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Segoe UI,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0d1014; --card:#161a20; --fg:#e4e9ef; --dim:#8a94a2; --line:#262c35;
+  --bg:#0d1014; --card:#161a20; --fg:#e4e9ef; --dim:#8a94a2; --faint:#6b7684; --line:#262c35;
   --ai:#7fa3ee; --ai-bg:#1a2438; --neuro:#e0a24e; --neuro-bg:#2c2312;
-  --urgent:#f07a70; --shadow:none;
+  --urgent:#f07a70; --shadow:none; --veil:rgba(0,0,0,.6);
 }}
 :root[data-theme="dark"]{
-  --bg:#0d1014; --card:#161a20; --fg:#e4e9ef; --dim:#8a94a2; --line:#262c35;
+  --bg:#0d1014; --card:#161a20; --fg:#e4e9ef; --dim:#8a94a2; --faint:#6b7684; --line:#262c35;
   --ai:#7fa3ee; --ai-bg:#1a2438; --neuro:#e0a24e; --neuro-bg:#2c2312;
-  --urgent:#f07a70; --shadow:none;
+  --urgent:#f07a70; --shadow:none; --veil:rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 15px/1.55 var(--sans);
   -webkit-font-smoothing:antialiased;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 60px}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 64px}
 h1{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:0 0 3px}
-.sub{color:var(--dim);font-size:12.5px;margin:0 0 14px}
-.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px;
-  position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5;border-bottom:1px solid var(--line)}
-button:focus-visible,input:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+.sub{color:var(--dim);font-size:12.5px;margin:0 0 12px}
+.bars{position:sticky;top:0;background:var(--bg);z-index:6;padding:8px 0 9px;border-bottom:1px solid var(--line)}
+.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.bar+.bar{margin-top:6px}
+.bar .sep{width:1px;height:18px;background:var(--line);margin:0 3px}
+.bar .lbl{color:var(--faint);font-size:11px;letter-spacing:.03em}
 button{font:inherit;font-size:13px;padding:5px 11px;border:1px solid var(--line);border-radius:99px;
   background:var(--card);color:var(--dim);cursor:pointer}
 button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
 input[type=search]{font:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--line);
   border-radius:99px;background:var(--card);color:var(--fg);flex:1;min-width:110px}
 section[hidden]{display:none}
 
+/* ── 마감 목록 ── */
+h2.grp{font-size:11.5px;color:var(--dim);font-weight:600;margin:19px 0 7px;letter-spacing:.02em}
+.card{box-shadow:var(--shadow);display:flex;gap:11px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:7px;cursor:pointer}
+.card:hover{border-color:var(--faint)}
+.dday{font:600 12px/1.25 var(--mono);font-variant-numeric:tabular-nums;min-width:54px;
+  text-align:right;padding-top:3px;color:var(--dim)}
+.dday.hot{color:var(--urgent)} .dday.past{opacity:.45}
+.body{flex:1;min-width:0}
+.name{font-weight:650;font-size:14.5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.star{background:none;border:0;padding:0 2px;font-size:14px;line-height:1;color:var(--faint);cursor:pointer}
+.star.on{color:var(--neuro)}
+.chip{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;font-weight:600}
+.chip.ai{background:var(--ai-bg);color:var(--ai)}
+.chip.neuro{background:var(--neuro-bg);color:var(--neuro)}
+.chip.t{background:transparent;border:1px solid var(--line);color:var(--dim);font-family:var(--mono)}
+.chip.est{background:transparent;border:1px dashed var(--line);color:var(--dim)}
+.meta{color:var(--dim);font-size:12.5px;margin-top:2px}
+.meta b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg)}
+/* 규모 = 로그 스케일 막대. 참가자 수와 투고 편수는 단위가 달라 색으로 구분한다. */
+.scale{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:11.5px;color:var(--dim)}
+.track{flex:0 0 68px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.fill{display:block;height:100%;border-radius:3px}
+.fill.submitted{background:var(--ai)} .fill.attendees{background:var(--neuro)}
+.scale .n{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--fg);font-weight:600}
+
 /* ── 연간 사이클 ── */
-.cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);
-  border-radius:10px;background:var(--card)}
+.cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px}
 th,td{padding:0;text-align:center}
 thead th{color:var(--dim);font-weight:500;font-size:11px;padding:7px 0;border-bottom:1px solid var(--line)}
 th.nm,td.nm{position:sticky;left:0;background:var(--card);text-align:left;padding:0 10px;
-  min-width:132px;max-width:132px;border-right:1px solid var(--line);z-index:2}
-tbody tr{height:26px}
+  min-width:136px;max-width:136px;border-right:1px solid var(--line);z-index:2}
+tbody tr{height:26px;cursor:pointer}
 tbody tr:nth-child(even){background:color-mix(in srgb,var(--fg) 3%,transparent)}
 tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--card))}
-.nm a{color:inherit;text-decoration:none;font-weight:600;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;display:block}
+.nm span.t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .cell{position:relative;height:26px}
 .span{position:absolute;left:0;right:0;top:12px;height:2px;background:var(--line)}
 .mk{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:15px;height:15px;
@@ -69,27 +96,37 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 .mk.est{opacity:.45}
 .legend{color:var(--dim);font-size:11.5px;margin:8px 2px 0;display:flex;gap:14px;flex-wrap:wrap}
 
-/* ── 마감 목록 ── */
-h2.grp{font-size:11.5px;text-transform:none;color:var(--dim);font-weight:600;margin:20px 0 7px;letter-spacing:.02em}
-.card{box-shadow:var(--shadow);display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
-  border-radius:10px;padding:10px 12px;margin-bottom:7px}
-.dday{font:600 12px/1.25 var(--mono);font-variant-numeric:tabular-nums;min-width:52px;text-align:right;padding-top:3px;color:var(--dim)}
-.dday.hot{color:var(--urgent)}
-.dday.past{opacity:.4}
-.body{flex:1;min-width:0}
-.name{font-weight:650;font-size:14.5px}
-.name a{color:inherit;text-decoration:none}
-.name a:hover{text-decoration:underline}
-.chip{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;vertical-align:2px;
-  margin-left:5px;font-weight:600}
-.chip.ai{background:var(--ai-bg);color:var(--ai)}
-.chip.neuro{background:var(--neuro-bg);color:var(--neuro)}
-.chip.est{background:transparent;border:1px dashed var(--line);color:var(--dim)}
-.meta{color:var(--dim);font-size:12.5px;margin-top:2px}
-.meta b{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.meta b{font-weight:600;color:var(--fg)}
+/* ── 정보원 ── */
+.srcgrp{margin-bottom:18px}
+.srcgrp h3{font-size:12px;color:var(--dim);font-weight:600;margin:0 0 7px;letter-spacing:.02em}
+.srcitem{display:block;background:var(--card);border:1px solid var(--line);border-radius:9px;
+  padding:9px 12px;margin-bottom:6px;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+.srcitem:hover{border-color:var(--faint)}
+.srcitem .t{font-weight:600;font-size:14px}
+.srcitem .u{font-family:var(--mono);font-size:11px;color:var(--faint);word-break:break-all}
+.srcitem .n{color:var(--dim);font-size:12.5px;margin-top:1px}
+
+/* ── 상세 ── */
+.veil{position:fixed;inset:0;background:var(--veil);display:flex;align-items:flex-end;
+  justify-content:center;z-index:20}
+.veil[hidden]{display:none}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:88vh;overflow-y:auto;
+  border-radius:14px 14px 0 0;padding:18px 18px 32px;border:1px solid var(--line)}
+@media(min-width:660px){.veil{align-items:center}.sheet{border-radius:14px}}
+.sheet h3{margin:0 0 3px;font-size:18px;font-weight:700}
+.sheet .close{position:sticky;top:0;float:right;margin:-4px -4px 0 0}
+.dl{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.dl .d{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--dim)}
+.dl.done .l,.dl.done .d{opacity:.45;text-decoration:line-through}
+.sheet h4{font-size:11.5px;color:var(--dim);font-weight:600;margin:18px 0 6px;letter-spacing:.02em}
+.linkrow{display:flex;gap:6px;flex-wrap:wrap}
+.linkrow a{font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:99px;
+  background:var(--card);color:var(--fg);text-decoration:none}
+.linkrow a:hover{border-color:var(--faint)}
+.note{color:var(--faint);font-size:11.5px;margin-top:7px;line-height:1.6}
 .foot{color:var(--dim);font-size:11.5px;margin-top:26px;line-height:1.7}
 .foot a{color:var(--dim)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -97,91 +134,155 @@ h2.grp{font-size:11.5px;text-transform:none;color:var(--dim);font-weight:600;mar
 <h1>🧠 학회 레이더</h1>
 <p class="sub" id="sub"></p>
 
-<div class="bar">
-  <button data-v="list" aria-pressed="true">마감 목록</button>
-  <button data-v="cyc" aria-pressed="false">연간 사이클</button>
-  <span style="width:8px"></span>
-  <button data-g="all" aria-pressed="true">전체</button>
-  <button data-g="neuro" aria-pressed="false">뇌과학</button>
-  <button data-g="ai" aria-pressed="false">AI</button>
-  <button id="sub" aria-pressed="true">제출 마감만</button>
-  <input type="search" id="q" placeholder="학회 검색">
+<div class="bars">
+  <div class="bar">
+    <button data-v="list" aria-pressed="true">마감 목록</button>
+    <button data-v="cyc">연간 사이클</button>
+    <button data-v="src">정보원</button>
+    <span class="sep"></span>
+    <button data-g="all" aria-pressed="true">전체</button>
+    <button data-g="neuro">뇌과학</button>
+    <button data-g="ai">AI</button>
+    <span class="sep"></span>
+    <button data-t="2" aria-pressed="true">T1·2</button>
+    <button data-t="1">T1만</button>
+    <button data-t="3">전체 티어</button>
+  </div>
+  <div class="bar" id="bar2">
+    <span class="lbl">정렬</span>
+    <button data-s="deadline" aria-pressed="true">마감순</button>
+    <button data-s="start">개최일순</button>
+    <button data-s="scale">규모순</button>
+    <button data-s="tier">티어순</button>
+    <button data-s="field">분야별</button>
+    <span class="sep"></span>
+    <button id="fav">★ 즐겨찾기</button>
+    <button id="sub-only" aria-pressed="true">제출 마감만</button>
+    <input type="search" id="q" placeholder="학회 검색">
+  </div>
 </div>
 
 <section id="v-list"></section>
 
 <section id="v-cyc" hidden>
-  <div class="cyc"><table>
-    <thead><tr><th class="nm">학회</th></tr></thead>
-    <tbody></tbody>
-  </table></div>
-  <p class="legend">
-    <span>● 마감</span><span>■ 개최</span>
-    <span style="opacity:.45">흐림 = 추정/미공지</span>
-    <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
-  </p>
+  <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
+  <p class="legend"><span>● 제출 마감</span><span>■ 개최</span>
+    <span style="opacity:.5">흐림 = 추정/미공지</span>
+    <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span></p>
 </section>
+
+<section id="v-src" hidden></section>
 
 <p class="foot" id="foot"></p>
 </div>
 
+<div class="veil" id="veil" hidden><div class="sheet" id="sheet"></div></div>
+
 <script>
-const DATA = {"generated": "2026-09-02", "upstream_raw": 52, "conferences": [{"id": "kdd26", "title": "KDD", "year": 2026, "full_name": "ACM SIGKDD Conference on Knowledge Discovery and Data Mining", "link": "https://kdd2026.kdd.org/", "group": "ai", "tags": ["data-mining", "machine-learning"], "city": "Jeju", "country": "Korea", "venue": "International Convention Center Jeju", "date_text": "August 9 - 13, 2026", "start": "2026-08-09", "end": "2026-08-13", "start_month": 8, "deadlines": [{"type": "abstract", "label": "Abstract submission (First Cycle)", "date": "2025-07-24", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission (First Cycle)", "date": "2025-07-31", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start (First Cycle)", "date": "2025-10-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end (First Cycle)", "date": "2025-10-18", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Notification (First Cycle)", "date": "2025-11-23", "tz": "AoE", "status": "confirmed"}, {"type": "abstract", "label": "Abstract submission (Second Cycle)", "date": "2026-02-01", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission (Second Cycle)", "date": "2026-02-08", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start (Second Cycle)", "date": "2026-04-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end (Second Cycle)", "date": "2026-04-17", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Notification (Second Cycle)", "date": "2026-05-16", "tz": "AoE", "status": "confirmed"}], "source": "https://kdd2026.kdd.org/", "verified": ""}, {"id": "ijcai26", "title": "IJCAI", "year": 2026, "full_name": "International Joint Conference on Artificial Intelligence", "link": "https://2026.ijcai.org/", "group": "ai", "tags": ["machine-learning"], "city": "Bremen", "country": "Germany", "venue": "Bremen Exhibition Center", "date_text": "August 15-21, 2026", "start": "2026-08-15", "end": "2026-08-21", "start_month": 8, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-01-12", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Full paper submission deadline", "date": "2026-01-19", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Phase I notification", "date": "2026-03-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author response period start", "date": "2026-04-07", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author response period end", "date": "2026-04-10", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper notification", "date": "2026-04-29", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera ready deadline", "date": "2026-05-15", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.ijcai.org/", "verified": ""}, {"id": "siggraph26", "title": "SIGGRAPH", "year": 2026, "full_name": "Conference on Computer Graphics and Interactive Techniques", "link": "https://s2026.siggraph.org/", "group": "ai", "tags": ["computer-graphics"], "city": "Los Angeles", "country": "United States", "venue": "Los Angeles Convention Center, Los Angeles, California", "date_text": "July 19-23, 2026", "start": "2026-07-19", "end": "2026-07-23", "start_month": 7, "deadlines": [{"type": "submission", "label": "Art Papers deadline", "date": "2026-01-13", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Volunteers Team Leader Applications deadline", "date": "2026-01-13", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Technical Papers submission form deadline", "date": "2026-01-15", "tz": "UTC", "status": "confirmed"}, {"type": "paper", "label": "Technical Papers deadline", "date": "2026-01-22", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Upload and conflicts deadline", "date": "2026-01-23", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Art Gallery deadline", "date": "2026-01-27", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Technical Workshops deadline", "date": "2026-01-27", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Talks, Production Sessions, Panels, Courses, Educator's Forum, Spatial Storytelling, Immersive Pavilion, Emerging Technologies deadline", "date": "2026-02-10", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Volunteers Applications deadline", "date": "2026-02-10", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Computer Animation Festival deadline", "date": "2026-03-17", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Frontiers deadline", "date": "2026-04-07", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Real-Time Live! deadline", "date": "2026-04-07", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Posters deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Appy Hour deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Research Competition deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}], "source": "https://s2026.siggraph.org/", "verified": ""}, {"id": "miccai26", "title": "MICCAI", "year": 2026, "full_name": "International Conference on Medical Image Computing and Computer-Assisted Intervention", "link": "https://conferences.miccai.org/2026/", "group": "ai", "tags": ["computer-vision"], "city": "Strasbourg", "country": "France", "venue": "Strasbourg Convention Center", "date_text": "September 27 - October 1, 2026", "start": "2026-09-27", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-02-12", "tz": "UTC-08", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-02-26", "tz": "UTC-08", "status": "confirmed"}, {"type": "review_release", "label": "Early Acceptance & Reviews Released", "date": "2026-05-07", "tz": "UTC-08", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal Period Starts", "date": "2026-05-08", "tz": "UTC-08", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Period Ends", "date": "2026-05-14", "tz": "UTC-08", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready (Early Accepted Papers)", "date": "2026-05-25", "tz": "UTC-08", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-06-12", "tz": "UTC-08", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready (All Other Papers)", "date": "2026-06-26", "tz": "UTC-08", "status": "confirmed"}], "source": "https://conferences.miccai.org/2026/", "verified": ""}, {"id": "eccv26", "title": "ECCV", "year": 2026, "full_name": "European Conference on Computer Vision", "link": "https://eccv.ecva.net/Conferences/2026", "group": "ai", "tags": ["computer-vision"], "city": "Malmö", "country": "Sweden", "venue": "Malmö Arena and Malmömässan", "date_text": "September 8-12, 2026", "start": "2026-09-08", "end": "2026-09-12", "start_month": 9, "deadlines": [{"type": "submission", "label": "Tutorial Proposal Submission", "date": "2026-02-15", "tz": "AoE", "status": "confirmed"}, {"type": "registration", "label": "Paper Registration", "date": "2026-02-26", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Workshop Proposal Submission", "date": "2026-02-27", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-03-05", "tz": "UTC", "status": "confirmed"}, {"type": "supplementary", "label": "Supplemental Materials", "date": "2026-03-12", "tz": "UTC", "status": "confirmed"}, {"type": "notification", "label": "Tutorial/Workshop Decisions", "date": "2026-04-12", "tz": "UTC", "status": "confirmed"}, {"type": "review_release", "label": "Reviews Released to Authors", "date": "2026-05-02", "tz": "UTC", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Deadline", "date": "2026-05-11", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "AI Art Submission", "date": "2026-06-14", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-06-17", "tz": "UTC", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera Ready Deadline", "date": "2026-06-26", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "AI Art Acceptance Notification", "date": "2026-06-29", "tz": "AoE", "status": "confirmed"}], "source": "https://eccv.ecva.net/Conferences/2026", "verified": ""}, {"id": "interspeech2026", "title": "Interspeech", "year": 2026, "full_name": "Interspeech", "link": "https://interspeech2026.org", "group": "ai", "tags": ["speech", "signal-processing"], "city": "Sydney", "country": "Australia", "venue": "International Convention Centre (ICC) Sydney", "date_text": "September 28-October 1, 2026", "start": "2026-09-28", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "submission", "label": "Paper submission deadline", "date": "2026-02-25", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Paper update deadline", "date": "2026-03-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start", "date": "2026-04-24", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end", "date": "2026-05-01", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper acceptance notification", "date": "2026-06-05", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready paper submission", "date": "2026-06-19", "tz": "AoE", "status": "confirmed"}], "source": "https://interspeech2026.org", "verified": ""}, {"id": "iros26", "title": "IROS", "year": 2026, "full_name": "IEEE\\RSJ International Conference on Intelligent Robots and Systems", "link": "https://2026.ieee-iros.org/", "group": "ai", "tags": ["robotics"], "city": "Pittsburgh", "country": "USA", "venue": "David L. Lawrence Convention Center", "date_text": "September 27 - October 1, 2026", "start": "2026-09-27", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2026-03-02", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper video submission deadline", "date": "2026-03-07", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper acceptance notification", "date": "2026-06-16", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Final paper submission deadline", "date": "2026-07-10", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.ieee-iros.org/", "verified": ""}, {"id": "colm26", "title": "COLM", "year": 2026, "full_name": "Conference on Language Modeling", "link": "https://colmweb.org/", "group": "ai", "tags": ["natural-language-processing", "large-language-models"], "city": "San Francisco", "country": "USA", "venue": "Hilton San Francisco Union Square, USA", "date_text": "October 6-9, 2026", "start": "2026-10-06", "end": "2026-10-09", "start_month": 10, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-03-26", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-03-31", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal Period Start", "date": "2026-05-22", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Period End", "date": "2026-06-08", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Decision Notification", "date": "2026-07-08", "tz": "AoE", "status": "confirmed"}], "source": "https://colmweb.org/", "verified": ""}, {"id": "neurips26", "title": "NeurIPS", "year": 2026, "full_name": "Conference on Neural Information Processing Systems", "link": "https://neurips.cc/", "group": "ai", "tags": ["machine-learning"], "city": "Sydney", "country": "Australia", "venue": "International Convention Centre, Sydney, Australia (Main venue, Dec 6-12). Satellite events at Georgia World Congress Center, Atlanta, USA (Dec 9-13) and Paris, France (Dec 9-13).", "date_text": "December 6-12, 2026", "start": "2026-12-06", "end": "2026-12-12", "start_month": 12, "deadlines": [{"type": "abstract", "label": "Abstract registration deadline", "date": "2026-05-04", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-05-06", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary materials deadline", "date": "2026-05-06", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Reviews released to authors", "date": "2026-07-22", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author + Reviewer + AC Discussion Period starts", "date": "2026-07-27", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author + Reviewer + AC Discussion Period ends", "date": "2026-08-03", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Author notification", "date": "2026-09-24", "tz": "AoE", "status": "confirmed"}], "source": "https://neurips.cc/", "verified": ""}, {"id": "emnlp26", "title": "EMNLP", "year": 2026, "full_name": "The annual Conference on Empirical Methods in Natural Language Processing", "link": "https://2026.emnlp.org/", "group": "ai", "tags": ["natural-language-processing"], "city": "Budapest", "country": "Hungary", "venue": "Hungexpo, Budapest, Hungary", "date_text": "October 24 - 29, 2026", "start": "2026-10-24", "end": "2026-10-29", "start_month": 10, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2026-05-25", "tz": "AoE", "status": "confirmed"}, {"type": "reviewer_registration", "label": "Reviewer registration deadline", "date": "2026-05-27", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author response period start", "date": "2026-07-07", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author response period end", "date": "2026-07-13", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Meta review release", "date": "2026-07-30", "tz": "AoE", "status": "confirmed"}, {"type": "commitment_deadline", "label": "EMNLP commitment deadline", "date": "2026-08-02", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Author notification date", "date": "2026-08-20", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-08-30", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.emnlp.org/", "verified": ""}, {"id": "corl26", "title": "CoRL", "year": 2026, "full_name": "The Conference on Robot Learning", "link": "https://www.corl.org/", "group": "ai", "tags": ["machine-learning", "robotics"], "city": "Austin", "country": "United States", "venue": "JW Marriott Austin, 110 E 2nd St, Austin, TX 78701", "date_text": "November 9-12, 2026", "start": "2026-11-09", "end": "2026-11-12", "start_month": 11, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-05-26", "tz": "UTC", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-05-29", "tz": "UTC", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-10-12", "tz": "AoE", "status": "confirmed"}], "source": "https://www.corl.org/", "verified": ""}, {"id": "bernstein26", "title": "Bernstein", "year": 2026, "full_name": "Bernstein Conference on Computational Neuroscience", "link": "https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/", "group": "neuro", "tags": ["computational-neuroscience"], "city": "Frankfurt am Main", "country": "Germany", "venue": "Goethe University Campus Westend", "date_text": "September 28 - October 1, 2026", "start": "2026-09-28", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "abstract", "label": "Contributed talk abstract (closed)", "date": "2026-05-27", "tz": "CEST", "status": "confirmed"}, {"type": "abstract_late", "label": "Poster abstract (closed)", "date": "2026-07-01", "tz": "CEST", "status": "confirmed"}], "source": "https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/", "verified": "2026-09-02"}, {"id": "sfn26", "title": "SfN", "year": 2026, "full_name": "Society for Neuroscience Annual Meeting (Neuroscience 2026)", "link": "https://www.sfn.org/meetings/neuroscience-2026", "group": "neuro", "tags": ["neuroscience"], "city": "Washington, D.C.", "country": "USA", "venue": "Walter E. Washington Convention Center", "date_text": "November 14-18, 2026", "start": "2026-11-14", "end": "2026-11-18", "start_month": 11, "deadlines": [{"type": "abstract", "label": "Regular abstract deadline (closed)", "date": "2026-06-10", "tz": "UTC-4", "status": "confirmed"}, {"type": "abstract_late", "label": "Late-breaking abstract deadline", "date": "2026-09-15", "tz": "UTC-4", "status": "confirmed"}], "source": "https://www.sfn.org/meetings/neuroscience-2026/general-information/dates-and-deadlines", "verified": "2026-09-02"}, {"id": "ksbns26", "title": "KSBNS", "year": 2026, "full_name": "한국뇌신경과학회 제29회 정기학술대회 (K-Brain 2026)", "link": "https://www.ksbns2026.org/", "group": "neuro", "tags": ["neuroscience", "korea"], "city": "대전", "country": "Korea", "venue": "대전컨벤션센터 (DCC)", "date_text": "September 6-8, 2026", "start": "2026-09-06", "end": "2026-09-08", "start_month": 9, "deadlines": [{"type": "abstract", "label": "초록 접수 마감 (마감됨)", "date": "2026-06-12", "tz": "KST", "status": "confirmed"}], "source": "https://www.ksbns2026.org/", "verified": "2026-09-02"}, {"id": "wacv27", "title": "WACV", "year": 2027, "full_name": "IEEE/CVF Winter Conference on Applications of Computer Vision", "link": "https://wacv.thecvf.com/", "group": "ai", "tags": ["machine-learning", "computer-vision"], "city": "Buena Vista, FL", "country": "USA", "venue": "Disney Springs, Buena Vista, FL", "date_text": "January 4 - January 8, 2027", "start": "2027-01-04", "end": "2027-01-08", "start_month": 1, "deadlines": [{"type": "registration", "label": "Round 1 Paper Registration", "date": "2026-06-19", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Round 1 Paper Submission", "date": "2026-06-26", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Round 1 Supplementary Material", "date": "2026-06-28", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Round 1 Reviews and Decisions To Authors", "date": "2026-08-09", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_and_revision", "label": "Round 1 Rebuttal and Revision Submission", "date": "2026-08-21", "tz": "AoE", "status": "confirmed"}, {"type": "registration", "label": "Round 2 New Paper Registration", "date": "2026-08-21", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Round 2 Paper Submissions", "date": "2026-08-28", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Round 2 Supplemental Material", "date": "2026-08-30", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Round 2 Reviews and Final Decisions to Authors", "date": "2026-10-09", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Round 1 Final Decisions Released to Authors", "date": "2026-10-09", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera Ready Both Rounds", "date": "2026-11-02", "tz": "AoE", "status": "confirmed"}], "source": "https://wacv.thecvf.com/", "verified": ""}, {"id": "aaai27", "title": "AAAI", "year": 2027, "full_name": "AAAI Conference on Artificial Intelligence", "link": "https://aaai.org/conference/aaai/aaai-27/", "group": "ai", "tags": ["data-mining", "machine-learning", "natural-language-processing", "computer-vision"], "city": "Montréal", "country": "Canada", "venue": "Palais des congrès de Montréal, Montréal, Canada", "date_text": "February 16 - 23, 2027", "start": "2027-02-16", "end": "2027-02-23", "start_month": 2, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-07-21", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-07-28", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary material and code deadline", "date": "2026-07-31", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Phase 1 rejection notifications", "date": "2026-09-24", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author feedback window start", "date": "2026-10-19", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author feedback window end", "date": "2026-10-25", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final acceptance/rejection notices", "date": "2026-11-30", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-12-14", "tz": "AoE", "status": "confirmed"}], "source": "https://aaai.org/conference/aaai/aaai-27/", "verified": ""}, {"id": "3dv27", "title": "3DV", "year": 2027, "full_name": "International Conference on 3D Vision", "link": "https://3dvconf.github.io/2027/", "group": "ai", "tags": ["machine-learning", "computer-vision"], "city": "Thessaloniki", "country": "Greece", "venue": "Thessaloniki Concert Hall (M2 building), Thessaloniki, Greece", "date_text": "April 6-9, 2027", "start": "2027-04-06", "end": "2027-04-09", "start_month": 4, "deadlines": [{"type": "submission", "label": "Paper Submission Deadline", "date": "2026-08-28", "tz": "UTC-7", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary Material Deadline", "date": "2026-09-02", "tz": "UTC-7", "status": "confirmed"}, {"type": "notification", "label": "Preliminary Notification", "date": "2026-10-27", "tz": "UTC-7", "status": "confirmed"}, {"type": "notification", "label": "Final Notification", "date": "2026-12-02", "tz": "UTC-7", "status": "confirmed"}], "source": "https://3dvconf.github.io/2027/", "verified": ""}, {"id": "icra27", "title": "ICRA", "year": 2027, "full_name": "IEEE International Conference on Robotics and Automation", "link": "https://2027.ieee-icra.org/", "group": "ai", "tags": ["robotics", "computer-vision", "machine-learning"], "city": "Seoul", "country": "South Korea", "venue": "COEX, Seoul, South Korea", "date_text": "May 24 - 28, 2027", "start": "2027-05-24", "end": "2027-05-28", "start_month": 5, "deadlines": [{"type": "submission", "label": "Paper Submission", "date": "2026-09-15", "tz": "PST", "status": "confirmed"}, {"type": "notification", "label": "Notification of Acceptance", "date": "2027-01-31", "tz": "PST", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready Submission", "date": "2027-03-06", "tz": "PST", "status": "confirmed"}], "source": "https://2027.ieee-icra.org/", "verified": ""}, {"id": "iclr27", "title": "ICLR", "year": 2027, "full_name": "The Fifteenth International Conference on Learning Representations", "link": "https://iclr.cc/Conferences/2027", "group": "ai", "tags": ["machine-learning", "computer-vision", "natural-language-processing", "signal-processing", "representation-learning"], "city": "San Francisco", "country": "United States", "venue": "Moscone Center, San Francisco, CA", "date_text": "April 26-30, 2027", "start": "2027-04-26", "end": "2027-04-30", "start_month": 4, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-09-18", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Paper Submission", "date": "2026-09-25", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Reviews Released", "date": "2026-11-05", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author-Reviewer Discussion End", "date": "2026-11-18", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-12-16", "tz": "AoE", "status": "confirmed"}], "source": "https://iclr.cc/Conferences/2027", "verified": ""}, {"id": "cosyne27", "title": "COSYNE", "year": 2027, "full_name": "Computational and Systems Neuroscience", "link": "https://www.cosyne.org/", "group": "neuro", "tags": ["computational-neuroscience", "systems-neuroscience", "neuroai"], "city": "Montréal", "country": "Canada", "venue": "Fairmont The Queen Elizabeth (main) / Le Westin Montréal (workshops 15-16 Mar)", "date_text": "March 11-14, 2027 (workshops 15-16)", "start": "2027-03-11", "end": "2027-03-16", "start_month": 3, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-10-16", "tz": "AoE", "status": "estimated"}, {"type": "notification", "label": "Author notification", "date": "2026-12-15", "tz": "AoE", "status": "tba"}], "source": "https://www.cosyne.org/abstracts-submission", "verified": "2026-09-02"}, {"id": "vss27", "title": "VSS", "year": 2027, "full_name": "Vision Sciences Society Annual Meeting", "link": "https://www.visionsciences.org/future-meetings/", "group": "neuro", "tags": ["vision", "cognitive-science"], "city": "Seattle", "country": "USA", "venue": "Seattle, Washington", "date_text": "May 21-25, 2027", "start": "2027-05-21", "end": "2027-05-25", "start_month": 5, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-12-04", "tz": "UTC-5", "status": "estimated"}], "source": "https://www.visionsciences.org/future-meetings/", "verified": "2026-09-02"}, {"id": "ohbm27", "title": "OHBM", "year": 2027, "full_name": "Organization for Human Brain Mapping Annual Meeting", "link": "https://www.humanbrainmapping.org/ohbm-2027/", "group": "neuro", "tags": ["neuroimaging"], "city": "Toronto", "country": "Canada", "venue": "Metro Toronto Convention Centre", "date_text": "June 26-30, 2027", "start": "2027-06-26", "end": "2027-06-30", "start_month": 6, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-12-10", "tz": "AoE", "status": "estimated"}, {"type": "notification", "label": "Poster accept/reject notification", "date": "2027-02-15", "tz": "AoE", "status": "tba"}], "source": "https://www.humanbrainmapping.org/ohbm-2027/", "verified": "2026-09-02"}, {"id": "cogsci27", "title": "CogSci", "year": 2027, "full_name": "Annual Meeting of the Cognitive Science Society", "link": "https://cognitivesciencesociety.org/", "group": "neuro", "tags": ["cognitive-science"], "city": "San Francisco", "country": "USA", "venue": "San Francisco, USA", "date_text": "July 30 - August 2, 2027", "start": "2027-07-30", "end": "2027-08-02", "start_month": 7, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2027-02-01", "tz": "AoE", "status": "estimated"}], "source": "https://cognitivesciencesociety.org/future-conference-organizers/", "verified": "2026-09-02"}, {"id": "cns27", "title": "CNS*", "year": 2027, "full_name": "OCNS Annual Computational Neuroscience Meeting", "link": "https://www.cnsorg.org/future-meetings", "group": "neuro", "tags": ["computational-neuroscience"], "city": "Gran Canaria", "country": "Spain", "venue": "Gran Canaria, Spain", "date_text": "July 10-14, 2027", "start": "2027-07-10", "end": "2027-07-14", "start_month": 7, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2027-02-15", "tz": "AoE", "status": "estimated"}], "source": "https://www.cnsorg.org/future-meetings", "verified": "2026-09-02"}, {"id": "ccn27", "title": "CCN", "year": 2027, "full_name": "Cognitive Computational Neuroscience", "link": "https://2027.ccneuro.org/", "group": "neuro", "tags": ["computational-neuroscience", "cognitive-science", "neuroai"], "city": "Edinburgh", "country": "UK", "venue": "Edinburgh, UK", "date_text": "July 26-29, 2027", "start": "2027-07-26", "end": "2027-07-29", "start_month": 7, "deadlines": [{"type": "paper", "label": "Submission deadline", "date": "2027-04-15", "tz": "AoE", "status": "estimated"}], "source": "https://2027.ccneuro.org/", "verified": "2026-09-02"}, {"id": "naacl27", "title": "NAACL", "year": 2027, "full_name": "The Annual Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics", "link": "https://2027.naacl.org/", "group": "ai", "tags": ["natural-language-processing"], "city": "San Francisco", "country": "USA", "venue": "", "date_text": "June 1-5, 2027", "start": "2027-06-01", "end": "2027-06-05", "start_month": 6, "deadlines": [], "source": "https://2027.naacl.org/", "verified": ""}, {"id": "cvpr27", "title": "CVPR", "year": 2027, "full_name": "IEEE/CVF Conference on Computer Vision and Pattern Recognition", "link": "https://cvpr.thecvf.com/", "group": "ai", "tags": ["computer-vision", "robotics", "machine-learning", "optimization-methods", "representation-learning"], "city": "Seattle", "country": "USA", "venue": "Seattle Convention Center, Seattle, USA", "date_text": "June 19-26, 2027", "start": "2027-06-19", "end": "2027-06-26", "start_month": 6, "deadlines": [], "source": "https://cvpr.thecvf.com/", "verified": ""}, {"id": "siggraph27", "title": "SIGGRAPH", "year": 2027, "full_name": "Conference on Computer Graphics and Interactive Techniques", "link": "https://www.siggraph.org/", "group": "ai", "tags": ["computer-graphics"], "city": "Anaheim", "country": "United States", "venue": "Anaheim Convention Center, Anaheim, California", "date_text": "August 8-12, 2027", "start": "2027-08-08", "end": "2027-08-12", "start_month": 8, "deadlines": [], "source": "https://www.siggraph.org/", "verified": ""}]};
+const DATA = {"generated": "2026-09-02", "upstream_raw": 52, "rates_raw": 93, "conferences": [{"id": "kdd26", "title": "KDD", "year": 2026, "full_name": "ACM SIGKDD Conference on Knowledge Discovery and Data Mining", "link": "https://kdd2026.kdd.org/", "group": "ai", "tier": 3, "field": "ml", "tags": ["data-mining", "machine-learning"], "scale": null, "city": "Jeju", "country": "Korea", "venue": "International Convention Center Jeju", "date_text": "August 9 - 13, 2026", "start": "2026-08-09", "end": "2026-08-13", "start_month": 8, "deadlines": [{"type": "abstract", "label": "Abstract submission (First Cycle)", "date": "2025-07-24", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission (First Cycle)", "date": "2025-07-31", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start (First Cycle)", "date": "2025-10-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end (First Cycle)", "date": "2025-10-18", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Notification (First Cycle)", "date": "2025-11-23", "tz": "AoE", "status": "confirmed"}, {"type": "abstract", "label": "Abstract submission (Second Cycle)", "date": "2026-02-01", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission (Second Cycle)", "date": "2026-02-08", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start (Second Cycle)", "date": "2026-04-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end (Second Cycle)", "date": "2026-04-17", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Notification (Second Cycle)", "date": "2026-05-16", "tz": "AoE", "status": "confirmed"}], "source": "https://kdd2026.kdd.org/", "verified": "", "history": [], "links": [["통계·추세", "https://papercopilot.com/statistics/kdd-statistics/"], ["OpenReview", "https://openreview.net/search?query=KDD"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "ijcai26", "title": "IJCAI", "year": 2026, "full_name": "International Joint Conference on Artificial Intelligence", "link": "https://2026.ijcai.org/", "group": "ai", "tier": 3, "field": "ml", "tags": ["machine-learning"], "scale": {"metric": "submitted", "value": 5651, "year": 2024, "source": "https://csconfstats.xoveexu.com/"}, "city": "Bremen", "country": "Germany", "venue": "Bremen Exhibition Center", "date_text": "August 15-21, 2026", "start": "2026-08-15", "end": "2026-08-21", "start_month": 8, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-01-12", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Full paper submission deadline", "date": "2026-01-19", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Phase I notification", "date": "2026-03-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author response period start", "date": "2026-04-07", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author response period end", "date": "2026-04-10", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper notification", "date": "2026-04-29", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera ready deadline", "date": "2026-05-15", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.ijcai.org/", "verified": "", "history": [{"year": 2022, "submitted": 4537, "accepted": 679, "rate": 0.1497, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2024, "submitted": 5651, "accepted": 791, "rate": 0.14, "source": "https://csconfstats.xoveexu.com/"}], "links": [["통계·추세", "https://papercopilot.com/statistics/ijcai-statistics/"], ["OpenReview", "https://openreview.net/search?query=IJCAI"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "siggraph26", "title": "SIGGRAPH", "year": 2026, "full_name": "Conference on Computer Graphics and Interactive Techniques", "link": "https://s2026.siggraph.org/", "group": "ai", "tier": 1, "field": "vision", "tags": ["computer-graphics"], "scale": {"metric": "submitted", "value": 844, "year": 2024, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3641519"}, "city": "Los Angeles", "country": "United States", "venue": "Los Angeles Convention Center, Los Angeles, California", "date_text": "July 19-23, 2026", "start": "2026-07-19", "end": "2026-07-23", "start_month": 7, "deadlines": [{"type": "submission", "label": "Art Papers deadline", "date": "2026-01-13", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Volunteers Team Leader Applications deadline", "date": "2026-01-13", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Technical Papers submission form deadline", "date": "2026-01-15", "tz": "UTC", "status": "confirmed"}, {"type": "paper", "label": "Technical Papers deadline", "date": "2026-01-22", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Upload and conflicts deadline", "date": "2026-01-23", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Art Gallery deadline", "date": "2026-01-27", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Technical Workshops deadline", "date": "2026-01-27", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Talks, Production Sessions, Panels, Courses, Educator's Forum, Spatial Storytelling, Immersive Pavilion, Emerging Technologies deadline", "date": "2026-02-10", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Volunteers Applications deadline", "date": "2026-02-10", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Computer Animation Festival deadline", "date": "2026-03-17", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Frontiers deadline", "date": "2026-04-07", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Real-Time Live! deadline", "date": "2026-04-07", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Posters deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Appy Hour deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Student Research Competition deadline", "date": "2026-04-21", "tz": "UTC", "status": "confirmed"}], "source": "https://s2026.siggraph.org/", "verified": "", "history": [{"year": 2022, "submitted": 610, "accepted": 133, "rate": 0.218, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2023, "submitted": 611, "accepted": 212, "rate": 0.347, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3588432"}, {"year": 2024, "submitted": 844, "accepted": 252, "rate": 0.2986, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3641519"}], "links": [["통계·추세", "https://papercopilot.com/statistics/siggraph-statistics/"], ["OpenReview", "https://openreview.net/search?query=SIGGRAPH"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "miccai26", "title": "MICCAI", "year": 2026, "full_name": "International Conference on Medical Image Computing and Computer-Assisted Intervention", "link": "https://conferences.miccai.org/2026/", "group": "ai", "tier": 2, "field": "medical", "tags": ["computer-vision"], "scale": null, "city": "Strasbourg", "country": "France", "venue": "Strasbourg Convention Center", "date_text": "September 27 - October 1, 2026", "start": "2026-09-27", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-02-12", "tz": "UTC-08", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-02-26", "tz": "UTC-08", "status": "confirmed"}, {"type": "review_release", "label": "Early Acceptance & Reviews Released", "date": "2026-05-07", "tz": "UTC-08", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal Period Starts", "date": "2026-05-08", "tz": "UTC-08", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Period Ends", "date": "2026-05-14", "tz": "UTC-08", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready (Early Accepted Papers)", "date": "2026-05-25", "tz": "UTC-08", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-06-12", "tz": "UTC-08", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready (All Other Papers)", "date": "2026-06-26", "tz": "UTC-08", "status": "confirmed"}], "source": "https://conferences.miccai.org/2026/", "verified": "", "history": [], "links": [["OpenReview", "https://openreview.net/search?query=MICCAI"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "eccv26", "title": "ECCV", "year": 2026, "full_name": "European Conference on Computer Vision", "link": "https://eccv.ecva.net/Conferences/2026", "group": "ai", "tier": 1, "field": "vision", "tags": ["computer-vision"], "scale": {"metric": "submitted", "value": 8585, "year": 2024, "source": "https://csconfstats.xoveexu.com/"}, "city": "Malmö", "country": "Sweden", "venue": "Malmö Arena and Malmömässan", "date_text": "September 8-12, 2026", "start": "2026-09-08", "end": "2026-09-12", "start_month": 9, "deadlines": [{"type": "submission", "label": "Tutorial Proposal Submission", "date": "2026-02-15", "tz": "AoE", "status": "confirmed"}, {"type": "registration", "label": "Paper Registration", "date": "2026-02-26", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "Workshop Proposal Submission", "date": "2026-02-27", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-03-05", "tz": "UTC", "status": "confirmed"}, {"type": "supplementary", "label": "Supplemental Materials", "date": "2026-03-12", "tz": "UTC", "status": "confirmed"}, {"type": "notification", "label": "Tutorial/Workshop Decisions", "date": "2026-04-12", "tz": "UTC", "status": "confirmed"}, {"type": "review_release", "label": "Reviews Released to Authors", "date": "2026-05-02", "tz": "UTC", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Deadline", "date": "2026-05-11", "tz": "UTC", "status": "confirmed"}, {"type": "submission", "label": "AI Art Submission", "date": "2026-06-14", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-06-17", "tz": "UTC", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera Ready Deadline", "date": "2026-06-26", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "AI Art Acceptance Notification", "date": "2026-06-29", "tz": "AoE", "status": "confirmed"}], "source": "https://eccv.ecva.net/Conferences/2026", "verified": "", "history": [{"year": 2022, "submitted": 5804, "accepted": 1645, "rate": 0.2834, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2024, "submitted": 8585, "accepted": 2395, "rate": 0.279, "source": "https://csconfstats.xoveexu.com/"}], "links": [["통계·추세", "https://papercopilot.com/statistics/eccv-statistics/"], ["OpenReview", "https://openreview.net/search?query=ECCV"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "interspeech2026", "title": "Interspeech", "year": 2026, "full_name": "Interspeech", "link": "https://interspeech2026.org", "group": "ai", "tier": 3, "field": "nlp", "tags": ["speech", "signal-processing"], "scale": {"metric": "submitted", "value": 2138, "year": 2024, "source": "https://csconfstats.xoveexu.com/"}, "city": "Sydney", "country": "Australia", "venue": "International Convention Centre (ICC) Sydney", "date_text": "September 28-October 1, 2026", "start": "2026-09-28", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "submission", "label": "Paper submission deadline", "date": "2026-02-25", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Paper update deadline", "date": "2026-03-04", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal period start", "date": "2026-04-24", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal period end", "date": "2026-05-01", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper acceptance notification", "date": "2026-06-05", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready paper submission", "date": "2026-06-19", "tz": "AoE", "status": "confirmed"}], "source": "https://interspeech2026.org", "verified": "", "history": [{"year": 2021, "submitted": 1990, "accepted": 963, "rate": 0.4839, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2024, "submitted": 2138, "accepted": 1029, "rate": 0.4813, "source": "https://csconfstats.xoveexu.com/"}], "links": [["OpenReview", "https://openreview.net/search?query=Interspeech"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "iros26", "title": "IROS", "year": 2026, "full_name": "IEEE\\RSJ International Conference on Intelligent Robots and Systems", "link": "https://2026.ieee-iros.org/", "group": "ai", "tier": 3, "field": "robotics", "tags": ["robotics"], "scale": {"metric": "submitted", "value": 4348, "year": 2026, "source": "https://www.xiaohongshu.com/explore/6a31fd4600000000070201ae?xsec_token=ABSd6qmeYxHvw1BGgCCqULOvOsyDchtfb9pi_i4qQvGSc=&xsec_source=pc_search&source=web_explore_feed"}, "city": "Pittsburgh", "country": "USA", "venue": "David L. Lawrence Convention Center", "date_text": "September 27 - October 1, 2026", "start": "2026-09-27", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2026-03-02", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper video submission deadline", "date": "2026-03-07", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Paper acceptance notification", "date": "2026-06-16", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Final paper submission deadline", "date": "2026-07-10", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.ieee-iros.org/", "verified": "", "history": [{"year": 2022, "submitted": 3579, "accepted": 1716, "rate": 0.4795, "source": "https://github.com/lixin4ever/Conference-Acceptance-Rate"}, {"year": 2026, "submitted": 4348, "accepted": 1585, "rate": 0.3645, "source": "https://www.xiaohongshu.com/explore/6a31fd4600000000070201ae?xsec_token=ABSd6qmeYxHvw1BGgCCqULOvOsyDchtfb9pi_i4qQvGSc=&xsec_source=pc_search&source=web_explore_feed"}], "links": [["통계·추세", "https://papercopilot.com/statistics/iros-statistics/"], ["OpenReview", "https://openreview.net/search?query=IROS"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "colm26", "title": "COLM", "year": 2026, "full_name": "Conference on Language Modeling", "link": "https://colmweb.org/", "group": "ai", "tier": 2, "field": "ml", "tags": ["natural-language-processing", "large-language-models"], "scale": null, "city": "San Francisco", "country": "USA", "venue": "Hilton San Francisco Union Square, USA", "date_text": "October 6-9, 2026", "start": "2026-10-06", "end": "2026-10-09", "start_month": 10, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-03-26", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper Submission", "date": "2026-03-31", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Rebuttal Period Start", "date": "2026-05-22", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Rebuttal Period End", "date": "2026-06-08", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Decision Notification", "date": "2026-07-08", "tz": "AoE", "status": "confirmed"}], "source": "https://colmweb.org/", "verified": "", "history": [], "links": [["통계·추세", "https://papercopilot.com/statistics/colm-statistics/"], ["OpenReview", "https://openreview.net/search?query=COLM"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "neurips26", "title": "NeurIPS", "year": 2026, "full_name": "Conference on Neural Information Processing Systems", "link": "https://neurips.cc/", "group": "ai", "tier": 1, "field": "ml", "tags": ["machine-learning"], "scale": {"metric": "submitted", "value": 15671, "year": 2024, "source": "https://media.neurips.cc/Conferences/NeurIPS2024/NeurIPS2024-Fact_Sheet.pdf"}, "city": "Sydney", "country": "Australia", "venue": "International Convention Centre, Sydney, Australia (Main venue, Dec 6-12). Satellite events at Georgia World Congress Center, Atlanta, USA (Dec 9-13) and Paris, France (Dec 9-13).", "date_text": "December 6-12, 2026", "start": "2026-12-06", "end": "2026-12-12", "start_month": 12, "deadlines": [{"type": "abstract", "label": "Abstract registration deadline", "date": "2026-05-04", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-05-06", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary materials deadline", "date": "2026-05-06", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Reviews released to authors", "date": "2026-07-22", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author + Reviewer + AC Discussion Period starts", "date": "2026-07-27", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author + Reviewer + AC Discussion Period ends", "date": "2026-08-03", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Author notification", "date": "2026-09-24", "tz": "AoE", "status": "confirmed"}], "source": "https://neurips.cc/", "verified": "", "history": [{"year": 2023, "submitted": 12343, "accepted": 3218, "rate": 0.2607, "source": "https://github.com/lixin4ever/Conference-Acceptance-Rate"}, {"year": 2024, "submitted": 15671, "accepted": 4043, "rate": 0.258, "source": "https://media.neurips.cc/Conferences/NeurIPS2024/NeurIPS2024-Fact_Sheet.pdf"}], "links": [["통계·추세", "https://papercopilot.com/statistics/neurips-statistics/"], ["OpenReview", "https://openreview.net/search?query=NeurIPS"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "emnlp26", "title": "EMNLP", "year": 2026, "full_name": "The annual Conference on Empirical Methods in Natural Language Processing", "link": "https://2026.emnlp.org/", "group": "ai", "tier": 2, "field": "nlp", "tags": ["natural-language-processing"], "scale": {"metric": "submitted", "value": 4909, "year": 2023, "source": "https://csconfstats.xoveexu.com/"}, "city": "Budapest", "country": "Hungary", "venue": "Hungexpo, Budapest, Hungary", "date_text": "October 24 - 29, 2026", "start": "2026-10-24", "end": "2026-10-29", "start_month": 10, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2026-05-25", "tz": "AoE", "status": "confirmed"}, {"type": "reviewer_registration", "label": "Reviewer registration deadline", "date": "2026-05-27", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author response period start", "date": "2026-07-07", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author response period end", "date": "2026-07-13", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Meta review release", "date": "2026-07-30", "tz": "AoE", "status": "confirmed"}, {"type": "commitment_deadline", "label": "EMNLP commitment deadline", "date": "2026-08-02", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Author notification date", "date": "2026-08-20", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-08-30", "tz": "AoE", "status": "confirmed"}], "source": "https://2026.emnlp.org/", "verified": "", "history": [{"year": 2022, "submitted": 3242, "accepted": 715, "rate": 0.2205, "source": "https://github.com/lixin4ever/Conference-Acceptance-Rate"}, {"year": 2023, "submitted": 4909, "accepted": 1047, "rate": 0.2133, "source": "https://csconfstats.xoveexu.com/"}], "links": [["통계·추세", "https://papercopilot.com/statistics/emnlp-statistics/"], ["OpenReview", "https://openreview.net/search?query=EMNLP"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "corl26", "title": "CoRL", "year": 2026, "full_name": "The Conference on Robot Learning", "link": "https://www.corl.org/", "group": "ai", "tier": 2, "field": "robotics", "tags": ["machine-learning", "robotics"], "scale": null, "city": "Austin", "country": "United States", "venue": "JW Marriott Austin, 110 E 2nd St, Austin, TX 78701", "date_text": "November 9-12, 2026", "start": "2026-11-09", "end": "2026-11-12", "start_month": 11, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-05-26", "tz": "UTC", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-05-29", "tz": "UTC", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-10-12", "tz": "AoE", "status": "confirmed"}], "source": "https://www.corl.org/", "verified": "", "history": [], "links": [["통계·추세", "https://papercopilot.com/statistics/corl-statistics/"], ["OpenReview", "https://openreview.net/search?query=CoRL"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "bernstein26", "title": "Bernstein", "year": 2026, "full_name": "Bernstein Conference on Computational Neuroscience", "link": "https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/", "group": "neuro", "tier": 2, "field": "neuro", "tags": ["computational-neuroscience"], "scale": null, "city": "Frankfurt am Main", "country": "Germany", "venue": "Goethe University Campus Westend", "date_text": "September 28 - October 1, 2026", "start": "2026-09-28", "end": "2026-10-01", "start_month": 9, "deadlines": [{"type": "abstract", "label": "Contributed talk abstract (closed)", "date": "2026-05-27", "tz": "CEST", "status": "confirmed"}, {"type": "abstract_late", "label": "Poster abstract (closed)", "date": "2026-07-01", "tz": "CEST", "status": "confirmed"}], "source": "https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "sfn26", "title": "SfN", "year": 2026, "full_name": "Society for Neuroscience Annual Meeting (Neuroscience 2026)", "link": "https://www.sfn.org/meetings/neuroscience-2026", "group": "neuro", "tier": 1, "field": "neuro", "tags": ["neuroscience"], "scale": {"metric": "attendees", "value": 30000, "year": 2025, "source": "https://www.sfn.org/meetings/neuroscience-2025/general-information"}, "city": "Washington, D.C.", "country": "USA", "venue": "Walter E. Washington Convention Center", "date_text": "November 14-18, 2026", "start": "2026-11-14", "end": "2026-11-18", "start_month": 11, "deadlines": [{"type": "abstract", "label": "Regular abstract deadline (closed)", "date": "2026-06-10", "tz": "UTC-4", "status": "confirmed"}, {"type": "abstract_late", "label": "Late-breaking abstract deadline", "date": "2026-09-15", "tz": "UTC-4", "status": "confirmed"}], "source": "https://www.sfn.org/meetings/neuroscience-2026/general-information/dates-and-deadlines", "verified": "2026-09-02", "history": [], "links": []}, {"id": "ksbns26", "title": "KSBNS", "year": 2026, "full_name": "한국뇌신경과학회 제29회 정기학술대회 (K-Brain 2026)", "link": "https://www.ksbns2026.org/", "group": "neuro", "tier": 1, "field": "neuro", "tags": ["neuroscience", "korea"], "scale": {"metric": "attendees", "value": 2500, "year": 2026, "source": "https://www.mdon.co.kr/news/article.html?no=35343"}, "city": "대전", "country": "Korea", "venue": "대전컨벤션센터 (DCC)", "date_text": "September 6-8, 2026", "start": "2026-09-06", "end": "2026-09-08", "start_month": 9, "deadlines": [{"type": "abstract", "label": "초록 접수 마감 (마감됨)", "date": "2026-06-12", "tz": "KST", "status": "confirmed"}], "source": "https://www.ksbns2026.org/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "wacv27", "title": "WACV", "year": 2027, "full_name": "IEEE/CVF Winter Conference on Applications of Computer Vision", "link": "https://wacv.thecvf.com/", "group": "ai", "tier": 2, "field": "vision", "tags": ["machine-learning", "computer-vision"], "scale": null, "city": "Buena Vista, FL", "country": "USA", "venue": "Disney Springs, Buena Vista, FL", "date_text": "January 4 - January 8, 2027", "start": "2027-01-04", "end": "2027-01-08", "start_month": 1, "deadlines": [{"type": "registration", "label": "Round 1 Paper Registration", "date": "2026-06-19", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Round 1 Paper Submission", "date": "2026-06-26", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Round 1 Supplementary Material", "date": "2026-06-28", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Round 1 Reviews and Decisions To Authors", "date": "2026-08-09", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_and_revision", "label": "Round 1 Rebuttal and Revision Submission", "date": "2026-08-21", "tz": "AoE", "status": "confirmed"}, {"type": "registration", "label": "Round 2 New Paper Registration", "date": "2026-08-21", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Round 2 Paper Submissions", "date": "2026-08-28", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Round 2 Supplemental Material", "date": "2026-08-30", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Round 2 Reviews and Final Decisions to Authors", "date": "2026-10-09", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Round 1 Final Decisions Released to Authors", "date": "2026-10-09", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera Ready Both Rounds", "date": "2026-11-02", "tz": "AoE", "status": "confirmed"}], "source": "https://wacv.thecvf.com/", "verified": "", "history": [], "links": [["통계·추세", "https://papercopilot.com/statistics/wacv-statistics/"], ["OpenReview", "https://openreview.net/search?query=WACV"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "aaai27", "title": "AAAI", "year": 2027, "full_name": "AAAI Conference on Artificial Intelligence", "link": "https://aaai.org/conference/aaai/aaai-27/", "group": "ai", "tier": 2, "field": "ml", "tags": ["data-mining", "machine-learning", "natural-language-processing", "computer-vision"], "scale": {"metric": "submitted", "value": 23680, "year": 2026, "source": "https://csconfstats.xoveexu.com/"}, "city": "Montréal", "country": "Canada", "venue": "Palais des congrès de Montréal, Montréal, Canada", "date_text": "February 16 - 23, 2027", "start": "2027-02-16", "end": "2027-02-23", "start_month": 2, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-07-21", "tz": "AoE", "status": "confirmed"}, {"type": "paper", "label": "Paper submission deadline", "date": "2026-07-28", "tz": "AoE", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary material and code deadline", "date": "2026-07-31", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Phase 1 rejection notifications", "date": "2026-09-24", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_start", "label": "Author feedback window start", "date": "2026-10-19", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author feedback window end", "date": "2026-10-25", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final acceptance/rejection notices", "date": "2026-11-30", "tz": "AoE", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-ready deadline", "date": "2026-12-14", "tz": "AoE", "status": "confirmed"}], "source": "https://aaai.org/conference/aaai/aaai-27/", "verified": "", "history": [{"year": 2024, "submitted": 9862, "accepted": 2342, "rate": 0.2375, "source": "https://github.com/lixin4ever/Conference-Acceptance-Rate"}, {"year": 2025, "submitted": 12957, "accepted": 3032, "rate": 0.234, "source": "https://csconfstats.xoveexu.com/"}, {"year": 2026, "submitted": 23680, "accepted": 4167, "rate": 0.176, "source": "https://csconfstats.xoveexu.com/"}], "links": [["통계·추세", "https://papercopilot.com/statistics/aaai-statistics/"], ["OpenReview", "https://openreview.net/search?query=AAAI"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "3dv27", "title": "3DV", "year": 2027, "full_name": "International Conference on 3D Vision", "link": "https://3dvconf.github.io/2027/", "group": "ai", "tier": 2, "field": "vision", "tags": ["machine-learning", "computer-vision"], "scale": null, "city": "Thessaloniki", "country": "Greece", "venue": "Thessaloniki Concert Hall (M2 building), Thessaloniki, Greece", "date_text": "April 6-9, 2027", "start": "2027-04-06", "end": "2027-04-09", "start_month": 4, "deadlines": [{"type": "submission", "label": "Paper Submission Deadline", "date": "2026-08-28", "tz": "UTC-7", "status": "confirmed"}, {"type": "supplementary", "label": "Supplementary Material Deadline", "date": "2026-09-02", "tz": "UTC-7", "status": "confirmed"}, {"type": "notification", "label": "Preliminary Notification", "date": "2026-10-27", "tz": "UTC-7", "status": "confirmed"}, {"type": "notification", "label": "Final Notification", "date": "2026-12-02", "tz": "UTC-7", "status": "confirmed"}], "source": "https://3dvconf.github.io/2027/", "verified": "", "history": [], "links": [["통계·추세", "https://papercopilot.com/statistics/3dv-statistics/"], ["OpenReview", "https://openreview.net/search?query=3DV"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "icra27", "title": "ICRA", "year": 2027, "full_name": "IEEE International Conference on Robotics and Automation", "link": "https://2027.ieee-icra.org/", "group": "ai", "tier": 3, "field": "robotics", "tags": ["robotics", "computer-vision", "machine-learning"], "scale": {"metric": "submitted", "value": 3313, "year": 2022, "source": "https://github.com/emeryberger/csconferences"}, "city": "Seoul", "country": "South Korea", "venue": "COEX, Seoul, South Korea", "date_text": "May 24 - 28, 2027", "start": "2027-05-24", "end": "2027-05-28", "start_month": 5, "deadlines": [{"type": "submission", "label": "Paper Submission", "date": "2026-09-15", "tz": "PST", "status": "confirmed"}, {"type": "notification", "label": "Notification of Acceptance", "date": "2027-01-31", "tz": "PST", "status": "confirmed"}, {"type": "camera_ready", "label": "Camera-Ready Submission", "date": "2027-03-06", "tz": "PST", "status": "confirmed"}], "source": "https://2027.ieee-icra.org/", "verified": "", "history": [{"year": 2022, "submitted": 3313, "accepted": 1428, "rate": 0.431, "source": "https://github.com/emeryberger/csconferences"}], "links": [["통계·추세", "https://papercopilot.com/statistics/icra-statistics/"], ["OpenReview", "https://openreview.net/search?query=ICRA"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "iclr27", "title": "ICLR", "year": 2027, "full_name": "The Fifteenth International Conference on Learning Representations", "link": "https://iclr.cc/Conferences/2027", "group": "ai", "tier": 1, "field": "ml", "tags": ["machine-learning", "computer-vision", "natural-language-processing", "signal-processing", "representation-learning"], "scale": {"metric": "submitted", "value": 19814, "year": 2026, "source": "https://papercopilot.com/statistics/iclr-statistics/"}, "city": "San Francisco", "country": "United States", "venue": "Moscone Center, San Francisco, CA", "date_text": "April 26-30, 2027", "start": "2027-04-26", "end": "2027-04-30", "start_month": 4, "deadlines": [{"type": "abstract", "label": "Abstract Submission", "date": "2026-09-18", "tz": "AoE", "status": "confirmed"}, {"type": "submission", "label": "Paper Submission", "date": "2026-09-25", "tz": "AoE", "status": "confirmed"}, {"type": "review_release", "label": "Reviews Released", "date": "2026-11-05", "tz": "AoE", "status": "confirmed"}, {"type": "rebuttal_end", "label": "Author-Reviewer Discussion End", "date": "2026-11-18", "tz": "AoE", "status": "confirmed"}, {"type": "notification", "label": "Final Decisions", "date": "2026-12-16", "tz": "AoE", "status": "confirmed"}], "source": "https://iclr.cc/Conferences/2027", "verified": "", "history": [{"year": 2024, "submitted": 7304, "accepted": 2250, "rate": 0.3081, "source": "https://github.com/lixin4ever/Conference-Acceptance-Rate"}, {"year": 2025, "submitted": 11672, "accepted": 3704, "rate": 0.3173, "source": "https://papercopilot.com/statistics/iclr-statistics/"}, {"year": 2026, "submitted": 19814, "accepted": 5343, "rate": 0.2697, "source": "https://papercopilot.com/statistics/iclr-statistics/"}], "links": [["통계·추세", "https://papercopilot.com/statistics/iclr-statistics/"], ["OpenReview", "https://openreview.net/search?query=ICLR"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "cosyne27", "title": "COSYNE", "year": 2027, "full_name": "Computational and Systems Neuroscience", "link": "https://www.cosyne.org/", "group": "neuro", "tier": 1, "field": "neuro", "tags": ["computational-neuroscience", "systems-neuroscience", "neuroai"], "scale": null, "city": "Montréal", "country": "Canada", "venue": "Fairmont The Queen Elizabeth (main) / Le Westin Montréal (workshops 15-16 Mar)", "date_text": "March 11-14, 2027 (workshops 15-16)", "start": "2027-03-11", "end": "2027-03-16", "start_month": 3, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-10-16", "tz": "AoE", "status": "estimated"}, {"type": "notification", "label": "Author notification", "date": "2026-12-15", "tz": "AoE", "status": "tba"}], "source": "https://www.cosyne.org/abstracts-submission", "verified": "2026-09-02", "history": [], "links": []}, {"id": "vss27", "title": "VSS", "year": 2027, "full_name": "Vision Sciences Society Annual Meeting", "link": "https://www.visionsciences.org/future-meetings/", "group": "neuro", "tier": 2, "field": "cognitive", "tags": ["vision", "cognitive-science"], "scale": null, "city": "Seattle", "country": "USA", "venue": "Seattle, Washington", "date_text": "May 21-25, 2027", "start": "2027-05-21", "end": "2027-05-25", "start_month": 5, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-12-04", "tz": "UTC-5", "status": "estimated"}], "source": "https://www.visionsciences.org/future-meetings/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "ohbm27", "title": "OHBM", "year": 2027, "full_name": "Organization for Human Brain Mapping Annual Meeting", "link": "https://www.humanbrainmapping.org/ohbm-2027/", "group": "neuro", "tier": 1, "field": "neuroimaging", "tags": ["neuroimaging"], "scale": null, "city": "Toronto", "country": "Canada", "venue": "Metro Toronto Convention Centre", "date_text": "June 26-30, 2027", "start": "2027-06-26", "end": "2027-06-30", "start_month": 6, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2026-12-10", "tz": "AoE", "status": "estimated"}, {"type": "notification", "label": "Poster accept/reject notification", "date": "2027-02-15", "tz": "AoE", "status": "tba"}], "source": "https://www.humanbrainmapping.org/ohbm-2027/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "cogsci27", "title": "CogSci", "year": 2027, "full_name": "Annual Meeting of the Cognitive Science Society", "link": "https://cognitivesciencesociety.org/", "group": "neuro", "tier": 2, "field": "cognitive", "tags": ["cognitive-science"], "scale": null, "city": "San Francisco", "country": "USA", "venue": "San Francisco, USA", "date_text": "July 30 - August 2, 2027", "start": "2027-07-30", "end": "2027-08-02", "start_month": 7, "deadlines": [{"type": "paper", "label": "Paper submission deadline", "date": "2027-02-01", "tz": "AoE", "status": "estimated"}], "source": "https://cognitivesciencesociety.org/future-conference-organizers/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "cns27", "title": "CNS*", "year": 2027, "full_name": "OCNS Annual Computational Neuroscience Meeting", "link": "https://www.cnsorg.org/future-meetings", "group": "neuro", "tier": 2, "field": "neuro", "tags": ["computational-neuroscience"], "scale": null, "city": "Gran Canaria", "country": "Spain", "venue": "Gran Canaria, Spain", "date_text": "July 10-14, 2027", "start": "2027-07-10", "end": "2027-07-14", "start_month": 7, "deadlines": [{"type": "abstract", "label": "Abstract submission deadline", "date": "2027-02-15", "tz": "AoE", "status": "estimated"}], "source": "https://www.cnsorg.org/future-meetings", "verified": "2026-09-02", "history": [], "links": []}, {"id": "ccn27", "title": "CCN", "year": 2027, "full_name": "Cognitive Computational Neuroscience", "link": "https://2027.ccneuro.org/", "group": "neuro", "tier": 1, "field": "neuro", "tags": ["computational-neuroscience", "cognitive-science", "neuroai"], "scale": {"metric": "attendees", "value": 650, "year": 2026, "source": "https://2026.ccneuro.org/partner-prospectus/"}, "city": "Edinburgh", "country": "UK", "venue": "Edinburgh, UK", "date_text": "July 26-29, 2027", "start": "2027-07-26", "end": "2027-07-29", "start_month": 7, "deadlines": [{"type": "paper", "label": "Submission deadline", "date": "2027-04-15", "tz": "AoE", "status": "estimated"}], "source": "https://2027.ccneuro.org/", "verified": "2026-09-02", "history": [], "links": []}, {"id": "naacl27", "title": "NAACL", "year": 2027, "full_name": "The Annual Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics", "link": "https://2027.naacl.org/", "group": "ai", "tier": 3, "field": "nlp", "tags": ["natural-language-processing"], "scale": {"metric": "submitted", "value": 2434, "year": 2024, "source": "https://csconfstats.xoveexu.com/"}, "city": "San Francisco", "country": "USA", "venue": "", "date_text": "June 1-5, 2027", "start": "2027-06-01", "end": "2027-06-05", "start_month": 6, "deadlines": [], "source": "https://2027.naacl.org/", "verified": "", "history": [{"year": 2024, "submitted": 2434, "accepted": 565, "rate": 0.2321, "source": "https://csconfstats.xoveexu.com/"}], "links": [["OpenReview", "https://openreview.net/search?query=NAACL"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "cvpr27", "title": "CVPR", "year": 2027, "full_name": "IEEE/CVF Conference on Computer Vision and Pattern Recognition", "link": "https://cvpr.thecvf.com/", "group": "ai", "tier": 1, "field": "vision", "tags": ["computer-vision", "robotics", "machine-learning", "optimization-methods", "representation-learning"], "scale": {"metric": "submitted", "value": 16092, "year": 2026, "source": "https://www.ithome.com/0/922/931.htm"}, "city": "Seattle", "country": "USA", "venue": "Seattle Convention Center, Seattle, USA", "date_text": "June 19-26, 2027", "start": "2027-06-19", "end": "2027-06-26", "start_month": 6, "deadlines": [], "source": "https://cvpr.thecvf.com/", "verified": "", "history": [{"year": 2023, "submitted": 9155, "accepted": 2360, "rate": 0.2578, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2024, "submitted": 11532, "accepted": 2719, "rate": 0.2358, "source": "https://csconfstats.xoveexu.com/"}, {"year": 2025, "submitted": 13008, "accepted": 2878, "rate": 0.2212, "source": "https://mp.weixin.qq.com/s?__biz=Mzg4OTEwNjMzMA==&mid=2247663029&idx=1&sn=f36b388a84d4319f4b47930b3750cc3c&chksm=cec06fc2f86f6c080876f53860d9992f7fe5a3571ad1ef06474397fb01e4a5151ec7a0559f91&mpshare=1&scene=1&srcid=0318MpQJ3yoMi2832NjrF0oX&sharer_shareinfo=5f66e1303d9fb0f8fed93ef4736ebcdd&sharer_shareinfo_first=5f66e1303d9fb0f8fed93ef4736ebcdd#rd"}, {"year": 2026, "submitted": 16092, "accepted": 4090, "rate": 0.2542, "source": "https://www.ithome.com/0/922/931.htm"}], "links": [["통계·추세", "https://papercopilot.com/statistics/cvpr-statistics/"], ["OpenReview", "https://openreview.net/search?query=CVPR"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}, {"id": "siggraph27", "title": "SIGGRAPH", "year": 2027, "full_name": "Conference on Computer Graphics and Interactive Techniques", "link": "https://www.siggraph.org/", "group": "ai", "tier": 1, "field": "vision", "tags": ["computer-graphics"], "scale": {"metric": "submitted", "value": 844, "year": 2024, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3641519"}, "city": "Anaheim", "country": "United States", "venue": "Anaheim Convention Center, Anaheim, California", "date_text": "August 8-12, 2027", "start": "2027-08-08", "end": "2027-08-12", "start_month": 8, "deadlines": [], "source": "https://www.siggraph.org/", "verified": "", "history": [{"year": 2022, "submitted": 610, "accepted": 133, "rate": 0.218, "source": "https://github.com/emeryberger/csconferences"}, {"year": 2023, "submitted": 611, "accepted": 212, "rate": 0.347, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3588432"}, {"year": 2024, "submitted": 844, "accepted": 252, "rate": 0.2986, "source": "https://dl.acm.org/action/showFmPdf?doi=10.1145%2F3641519"}], "links": [["통계·추세", "https://papercopilot.com/statistics/siggraph-statistics/"], ["OpenReview", "https://openreview.net/search?query=SIGGRAPH"], ["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"]]}], "sources": [{"group": "마감 집계", "items": [{"name": "AI Deadlines", "url": "https://huggingface.co/spaces/huggingface/ai-deadlines", "note": "이 뷰어의 AI 학회 데이터 원본. 68개 학회"}, {"name": "CCF Deadlines", "url": "https://ccfddl.com/", "note": "CS 전반. 투고/채택 수 시계열도 여기서 가져온다"}, {"name": "world-wide.org", "url": "https://world-wide.org/", "note": "계산신경과학 학회·세미나 캘린더"}]}, {"group": "통계 · 추세 · 순위", "items": [{"name": "Paper Copilot", "url": "https://papercopilot.com/statistics/", "note": "학회별 투고·채택·리뷰 점수 분포. 연도별 추세 그래프"}, {"name": "CORE Conference Ranking", "url": "https://portal.core.edu.au/conf-ranks/", "note": "A*/A/B/C 등급. 학회 위상 판단 기준"}]}, {"group": "논문 · 리뷰 열람", "items": [{"name": "OpenReview", "url": "https://openreview.net/", "note": "NeurIPS·ICLR·ICML 등 공개 리뷰 원문"}, {"name": "Best Paper Awards in CS (1996-)", "url": "https://jeffhuang.com/best_paper_awards/", "note": "연도별 주요 CS 학회 수상 논문 30년치 단일 페이지"}]}, {"group": "커뮤니티", "items": [{"name": "r/MachineLearning", "url": "https://www.reddit.com/r/MachineLearning/", "note": "마감 직후 리뷰·리버털 논의가 가장 빠름"}, {"name": "r/neuroscience", "url": "https://www.reddit.com/r/neuroscience/"}, {"name": "r/compneuro", "url": "https://www.reddit.com/r/compneuro/", "note": "계산신경과학 전용. 규모는 작지만 밀도 높음"}, {"name": "neuromatch.social", "url": "https://neuromatch.social/", "note": "신경과학자 Mastodon. Cosyne·CCN 공지가 여기로도 나온다"}]}, {"group": "메일링 리스트", "items": [{"name": "comp-neuro (OCNS)", "url": "https://lists.cnsorg.org/hyperkitty/list/comp-neuro@lists.cnsorg.org/", "note": "Cosyne·Bernstein·CNS* 공식 CFP 가 가장 먼저 뜨는 곳"}, {"name": "visionlist 아카이브", "url": "http://visionscience.com/pipermail/visionlist_visionscience.com/", "note": "VSS·시지각 계열. https 는 죽어 있고 http 아카이브만 살아 있다"}]}, {"group": "X (트위터)", "items": [{"name": "@CosyneMeeting", "url": "https://x.com/CosyneMeeting", "note": "Cosyne 마감 리마인더가 여기로만 오는 해가 있다"}, {"name": "@SfNtweets", "url": "https://x.com/SfNtweets"}, {"name": "@OHBM", "url": "https://x.com/OHBM"}]}, {"group": "국내", "items": [{"name": "한국뇌신경과학회 (KSBNS)", "url": "https://www.ksbns.org/", "note": "연례학술대회 공지·심포지엄 제안 공모"}]}]};
 const TODAY = new Date(new Date().toDateString());
 const MONTHS = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const state = {view:"list", group:"all", q:"", subOnly:true};
-// 실제로 "내야 하는" 마감. 나머지(notification·rebuttal·camera_ready·review_release)는 통보/사후 일정.
+const FIELD = {ml:"머신러닝", vision:"비전·3D", nlp:"자연어·음성", robotics:"로보틱스",
+               medical:"의료영상", neuro:"신경과학", neuroimaging:"뇌영상", cognitive:"인지·시지각"};
+const METRIC = {submitted:"투고", attendees:"참가"};
+// 실제로 "내야 하는" 마감. notification·rebuttal·camera_ready 는 그 질문의 답이 아니다.
 const SUBMIT = new Set(["abstract","paper","submission","supplementary","abstract_late"]);
+
+const FAV_KEY = "confradar:fav";
+const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); }
+                        catch { return new Set(); } };
+const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
+
+const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
+               favOnly:false, fav:loadFav()};
+
+const days  = iso => Math.round((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝
+const until = iso => Math.round((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
+const fmt  = iso => iso.slice(2).replace(/-/g,".");
+const num  = n => n.toLocaleString("en-US");
+const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const dlsOf = c => state.subOnly ? c.deadlines.filter(d => SUBMIT.has(d.type)) : c.deadlines;
+const nextDl = c => dlsOf(c).find(d => days(d.date) >= 0) || null;
 
-const days = iso => Math.round((new Date(iso+"T23:59:59") - TODAY)/864e5);
-const fmt = iso => iso.slice(2).replace(/-/g,".");
-
-// 표시할 마감 = 아직 안 지난 것 중 가장 이른 것. 전부 지났으면 마지막 것(맥락용).
-function nextDeadline(c){
-  return c.deadlines.find(d => days(d.date) >= 0) || c.deadlines[c.deadlines.length-1] || null;
+// 규모 막대는 지표별 로그 스케일. 650~30,000 을 선형으로 그리면 작은 학회가 전부 0 이 된다.
+const SPAN = {submitted:[500, 30000], attendees:[300, 40000]};
+function scalePct(sc){
+  const [lo,hi] = SPAN[sc.metric] || [1,1e5];
+  const p = (Math.log10(sc.value) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo));
+  return Math.max(6, Math.min(100, Math.round(p*100)));
 }
+
 function visible(){
   const q = state.q.trim().toLowerCase();
   return DATA.conferences.filter(c =>
     (state.group === "all" || c.group === state.group) &&
-    (!q || (c.title+" "+c.full_name+" "+c.city+" "+c.tags.join(" ")).toLowerCase().includes(q)));
+    c.tier <= state.tier &&
+    (!state.favOnly || state.fav.has(c.id)) &&
+    (!q || (c.title+" "+c.full_name+" "+c.city+" "+FIELD[c.field]+" "+c.tags.join(" ")).toLowerCase().includes(q)));
+}
+
+function cardHTML(c){
+  const d = nextDl(c), n = d ? days(d.date) : null, m = until(c.start);
+  const dd  = d ? `D-${n}` : (m >= 0 ? `개최 D-${m}` : "진행 중");
+  const hot = d ? n <= 14 : m <= 14;
+  const est = d && d.status !== "confirmed";
+  const sc  = c.scale;
+  return `<div class="card" data-id="${c.id}">
+    <div class="dday ${hot?"hot":""} ${d?"":"past"}">${dd}</div>
+    <div class="body">
+      <div class="name">
+        <button class="star ${state.fav.has(c.id)?"on":""}" data-fav="${c.id}"
+          aria-label="즐겨찾기">${state.fav.has(c.id)?"★":"☆"}</button>
+        ${esc(c.title)} ${c.year}
+        <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
+        <span class="chip t">T${c.tier}</span>
+        ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}
+      </div>
+      <div class="meta">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:"제출 마감 종료"}</div>
+      <div class="meta">📍 ${esc(c.date_text || fmt(c.start))} · ${esc([c.city,c.country].filter(Boolean).join(", "))}</div>
+      ${sc?`<div class="scale"><span class="track"><span class="fill ${sc.metric}"
+            style="width:${scalePct(sc)}%"></span></span>
+            <span><span class="n">${num(sc.value)}</span> ${METRIC[sc.metric]} · ${sc.year}</span></div>`
+        :`<div class="scale"><span class="track"></span><span style="opacity:.6">규모 미상</span></div>`}
+    </div></div>`;
 }
 
 function renderList(){
-  // 마감이 남았으면 마감 기준, 다 지났으면 개최일 기준으로 줄 세운다.
-  // (KSBNS 처럼 마감은 지났지만 개최가 코앞인 학회를 목록 바닥에 묻지 않기 위함)
-  const items = visible().map(c => {
-    const d = dlsOf(c).find(x => days(x.date) >= 0) || null;
-    return {c, d, n: d ? days(d.date) : null, m: days(c.start)};
-  });
-  const upcoming = items.filter(x => x.n !== null).sort((a,b) => a.n - b.n);
-  const passed   = items.filter(x => x.n === null).sort((a,b) => a.m - b.m);
-  const buckets = [
-    ["🔥 2주 내",          upcoming.filter(x => x.n <= 14)],
-    ["다가오는 마감 (3개월)", upcoming.filter(x => x.n > 14 && x.n <= 92)],
-    ["그 이후",            upcoming.filter(x => x.n > 92)],
-    ["마감 지남 · 개최 예정", passed],
-  ];
-  let html = "";
-  for (const [label, rows] of buckets){
-    if (!rows.length) continue;
-    html += `<h2 class="grp">${label}</h2>`;
-    for (const {c,d,n,m} of rows){
-      const dd  = d ? `D-${n}` : (m >= 0 ? `개최 D-${m}` : "진행 중");
-      const hot = d ? n <= 14 : m <= 14;
-      const est = d && d.status !== "confirmed";
-      html += `<div class="card">
-        <div class="dday ${hot?"hot":""} ${d?"":"past"}">${dd}</div>
-        <div class="body">
-          <div class="name"><a href="${c.link}" target="_blank" rel="noopener">${c.title} ${c.year}</a>
-            <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
-            ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
-          <div class="meta">${d?`<b>${fmt(d.date)}</b> ${d.label}`:"마감 종료"}</div>
-          <div class="meta">📍 ${c.date_text || fmt(c.start)} · ${[c.city,c.country].filter(Boolean).join(", ")}</div>
-        </div></div>`;
-    }
+  const items = visible().map(c => ({c, d:nextDl(c)}));
+  const byDeadline = (a,b) => {
+    const A = a.d ? days(a.d.date) : 1e6 + until(a.c.start), B = b.d ? days(b.d.date) : 1e6 + until(b.c.start);
+    return A - B;
+  };
+  let groups;
+  if (state.sort === "field"){
+    const m = new Map();
+    for (const x of items.sort(byDeadline)) (m.get(x.c.field) ?? m.set(x.c.field, []).get(x.c.field)).push(x);
+    groups = [...m].map(([f, rows]) => [FIELD[f] || f, rows]);
+  } else if (state.sort === "scale"){
+    // 규모는 지표가 다르면 비교가 성립하지 않는다. 지표별로 나눠 정렬한다.
+    const has = items.filter(x => x.c.scale), no = items.filter(x => !x.c.scale);
+    const m = new Map();
+    for (const x of has.sort((a,b) => b.c.scale.value - a.c.scale.value))
+      (m.get(x.c.scale.metric) ?? m.set(x.c.scale.metric, []).get(x.c.scale.metric)).push(x);
+    groups = [...m].map(([k, rows]) => [`${METRIC[k]} 규모순 (${k==="submitted"?"논문 투고 편수":"참가자 수"})`, rows]);
+    if (no.length) groups.push(["규모 미상", no.sort(byDeadline)]);
+  } else if (state.sort === "tier"){
+    const m = new Map();
+    for (const x of items.sort((a,b) => a.c.tier - b.c.tier || byDeadline(a,b))) 
+      (m.get(x.c.tier) ?? m.set(x.c.tier, []).get(x.c.tier)).push(x);
+    groups = [...m].map(([t, rows]) => [`T${t} — ${["","반드시 챙길 학회","관련 있는 학회","참고"][t]}`, rows]);
+  } else if (state.sort === "start"){
+    groups = [["개최일 순", items.sort((a,b) => a.c.start.localeCompare(b.c.start))]];
+  } else {
+    const s = items.sort(byDeadline);
+    groups = [["🔥 2주 내",        s.filter(x => x.d && days(x.d.date) <= 14)],
+              ["다가오는 마감 (3개월)", s.filter(x => x.d && days(x.d.date) > 14 && days(x.d.date) <= 92)],
+              ["그 이후",          s.filter(x => x.d && days(x.d.date) > 92)],
+              ["제출 마감 종료 · 개최 예정", s.filter(x => !x.d).sort((a,b) => a.c.start.localeCompare(b.c.start))]];
   }
+  const html = groups.filter(([,r]) => r.length)
+    .map(([label, rows]) => `<h2 class="grp">${esc(label)}</h2>` + rows.map(x => cardHTML(x.c)).join(""))
+    .join("");
   document.getElementById("v-list").innerHTML = html || `<p class="meta">해당 학회 없음</p>`;
 }
 
@@ -190,61 +291,152 @@ function renderCycle(){
   for (const c of visible().slice().sort((a,b) => a.start.localeCompare(b.start)))
     if (!byTitle.has(c.title)) byTitle.set(c.title, c);
   const rows = [...byTitle.values()].sort((a,b) => a.start_month - b.start_month || a.title.localeCompare(b.title));
-  const thead = document.querySelector("#v-cyc thead tr");
-  thead.innerHTML = `<th class="nm">학회</th>` + MONTHS.map(m => `<th>${m}</th>`).join("");
-  const tb = document.querySelector("#v-cyc tbody");
-  tb.innerHTML = rows.map(c => {
-    // 마감 월과 개최 월만 남기고 나머지는 빈 칸. 연도 차이는 무시 — "연 주기"를 보는 뷰다.
+  document.querySelector("#v-cyc thead tr").innerHTML =
+    `<th class="nm">학회</th>` + MONTHS.map(m => `<th>${m}</th>`).join("");
+  document.querySelector("#v-cyc tbody").innerHTML = rows.map(c => {
     const dl = {}, est = {};
     for (const d of c.deadlines.filter(x => SUBMIT.has(x.type))){
       const m = +d.date.slice(5,7);
-      dl[m] = true;
-      est[m] = (est[m] ?? true) && d.status !== "confirmed";
+      dl[m] = true; est[m] = (est[m] ?? true) && d.status !== "confirmed";
     }
-    const mm = c.start_month;
-    const marks = Object.keys(dl).map(Number).concat([mm]);
+    const mm = c.start_month, marks = Object.keys(dl).map(Number).concat([mm]);
     const lo = Math.min(...marks), hi = Math.max(...marks);
     const cells = MONTHS.map((_,i) => {
-      const m = i+1;
-      const line = (m > lo && m < hi) ? `<span class="span"></span>` : "";
-      if (m === mm) return `<td class="cell">${line}<span class="mk">■</span></td>`;
-      if (dl[m]) return `<td class="cell">${line}<span class="mk dl ${est[m]?"est":""}">●</span></td>`;
+      const m = i+1, line = (m > lo && m < hi) ? `<span class="span"></span>` : "";
+      if (m === mm)  return `<td class="cell">${line}<span class="mk">■</span></td>`;
+      if (dl[m])     return `<td class="cell">${line}<span class="mk dl ${est[m]?"est":""}">●</span></td>`;
       return `<td class="cell">${line}</td>`;
     }).join("");
-    return `<tr class="g-${c.group}"><td class="nm"><a href="${c.link}" target="_blank" rel="noopener">${c.title}</a></td>${cells}</tr>`;
+    return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}</span></td>${cells}</tr>`;
   }).join("");
 }
 
-function render(){
-  document.getElementById("v-list").hidden = state.view !== "list";
-  document.getElementById("v-cyc").hidden  = state.view !== "cyc";
-  state.view === "list" ? renderList() : renderCycle();
+function renderSources(){
+  document.getElementById("v-src").innerHTML = DATA.sources.map(g => `
+    <div class="srcgrp"><h3>${esc(g.group)}</h3>` + g.items.map(i => `
+      <a class="srcitem" href="${esc(i.url)}" target="_blank" rel="noopener">
+        <div class="t">${esc(i.name)}</div>
+        ${i.note?`<div class="n">${esc(i.note)}</div>`:""}
+        <div class="u">${esc(i.url)}</div></a>`).join("") + `</div>`).join("");
 }
 
-for (const b of document.querySelectorAll("[data-v]")) b.onclick = () => {
-  state.view = b.dataset.v;
-  for (const o of document.querySelectorAll("[data-v]")) o.setAttribute("aria-pressed", o === b);
-  render();
+/* 추세 차트: 연도 사이 간격이 들쭉날쭉하므로 시간축이 아니라 이산 범주로 그린다.
+   있는 해만 막대로 세우고, 없는 해를 보간하지 않는다. */
+function trendSVG(hist){
+  // viewBox 좌표로만 계산한다. 막대 높이를 100%로 잡으면 그 위의 값 라벨이 캔버스 밖으로 나간다
+  // (실제로 최대 막대의 숫자가 잘렸다) — 위에 라벨 높이만큼 여백을 확보한다.
+  const W = 400, H = 130, TOP = 16, BASE = 88, BAND = BASE - TOP;
+  const n = hist.length, cw = W/n, max = Math.max(...hist.map(h => h.submitted));
+  const g = hist.map((h,i) => {
+    const bh = Math.max(3, Math.round(h.submitted/max*BAND));
+    const x = i*cw + cw*0.2, w = cw*0.6, y = BASE - bh, cx = i*cw + cw/2;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${bh}"
+              fill="var(--ai)" rx="2"></rect>
+            <text x="${cx.toFixed(1)}" y="${(y-4).toFixed(1)}" text-anchor="middle" font-size="10"
+              font-weight="600" fill="var(--fg)">${num(h.submitted)}</text>
+            <text x="${cx.toFixed(1)}" y="${BASE+13}" text-anchor="middle" font-size="10"
+              fill="var(--neuro)">${(h.rate*100).toFixed(1)}%</text>
+            <text x="${cx.toFixed(1)}" y="${BASE+26}" text-anchor="middle" font-size="10"
+              fill="var(--dim)">${h.year}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="height:auto;display:block" role="img"
+      aria-label="연도별 투고 편수와 채택률">
+      <line x1="0" y1="${BASE}" x2="${W}" y2="${BASE}" stroke="var(--line)" stroke-width="1"></line>
+      ${g}</svg>
+    <p class="note">막대 = 투고 편수 · 주황 = 채택률. 출처가 연도마다 다르고, 빠진 해는
+    데이터가 없는 것이지 0 이 아니다. 연도 간격이 일정하지 않으므로 시간축이 아니라 나열이다.</p>`;
+}
+
+function openDetail(id){
+  const c = DATA.conferences.find(x => x.id === id);
+  if (!c) return;
+  const dls = c.deadlines.map(d => {
+    const n = days(d.date), tag = d.status === "confirmed" ? "" :
+      ` <span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`;
+    return `<div class="dl ${n<0?"done":""}"><span class="l">${esc(d.label)}${tag}</span>
+      <span class="d">${fmt(d.date)}${d.tz?" "+esc(d.tz):""} ${n>=0?`· D-${n}`:""}</span></div>`;
+  }).join("") || `<p class="note">공지된 마감 없음 (업스트림 미등록 또는 학회 미발표)</p>`;
+  const sc = c.scale;
+  const links = [["학회 사이트", c.link], ...c.links.map(([a,b]) => [a,b])]
+    .filter(([,u]) => u).map(([t,u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("");
+  document.getElementById("sheet").innerHTML = `
+    <button class="close" id="x">닫기</button>
+    <h3>${esc(c.title)} ${c.year}</h3>
+    <p class="meta">${esc(c.full_name || "")}</p>
+    <p class="meta">📍 ${esc(c.date_text)} · ${esc(c.venue || [c.city,c.country].filter(Boolean).join(", "))}</p>
+    <p class="meta"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
+      <span class="chip t">T${c.tier}</span> ${esc(FIELD[c.field]||c.field)}</p>
+
+    <h4>일정</h4>${dls}
+
+    <h4>규모</h4>
+    ${sc ? `<p class="meta"><b>${num(sc.value)}</b> ${sc.metric==="submitted"?"편 투고":"명 참가"} (${sc.year})
+             ${sc.source?`· <a href="${esc(sc.source)}" target="_blank" rel="noopener">출처 ↗</a>`:""}</p>`
+         : `<p class="note">근거 있는 규모 수치를 찾지 못했다. 추측으로 채우지 않는다.</p>`}
+    ${c.history.length ? `<h4>연도별 투고·채택 추세</h4>${trendSVG(c.history)}` : ""}
+
+    <h4>바로 가기</h4><div class="linkrow">${links}</div>
+    ${c.verified ? `<p class="note">이 항목의 날짜는 ${esc(c.verified)} 에
+      <a href="${esc(c.source)}" target="_blank" rel="noopener">출처</a> 에서 확인했다.</p>` : ""}`;
+  document.getElementById("veil").hidden = false;
+  document.getElementById("x").onclick = closeDetail;
+}
+const closeDetail = () => { document.getElementById("veil").hidden = true; };
+document.getElementById("veil").onclick = e => { if (e.target.id === "veil") closeDetail(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+
+function render(){
+  for (const [v, el] of [["list","v-list"],["cyc","v-cyc"],["src","v-src"]])
+    document.getElementById(el).hidden = state.view !== v;
+  document.getElementById("bar2").style.display = state.view === "src" ? "none" : "";
+  if (state.view === "list") renderList();
+  else if (state.view === "cyc") renderCycle();
+  else renderSources();
+}
+
+function bindGroup(sel, apply){
+  for (const b of document.querySelectorAll(sel)) b.onclick = () => {
+    apply(b);
+    for (const o of document.querySelectorAll(sel)) o.setAttribute("aria-pressed", o === b);
+    render();
+  };
+}
+bindGroup("[data-v]", b => state.view  = b.dataset.v);
+bindGroup("[data-g]", b => state.group = b.dataset.g);
+bindGroup("[data-t]", b => state.tier  = +b.dataset.t);
+bindGroup("[data-s]", b => state.sort  = b.dataset.s);
+document.getElementById("fav").onclick = e => {
+  state.favOnly = !state.favOnly;
+  e.target.setAttribute("aria-pressed", state.favOnly); render();
 };
-for (const b of document.querySelectorAll("[data-g]")) b.onclick = () => {
-  state.group = b.dataset.g;
-  for (const o of document.querySelectorAll("[data-g]")) o.setAttribute("aria-pressed", o === b);
-  render();
-};
-document.getElementById("sub").onclick = e => {
+document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
-  e.target.setAttribute("aria-pressed", state.subOnly);
-  render();
+  e.target.setAttribute("aria-pressed", state.subOnly); render();
 };
 document.getElementById("q").oninput = e => { state.q = e.target.value; render(); };
 
-const n = DATA.conferences.length,
-      nn = DATA.conferences.filter(c => c.group === "neuro").length;
+// 카드/행 클릭 = 상세. 별 클릭은 상세를 열지 않는다.
+document.addEventListener("click", e => {
+  const star = e.target.closest("[data-fav]");
+  if (star){
+    e.stopPropagation();
+    const id = star.dataset.fav;
+    state.fav.has(id) ? state.fav.delete(id) : state.fav.add(id);
+    saveFav(state.fav); render(); return;
+  }
+  const row = e.target.closest("[data-id]");
+  if (row && !e.target.closest("a")) openDetail(row.dataset.id);
+});
+
+const n = DATA.conferences.length, nn = DATA.conferences.filter(c => c.group === "neuro").length;
 document.getElementById("sub").textContent =
-  `${DATA.generated} 갱신 · ${n}개 학회 (뇌과학 ${nn} · AI ${n-nn})`;
+  `${DATA.generated} 갱신 · ${n}개 학회 (뇌과학 ${nn} · AI ${n-nn}) · 카드를 누르면 상세`;
 document.getElementById("foot").innerHTML =
-  `AI 학회 = <a href="https://github.com/huggingface/ai-deadlines" target="_blank" rel="noopener">huggingface/ai-deadlines</a> 업스트림 자동 반영.<br>
-   뇌과학 학회 = 수동 큐레이션(<code>data/neuro.yml</code>). <b>추정</b>·<b>미공지</b> 표시가 붙은 마감은 공식 확정값이 아니므로 학회 사이트에서 반드시 재확인할 것.`;
+  `AI 학회 마감 = <a href="https://github.com/huggingface/ai-deadlines" target="_blank" rel="noopener">huggingface/ai-deadlines</a>,
+   투고·채택 수 = <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccfddl/ccf-deadlines</a> 업스트림 자동 반영.<br>
+   뇌과학 학회 = 수동 큐레이션(<code>data/neuro.yml</code>). <b>추정</b>·<b>미공지</b> 배지가 붙은 마감은
+   공식 확정값이 아니므로 학회 사이트에서 반드시 재확인할 것.<br>
+   티어(T1/T2/T3)는 학회 등급이 아니라 <b>이 사람 기준 관심 우선순위</b>다.`;
 render();
 </script>
 </body>

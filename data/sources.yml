@@ -1,0 +1,71 @@
+# 학회 정보를 실제로 얻는 곳. 각 항목은 2026-09-02 에 HTTP 응답을 확인했다.
+# reddit(403)·ksbns.org(406) 는 curl 을 봇으로 막은 것이며 브라우저에서는 열린다.
+
+- group: 마감 집계
+  items:
+    - name: AI Deadlines
+      url: https://huggingface.co/spaces/huggingface/ai-deadlines
+      note: 이 뷰어의 AI 학회 데이터 원본. 68개 학회
+    - name: CCF Deadlines
+      url: https://ccfddl.com/
+      note: CS 전반. 투고/채택 수 시계열도 여기서 가져온다
+    - name: world-wide.org
+      url: https://world-wide.org/
+      note: 계산신경과학 학회·세미나 캘린더
+
+- group: 통계 · 추세 · 순위
+  items:
+    - name: Paper Copilot
+      url: https://papercopilot.com/statistics/
+      note: 학회별 투고·채택·리뷰 점수 분포. 연도별 추세 그래프
+    - name: CORE Conference Ranking
+      url: https://portal.core.edu.au/conf-ranks/
+      note: A*/A/B/C 등급. 학회 위상 판단 기준
+
+- group: 논문 · 리뷰 열람
+  items:
+    - name: OpenReview
+      url: https://openreview.net/
+      note: NeurIPS·ICLR·ICML 등 공개 리뷰 원문
+    - name: Best Paper Awards in CS (1996-)
+      url: https://jeffhuang.com/best_paper_awards/
+      note: 연도별 주요 CS 학회 수상 논문 30년치 단일 페이지
+
+- group: 커뮤니티
+  items:
+    - name: r/MachineLearning
+      url: https://www.reddit.com/r/MachineLearning/
+      note: 마감 직후 리뷰·리버털 논의가 가장 빠름
+    - name: r/neuroscience
+      url: https://www.reddit.com/r/neuroscience/
+    - name: r/compneuro
+      url: https://www.reddit.com/r/compneuro/
+      note: 계산신경과학 전용. 규모는 작지만 밀도 높음
+    - name: neuromatch.social
+      url: https://neuromatch.social/
+      note: 신경과학자 Mastodon. Cosyne·CCN 공지가 여기로도 나온다
+
+- group: 메일링 리스트
+  items:
+    - name: comp-neuro (OCNS)
+      url: https://lists.cnsorg.org/hyperkitty/list/comp-neuro@lists.cnsorg.org/
+      note: Cosyne·Bernstein·CNS* 공식 CFP 가 가장 먼저 뜨는 곳
+    - name: visionlist 아카이브
+      url: http://visionscience.com/pipermail/visionlist_visionscience.com/
+      note: VSS·시지각 계열. https 는 죽어 있고 http 아카이브만 살아 있다
+
+- group: X (트위터)
+  items:
+    - name: "@CosyneMeeting"
+      url: https://x.com/CosyneMeeting
+      note: Cosyne 마감 리마인더가 여기로만 오는 해가 있다
+    - name: "@SfNtweets"
+      url: https://x.com/SfNtweets
+    - name: "@OHBM"
+      url: https://x.com/OHBM
+
+- group: 국내
+  items:
+    - name: 한국뇌신경과학회 (KSBNS)
+      url: https://www.ksbns.org/
+      note: 연례학술대회 공지·심포지엄 제안 공모

@@ -5,11 +5,19 @@
 # source  : 근거 URL. 근거 없는 날짜는 입력 금지.
 # verified: 그 URL 을 마지막으로 확인한 날짜
 #
+# tier    : 관심 우선순위(이 사람 기준). 1=반드시 챙김 2=관련 있음. 학회 등급이 아니다.
+# field   : 그룹핑 축. neuro / neuroimaging / cognitive
+# scale   : 규모. metric 은 attendees(참가자). AI 학회의 submitted(투고 편수)와 단위가 달라
+#           그룹을 넘어 비교하면 안 된다. 근거 URL 없으면 비워 둔다.
+#
 # 갱신 요령: 연 1회 가을에 전체 훑기 + estimated 가 confirmed 로 바뀌면 즉시 승격.
 
 - title: COSYNE
   year: 2027
   id: cosyne27
+  tier: 1
+  field: neuro
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Computational and Systems Neuroscience
   link: https://www.cosyne.org/
   deadlines:
@@ -36,6 +44,13 @@
 - title: CCN
   year: 2027
   id: ccn27
+  tier: 1
+  field: neuro
+  scale:
+    metric: attendees
+    value: 650
+    year: 2026
+    source: https://2026.ccneuro.org/partner-prospectus/
   full_name: Cognitive Computational Neuroscience
   link: https://2027.ccneuro.org/
   deadlines:
@@ -57,6 +72,13 @@
 - title: SfN
   year: 2026
   id: sfn26
+  tier: 1
+  field: neuro
+  scale:
+    metric: attendees
+    value: 30000
+    year: 2025
+    source: https://www.sfn.org/meetings/neuroscience-2025/general-information
   full_name: Society for Neuroscience Annual Meeting (Neuroscience 2026)
   link: https://www.sfn.org/meetings/neuroscience-2026
   deadlines:
@@ -83,6 +105,9 @@
 - title: Bernstein
   year: 2026
   id: bernstein26
+  tier: 2
+  field: neuro
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Bernstein Conference on Computational Neuroscience
   link: https://bernstein-network.de/en/bernstein-conference/bernstein-conference-2026/
   deadlines:
@@ -109,6 +134,9 @@
 - title: CNS*
   year: 2027
   id: cns27
+  tier: 2
+  field: neuro
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: OCNS Annual Computational Neuroscience Meeting
   link: https://www.cnsorg.org/future-meetings
   deadlines:
@@ -130,6 +158,9 @@
 - title: OHBM
   year: 2027
   id: ohbm27
+  tier: 1
+  field: neuroimaging
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Organization for Human Brain Mapping Annual Meeting
   link: https://www.humanbrainmapping.org/ohbm-2027/
   deadlines:
@@ -156,6 +187,13 @@
 - title: KSBNS
   year: 2026
   id: ksbns26
+  tier: 1
+  field: neuro
+  scale:
+    metric: attendees
+    value: 2500
+    year: 2026
+    source: https://www.mdon.co.kr/news/article.html?no=35343
   full_name: 한국뇌신경과학회 제29회 정기학술대회 (K-Brain 2026)
   link: https://www.ksbns2026.org/
   deadlines:
@@ -177,6 +215,9 @@
 - title: VSS
   year: 2027
   id: vss27
+  tier: 2
+  field: cognitive
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Vision Sciences Society Annual Meeting
   link: https://www.visionsciences.org/future-meetings/
   deadlines:
@@ -198,6 +239,9 @@
 - title: CogSci
   year: 2027
   id: cogsci27
+  tier: 2
+  field: cognitive
+  scale:   # 근거 있는 참가자 수를 못 찾음. 추측으로 채우지 않는다
   full_name: Annual Meeting of the Cognitive Science Society
   link: https://cognitivesciencesociety.org/
   deadlines:

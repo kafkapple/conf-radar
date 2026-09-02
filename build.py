@@ -20,15 +20,41 @@ import yaml
 
 ROOT = Path(__file__).parent
 UPSTREAM_TARBALL = "https://codeload.github.com/huggingface/ai-deadlines/tar.gz/refs/heads/main"
+# 투고/채택 수 시계열. 데이터 포인트마다 source URL 이 붙어 있어 출처 추적이 된다.
+RATES_TARBALL = "https://codeload.github.com/ccfddl/ccf-deadlines/tar.gz/refs/heads/main"
+RATES_DIR = "accept_rates/"
+RATES_CACHE = ROOT / ".cache" / "rates.tar.gz"
+# accept_rates 색인 키는 파일명이 아니라 YAML 안의 title 이다 (nips.yml 의 title 은 "NeurIPS").
+# 파일명으로 맞추려다 NeurIPS 추세가 통째로 빠졌던 자리 — 제목으로 맞추고 예외만 별칭으로 둔다.
+RATES_ALIAS = {"SIGGRAPH": "ACM SIGGRAPH"}
 UPSTREAM_DIR = "src/data/conferences/"
 CACHE = ROOT / ".cache" / "upstream.tar.gz"
 
-# 추적할 AI 학회. 업스트림 68개 전부를 띄우면 목록이 노이즈가 된다.
-TRACKED_AI = {
-    "neurips", "icml", "iclr", "aistats", "uai", "colm", "colt",
-    "cvpr", "iccv", "eccv", "3dv", "wacv", "siggraph", "miccai",
-    "aaai", "ijcai", "acl", "emnlp", "naacl",
-    "corl", "icra", "iros", "rss", "kdd", "icassp", "interspeech",
+# 티어 = 학회의 객관적 등급이 아니라 **이 사람의 관심 우선순위**다 (3D 비전 · 행동/뇌 계측).
+# T1 = 반드시 챙김 / T2 = 관련 있음 / T3 = 참고. 기본 화면은 T1-2 만 보여준다.
+TIER_AI = {
+    1: ["neurips", "icml", "iclr", "cvpr", "iccv", "eccv", "siggraph"],
+    2: ["aaai", "acl", "emnlp", "aistats", "colm", "miccai", "3dv", "wacv", "corl"],
+    3: ["ijcai", "naacl", "uai", "colt", "kdd", "icassp", "interspeech", "icra", "iros", "rss"],
+}
+TRACKED_AI = {slug: t for t, slugs in TIER_AI.items() for slug in slugs}
+
+# 분야 = 슬러그에서 직접 매핑. 업스트림 tags 는 학회마다 입도가 달라 그룹핑에 못 쓴다.
+FIELD_AI = {
+    **{k: "ml" for k in ["neurips", "icml", "iclr", "aistats", "colm", "uai", "colt", "aaai", "ijcai", "kdd"]},
+    **{k: "vision" for k in ["cvpr", "iccv", "eccv", "3dv", "wacv", "siggraph"]},
+    **{k: "nlp" for k in ["acl", "emnlp", "naacl", "interspeech", "icassp"]},
+    **{k: "robotics" for k in ["icra", "iros", "rss", "corl"]},
+    "miccai": "medical",
+}
+
+# papercopilot 통계 페이지가 실재하는 슬러그. 없는 슬러그는 진짜 404 를 낸다(soft-404 아님).
+# 재확인: for s in <slug>; do curl -sLo/dev/null -w"%{http_code} $s\n" \
+#   https://papercopilot.com/statistics/$s-statistics/; done
+PAPERCOPILOT = {
+    "neurips", "icml", "iclr", "cvpr", "iccv", "eccv", "siggraph", "aaai", "acl",
+    "emnlp", "aistats", "colm", "3dv", "wacv", "corl", "ijcai", "uai", "kdd",
+    "icra", "iros", "rss",
 }
 STALE_DAYS = 45  # 끝난 지 이만큼 지난 학회는 뺀다
 
@@ -60,8 +86,39 @@ def fetch_upstream(offline: bool = False) -> list[dict]:
             assert fh is not None, f"tar member unreadable: {m.name}"
             for e in yaml.safe_load(fh.read()) or []:
                 e["group"] = "ai"
+                e["tier"] = TRACKED_AI[slug]
+                e["field"] = FIELD_AI.get(slug, "ml")
                 entries.append(e)
     return entries
+
+
+def fetch_rates(offline: bool = False) -> dict[str, list[dict]]:
+    """ccf-deadlines 의 투고/채택 시계열을 학회 제목(대문자) 기준으로 색인한다."""
+    if not offline or not RATES_CACHE.exists():
+        RATES_CACHE.parent.mkdir(exist_ok=True)
+        with urllib.request.urlopen(RATES_TARBALL, timeout=90) as r:
+            RATES_CACHE.write_bytes(r.read())
+    out: dict[str, list[dict]] = {}
+    with tarfile.open(fileobj=io.BytesIO(RATES_CACHE.read_bytes())) as tf:
+        for m in tf.getmembers():
+            if RATES_DIR not in m.name or not m.name.endswith(".yml"):
+                continue
+            fh = tf.extractfile(m)
+            if fh is None:
+                continue
+            for e in yaml.safe_load(fh.read()) or []:
+                rows = []
+                for r in e.get("accept_rates") or []:
+                    sub, acc = r.get("submitted"), r.get("accepted")
+                    if not sub or not acc:
+                        continue
+                    # 업스트림 rate 필드는 소수점에 쉼표가 섞인 사례가 있어 직접 계산한다
+                    rows.append({"year": int(r["year"]), "submitted": int(sub),
+                                 "accepted": int(acc), "rate": round(acc / sub, 4),
+                                 "source": r.get("source", "")})
+                if rows:
+                    out[str(e["title"]).upper()] = sorted(rows, key=lambda r: r["year"])
+    return out
 
 
 def load_neuro() -> list[dict]:
@@ -69,6 +126,27 @@ def load_neuro() -> list[dict]:
     for e in entries:
         e["group"] = "neuro"
     return entries
+
+
+def enrich(c: dict, rates: dict[str, list[dict]]) -> dict:
+    """규모·추세·외부 링크를 붙인다. 근거를 못 찾으면 채우지 않고 비워 둔다."""
+    slug = c["id"].rstrip("0123456789")
+    key = c["title"].upper()
+    hist = rates.get(RATES_ALIAS.get(key, key), []) if c["group"] == "ai" else []
+    c["history"] = hist
+    if c["group"] == "ai" and hist:
+        # 규모 = 최근 회차 투고 편수. 참가자 수와 단위가 다르므로 그룹을 넘어 비교하지 않는다.
+        c["scale"] = {"metric": "submitted", "value": hist[-1]["submitted"],
+                      "year": hist[-1]["year"], "source": hist[-1]["source"]}
+    c.setdefault("scale", None)
+    links = []
+    if slug in PAPERCOPILOT:
+        links.append(["통계·추세", f"https://papercopilot.com/statistics/{slug}-statistics/"])
+    if c["group"] == "ai":
+        links.append(["OpenReview", f"https://openreview.net/search?query={c['title']}"])
+        links.append(["역대 수상 논문", "https://jeffhuang.com/best_paper_awards/"])
+    c["links"] = links
+    return c
 
 
 def normalize(entries: list[dict], today: date) -> list[dict]:
@@ -103,7 +181,10 @@ def normalize(entries: list[dict], today: date) -> list[dict]:
             "full_name": e.get("full_name", ""),
             "link": e.get("link", ""),
             "group": e["group"],
+            "tier": int(e.get("tier", 3)),
+            "field": e.get("field", "neuro" if e["group"] == "neuro" else "ml"),
             "tags": e.get("tags") or [],
+            "scale": e.get("scale"),
             "city": e.get("city", ""),
             "country": e.get("country", ""),
             "venue": e.get("venue", ""),
@@ -122,10 +203,14 @@ def normalize(entries: list[dict], today: date) -> list[dict]:
 def build(offline: bool = False) -> dict:
     today = date.today()
     upstream, neuro = fetch_upstream(offline), load_neuro()
+    rates = fetch_rates(offline)
+    confs = [enrich(c, rates) for c in normalize(upstream + neuro, today)]
     data = {
         "generated": today.isoformat(),
         "upstream_raw": len(upstream),   # 필터 전 개수 = fetch 성공 여부 판정용
-        "conferences": normalize(upstream + neuro, today),
+        "rates_raw": len(rates),
+        "conferences": confs,
+        "sources": yaml.safe_load((ROOT / "data" / "sources.yml").read_text()),
     }
     tpl = (ROOT / "template.html").read_text()
     assert "__DATA__" in tpl, "template.html 에 __DATA__ 자리표시자가 없다"
@@ -148,6 +233,17 @@ def check(data: dict) -> None:
     # 정상적으로 빠지므로 fetch 성공과 무관하게 개수가 출렁인다. fetch 자체는 raw 로 본다.
     assert data["upstream_raw"] >= 40, f"업스트림 fetch 실패 의심: raw {data['upstream_raw']}건"
     assert ai, "AI 학회가 0건 — 신선도 필터 또는 TRACKED_AI 확인"
+    assert all(c["tier"] in (1, 2, 3) for c in confs), "tier 미지정 학회 존재"
+    assert all(c["field"] for c in confs), "field 미지정 학회 존재"
+    assert data["rates_raw"] >= 60, f"accept_rates fetch 실패 의심: {data['rates_raw']}건"  # 260902 실측 93건
+    with_hist = {c["title"] for c in confs if c["history"]}
+    # 이 넷이 빠지면 제목 매핑이 깨진 것이다 (실제로 NeurIPS 가 파일명 매칭 탓에 빠졌었다)
+    must = {"NeurIPS", "CVPR", "ICLR", "SIGGRAPH"} & {c["title"] for c in confs}
+    assert must <= with_hist, f"추세 누락: {sorted(must - with_hist)} — RATES_ALIAS 확인"
+    for c in confs:
+        for h in c["history"]:
+            assert 0 < h["rate"] <= 1, f"{c['id']} {h['year']}: 채택률 {h['rate']}"
+    assert data["sources"], "sources.yml 비어 있음"
     assert len(neuro) >= 5, f"neuro.yml 로드 실패 의심: {len(neuro)}건"
     for c in confs:
         assert c["title"] and c["start"] <= c["end"], f"날짜 역전: {c['id']}"
