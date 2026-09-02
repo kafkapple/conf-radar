@@ -560,12 +560,29 @@ function renderCycle(){
 }
 
 function renderSources(){
-  document.getElementById("v-src").innerHTML = DATA.sources.map(g => `
+  const sub = location.protocol.startsWith("http")
+    ? location.href.replace(/[^/]*$/, "") + "deadlines.ics" : "";
+  const cal = `<div class="srcgrp"><h3>캘린더</h3>
+    ${sub ? `<a class="srcitem" href="webcal://${esc(sub.replace(/^https?:\/\//,""))}">
+      <div class="t">전체 구독 (webcal)</div>
+      <div class="n">한 번 구독하면 매일 자동 갱신된다. 아이폰: 눌러서 "구독" → 캘린더 앱에 추가.</div>
+      <div class="u">${esc(sub)}</div></a>` : ""}
+    <div class="srcitem" id="ics-fav" style="cursor:pointer">
+      <div class="t">★ 즐겨찾기만 내보내기 (.ics)</div>
+      <div class="n">지금 별을 켜 둔 학회의 마감·개최만 파일로 받는다. 현재 ${state.fav.size}건.</div></div>
+    <div class="srcitem" id="ics-view" style="cursor:pointer">
+      <div class="t">현재 필터 결과 내보내기 (.ics)</div>
+      <div class="n">지금 보고 있는 목록 그대로. 현재 ${visible().length}건.</div></div>
+  </div>`;
+  document.getElementById("v-src").innerHTML = cal + DATA.sources.map(g => `
     <div class="srcgrp"><h3>${esc(g.group)}</h3>` + g.items.map(i => `
       <a class="srcitem" href="${esc(i.url)}" target="_blank" rel="noopener">
         <div class="t">${esc(i.name)}</div>
         ${i.note?`<div class="n">${esc(i.note)}</div>`:""}
         <div class="u">${esc(i.url)}</div></a>`).join("") + `</div>`).join("");
+  const fav = document.getElementById("ics-fav"), vw = document.getElementById("ics-view");
+  if (fav) fav.onclick = () => openICS(DATA.series.filter(c => state.fav.has(c.id)), "conf-radar-favorites");
+  if (vw)  vw.onclick  = () => openICS(visible(), "conf-radar-filtered");
 }
 
 /* 추세 차트: 연도 사이 간격이 들쭉날쭉하므로 시간축이 아니라 이산 범주로 그린다.
@@ -644,11 +661,16 @@ function openDetail(id){
 
     <h4>저널·학회 연계</h4>${progs}
 
+    <h4>캘린더</h4>
+    <div class="linkrow"><button id="ics-one">이 학회 일정 추가 (.ics)</button></div>
+    <p class="note">제출 마감 + 개최 기간이 종일 일정으로 들어가고, 마감 1주 전 알림이 붙는다.</p>
+
     <h4>바로 가기</h4><div class="linkrow">${links}</div>
     ${c.verified ? `<p class="note">이 항목의 날짜는 ${esc(c.verified)} 에
       <a href="${esc(c.source)}" target="_blank" rel="noopener">출처</a> 에서 확인했다.</p>` : ""}`;
   document.getElementById("veil").hidden = false;
   document.getElementById("x").onclick = closeDetail;
+  document.getElementById("ics-one").onclick = () => openICS([c], c.id);
   document.getElementById("sheet").scrollTop = 0;
 }
 const closeDetail = () => { document.getElementById("veil").hidden = true; };
@@ -709,6 +731,64 @@ document.addEventListener("click", e => {
   const row = e.target.closest("[data-id]");
   if (row && !e.target.closest("a")) openDetail(row.dataset.id);
 });
+
+/* ── 캘린더 (.ics) ───────────────────────────────────────────────────────────
+   빌드가 만드는 구독 피드(deadlines.ics)와 별개로, 고른 학회만 즉석으로 뽑는 경로.
+   구독은 "전부 상시", 이건 "관심 있는 것만 지금". 둘 다 필요하다. */
+const icsEsc = t => String(t ?? "").replace(/\\/g,"\\\\").replace(/;/g,"\;")
+                                  .replace(/,/g,"\\,").replace(/\n/g,"\\n");
+const plusDay = iso => { const d = new Date(iso+"T00:00:00"); d.setDate(d.getDate()+1);
+  return d.toISOString().slice(0,10).replace(/-/g,""); };
+const icsFold = l => {                    // RFC 5545 = 75옥텟. 한글은 3바이트라 금방 넘는다
+  const b = new TextEncoder().encode(l);
+  if (b.length <= 73) return l;
+  const out = []; let cur = b;
+  while (cur.length > 73){
+    let cut = 73; while (cut > 0 && (cur[cut] & 0xC0) === 0x80) cut--;
+    out.push(new TextDecoder().decode(cur.slice(0,cut)));
+    cur = new Uint8Array([32, ...cur.slice(cut)]);
+  }
+  out.push(new TextDecoder().decode(cur));
+  return out.join("\r\n");
+};
+function buildICS(list){
+  const stamp = new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  const L = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//conf-radar//KR","CALSCALE:GREGORIAN",
+             "METHOD:PUBLISH","X-WR-CALNAME:학회 레이더 (선택)"];
+  for (const c of list){
+    for (const d of c.deadlines){
+      if (!SUBMIT.has(d.type)) continue;
+      const tag = d.status === "confirmed" ? "" : (d.status === "tba" ? " (미공지)" : " (추정)");
+      L.push("BEGIN:VEVENT", `UID:${c.id}-${d.type}-${d.date}@conf-radar`, `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${d.date.replace(/-/g,"")}`, `DTEND;VALUE=DATE:${plusDay(d.date)}`,
+        `SUMMARY:🔴 ${icsEsc(c.title)} 마감${icsEsc(tag)}`,
+        `DESCRIPTION:${icsEsc(d.label)} · ${icsEsc(c.date_text)} ${icsEsc(c.city)}`,
+        `URL:${c.link}`, "TRANSP:TRANSPARENT",
+        "BEGIN:VALARM","TRIGGER:-P7D","ACTION:DISPLAY",
+        `DESCRIPTION:${icsEsc(c.title)} 마감 1주 전`,"END:VALARM","END:VEVENT");
+    }
+    if (c.start && c.end)
+      L.push("BEGIN:VEVENT", `UID:${c.id}-meeting@conf-radar`, `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${c.start.replace(/-/g,"")}`, `DTEND;VALUE=DATE:${plusDay(c.end)}`,
+        `SUMMARY:📍 ${icsEsc(c.title)} ${c.next ?? ""}`,
+        `LOCATION:${icsEsc(c.venue || c.city)}`, `URL:${c.link}`, "TRANSP:TRANSPARENT","END:VEVENT");
+  }
+  L.push("END:VCALENDAR");
+  return L.map(icsFold).join("\r\n") + "\r\n";
+}
+// 아이폰은 data: URL 을 캘린더로 넘긴다. <a download> 는 홈화면 앱 모드에서 잘 안 먹는다.
+function openICS(list, name){
+  if (!list.length) return alert("선택된 학회가 없다");
+  const txt = buildICS(list);
+  const a = document.createElement("a");
+  a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(txt);
+  a.download = name + ".ics"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+// 서비스 워커 = 오프라인. https 또는 localhost 에서만 등록되고, 실패해도 페이지는 정상 동작한다.
+if ("serviceWorker" in navigator)
+  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 
 const n = DATA.series.length, nn = DATA.series.filter(c => c.group === "neuro").length;
 const noNext = DATA.series.filter(c => !c.next).length;
