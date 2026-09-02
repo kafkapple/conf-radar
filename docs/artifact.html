@@ -71,6 +71,36 @@ h2.grp{font-size:11.5px;color:var(--dim);font-weight:600;margin:19px 0 7px;lette
 .fill.submitted{background:var(--ai)} .fill.attendees{background:var(--neuro)}
 .scale .n{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--fg);font-weight:600}
 
+/* ── 칸반: 마감 임박도를 열로. 열 자체가 순서라 세로 정렬은 선택한 정렬 기준을 따른다 ── */
+.kb{display:flex;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.kbcol{flex:0 0 268px;min-width:268px}
+.kbhead{font-size:11.5px;font-weight:600;color:var(--dim);padding:0 2px 7px;
+  display:flex;justify-content:space-between;align-items:baseline}
+.kbhead .c{font-family:var(--mono);color:var(--faint)}
+.kbcard{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  margin-bottom:7px;cursor:pointer;box-shadow:var(--shadow)}
+.kbcard:hover{border-color:var(--faint)}
+.kbcard .top{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.kbcard .dd{font:600 11.5px var(--mono);font-variant-numeric:tabular-nums;color:var(--dim)}
+.kbcard .dd.hot{color:var(--urgent)}
+.kbcard .nm2{font-weight:650;font-size:13.5px}
+.kbcard .sm{color:var(--dim);font-size:11.5px;margin-top:3px}
+.kbcard .sm b{font-family:var(--mono);color:var(--fg);font-weight:600}
+
+/* ── 테이블: 훑기용 고밀도 뷰. 정렬은 위 정렬 바를 그대로 쓴다(로직 중복 없음) ── */
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);
+  border-radius:10px;background:var(--card)}
+table.dense{border-collapse:collapse;width:100%;min-width:780px;font-size:12.5px}
+table.dense th{position:sticky;top:0;background:var(--card);color:var(--dim);font-weight:600;
+  font-size:11px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.dense th.on{color:var(--fg)}
+table.dense td{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.dense tr:last-child td{border-bottom:0}
+table.dense tbody tr{cursor:pointer}
+table.dense tbody tr:hover{background:color-mix(in srgb,var(--fg) 4%,transparent)}
+table.dense .n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+table.dense td.w{white-space:normal;min-width:150px}
+
 /* ── 연간 사이클 ── */
 .cyc{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px}
@@ -130,7 +160,9 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 
 <div class="bars">
   <div class="bar">
-    <button data-v="list" aria-pressed="true">마감 목록</button>
+    <button data-v="list" aria-pressed="true">목록</button>
+    <button data-v="kb">칸반</button>
+    <button data-v="tbl">표</button>
     <button data-v="cyc">연간 사이클</button>
     <button data-v="src">정보원</button>
     <span class="sep"></span>
@@ -157,6 +189,11 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 </div>
 
 <section id="v-list"></section>
+
+<section id="v-kb" hidden><div class="kb"></div></section>
+
+<section id="v-tbl" hidden><div class="tbl"><table class="dense">
+  <thead><tr></tr></thead><tbody></tbody></table></div></section>
 
 <section id="v-cyc" hidden>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
@@ -190,10 +227,14 @@ const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s]
 const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
                favOnly:false, fav:loadFav()};
 
-const days  = iso => Math.round((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝
-const until = iso => Math.round((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
+const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 마감 = 0
+const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
 const fmt  = iso => iso.slice(2).replace(/-/g,".");
 const num  = n => n.toLocaleString("en-US");
+const dday = n => n === 0 ? "오늘" : `D-${n}`;
+// 개최 상태: 시작 전이면 D-day, 시작했지만 안 끝났으면 진행 중, 종료일이 지났으면 종료
+const meetState = c => { const a = until(c.start), b = until(c.end);
+  return a >= 0 ? `개최 ${dday(a)}` : (b >= 0 ? "진행 중" : "종료"); };
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const dlsOf = c => state.subOnly ? c.deadlines.filter(d => SUBMIT.has(d.type)) : c.deadlines;
 const nextDl = c => dlsOf(c).find(d => days(d.date) >= 0) || null;
@@ -217,7 +258,7 @@ function visible(){
 
 function cardHTML(c){
   const d = nextDl(c), n = d ? days(d.date) : null, m = until(c.start);
-  const dd  = d ? `D-${n}` : (m >= 0 ? `개최 D-${m}` : "진행 중");
+  const dd  = d ? dday(n) : meetState(c);
   const hot = d ? n <= 14 : m <= 14;
   const est = d && d.status !== "confirmed";
   const sc  = c.scale;
@@ -242,42 +283,106 @@ function cardHTML(c){
 }
 
 function renderList(){
-  const items = visible().map(c => ({c, d:nextDl(c)}));
-  const byDeadline = (a,b) => {
-    const A = a.d ? days(a.d.date) : 1e6 + until(a.c.start), B = b.d ? days(b.d.date) : 1e6 + until(b.c.start);
-    return A - B;
+  const {items, byDeadline} = sortedItems();
+  const bucket = (keyOf, label) => {          // 같은 키끼리 묶되 sortedItems 의 순서를 유지한다
+    const m = new Map();
+    for (const x of items) (m.get(keyOf(x)) ?? m.set(keyOf(x), []).get(keyOf(x))).push(x);
+    return [...m].map(([k, rows]) => [label(k, rows), rows]);
   };
   let groups;
-  if (state.sort === "field"){
-    const m = new Map();
-    for (const x of items.sort(byDeadline)) (m.get(x.c.field) ?? m.set(x.c.field, []).get(x.c.field)).push(x);
-    groups = [...m].map(([f, rows]) => [FIELD[f] || f, rows]);
-  } else if (state.sort === "scale"){
-    // 규모는 지표가 다르면 비교가 성립하지 않는다. 지표별로 나눠 정렬한다.
-    const has = items.filter(x => x.c.scale), no = items.filter(x => !x.c.scale);
-    const m = new Map();
-    for (const x of has.sort((a,b) => b.c.scale.value - a.c.scale.value))
-      (m.get(x.c.scale.metric) ?? m.set(x.c.scale.metric, []).get(x.c.scale.metric)).push(x);
-    groups = [...m].map(([k, rows]) => [`${METRIC[k]} 규모순 (${k==="submitted"?"논문 투고 편수":"참가자 수"})`, rows]);
-    if (no.length) groups.push(["규모 미상", no.sort(byDeadline)]);
-  } else if (state.sort === "tier"){
-    const m = new Map();
-    for (const x of items.sort((a,b) => a.c.tier - b.c.tier || byDeadline(a,b))) 
-      (m.get(x.c.tier) ?? m.set(x.c.tier, []).get(x.c.tier)).push(x);
-    groups = [...m].map(([t, rows]) => [`T${t} — ${["","반드시 챙길 학회","관련 있는 학회","참고"][t]}`, rows]);
-  } else if (state.sort === "start"){
-    groups = [["개최일 순", items.sort((a,b) => a.c.start.localeCompare(b.c.start))]];
-  } else {
-    const s = items.sort(byDeadline);
-    groups = [["🔥 2주 내",        s.filter(x => x.d && days(x.d.date) <= 14)],
-              ["다가오는 마감 (3개월)", s.filter(x => x.d && days(x.d.date) > 14 && days(x.d.date) <= 92)],
-              ["그 이후",          s.filter(x => x.d && days(x.d.date) > 92)],
-              ["제출 마감 종료 · 개최 예정", s.filter(x => !x.d).sort((a,b) => a.c.start.localeCompare(b.c.start))]];
-  }
+  if (state.sort === "field")
+    groups = bucket(x => x.c.field, f => FIELD[f] || f);
+  else if (state.sort === "tier")
+    groups = bucket(x => x.c.tier, t => `T${t} — ${["","반드시 챙길 학회","관련 있는 학회","참고"][t]}`);
+  else if (state.sort === "scale")
+    groups = bucket(x => x.c.scale?.metric ?? "none",
+                    k => k === "none" ? "규모 미상"
+                       : `${METRIC[k]} 규모순 (${k === "submitted" ? "논문 투고 편수" : "참가자 수"})`);
+  else if (state.sort === "start")
+    groups = [["개최일 순", items]];
+  else
+    groups = [["🔥 2주 내",          items.filter(x => x.d && days(x.d.date) <= 14)],
+              ["다가오는 마감 (3개월)", items.filter(x => x.d && days(x.d.date) > 14 && days(x.d.date) <= 92)],
+              ["그 이후",            items.filter(x => x.d && days(x.d.date) > 92)],
+              ["제출 마감 종료 · 개최 예정",
+               items.filter(x => !x.d).sort((a,b) => a.c.start.localeCompare(b.c.start))]];
   const html = groups.filter(([,r]) => r.length)
     .map(([label, rows]) => `<h2 class="grp">${esc(label)}</h2>` + rows.map(x => cardHTML(x.c)).join(""))
     .join("");
   document.getElementById("v-list").innerHTML = html || `<p class="meta">해당 학회 없음</p>`;
+}
+
+// 목록·칸반·표가 같은 정렬 비교자를 공유한다. 뷰마다 정렬을 다시 구현하지 않는다.
+function sortedItems(){
+  const items = visible().map(c => ({c, d:nextDl(c)}));
+  const byDeadline = (a,b) => {
+    const A = a.d ? days(a.d.date) : 1e6 + until(a.c.start);
+    const B = b.d ? days(b.d.date) : 1e6 + until(b.c.start);
+    return A - B;
+  };
+  const cmp = {
+    start:    (a,b) => a.c.start.localeCompare(b.c.start),
+    tier:     (a,b) => a.c.tier - b.c.tier || byDeadline(a,b),
+    field:    (a,b) => (FIELD[a.c.field]||"").localeCompare(FIELD[b.c.field]||"") || byDeadline(a,b),
+    // 규모는 지표가 다르면 비교가 성립하지 않으므로 지표로 먼저 묶고 그 안에서만 큰 순서
+    scale:    (a,b) => (a.c.scale?0:1) - (b.c.scale?0:1)
+                    || (a.c.scale && b.c.scale ? a.c.scale.metric.localeCompare(b.c.scale.metric) : 0)
+                    || ((b.c.scale?.value ?? 0) - (a.c.scale?.value ?? 0)),
+  }[state.sort] || byDeadline;
+  return {items: items.sort(cmp), byDeadline};
+}
+
+function renderKanban(){
+  const {items} = sortedItems();
+  const cols = [
+    ["🔥 2주 내",        x => x.d && days(x.d.date) <= 14],
+    ["1-3개월",          x => x.d && days(x.d.date) > 14 && days(x.d.date) <= 92],
+    ["3개월 이후",       x => x.d && days(x.d.date) > 92],
+    ["제출 종료 · 개최 예정", x => !x.d],
+  ];
+  document.querySelector("#v-kb .kb").innerHTML = cols.map(([label, pred]) => {
+    const rows = items.filter(pred);
+    return `<div class="kbcol">
+      <div class="kbhead"><span>${esc(label)}</span><span class="c">${rows.length}</span></div>
+      ${rows.map(({c,d}) => {
+        const n = d ? days(d.date) : until(c.start);
+        const dd = d ? dday(n) : meetState(c);
+        const est = d && d.status !== "confirmed";
+        return `<div class="kbcard" data-id="${c.id}">
+          <div class="top"><span class="dd ${n<=14?"hot":""}">${dd}</span>
+            <span class="nm2">${esc(c.title)} ${c.year}</span>
+            <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
+            <span class="chip t">T${c.tier}</span>
+            ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
+          <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:"제출 마감 종료"}</div>
+          <div class="sm">📍 ${esc(c.date_text || fmt(c.start))} · ${esc(c.city)}</div>
+        </div>`;
+      }).join("") || `<div class="sm" style="color:var(--faint);padding:2px">없음</div>`}
+    </div>`;
+  }).join("");
+}
+
+function renderTable(){
+  const {items} = sortedItems();
+  const cols = [["학회","tier"],["분야","field"],["제출 마감","deadline"],["D-day","deadline"],
+                ["개최","start"],["장소",null],["규모","scale"]];
+  document.querySelector("#v-tbl thead tr").innerHTML =
+    cols.map(([t,k]) => `<th class="${k && k===state.sort?"on":""}">${t}</th>`).join("");
+  document.querySelector("#v-tbl tbody").innerHTML = items.map(({c,d}) => {
+    const n  = d ? days(d.date) : until(c.start);
+    const sc = c.scale;
+    const est = d && d.status !== "confirmed";
+    return `<tr data-id="${c.id}">
+      <td class="w"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
+        <b>${esc(c.title)} ${c.year}</b> <span class="chip t">T${c.tier}</span></td>
+      <td>${esc(FIELD[c.field]||c.field)}</td>
+      <td class="n">${d?fmt(d.date):"—"} ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</td>
+      <td class="n" style="${d&&n<=14?"color:var(--urgent)":""}">${d?dday(n):meetState(c)}</td>
+      <td class="n">${esc(c.start.slice(2).replace(/-/g,"."))}</td>
+      <td class="w">${esc([c.city,c.country].filter(Boolean).join(", "))}</td>
+      <td class="n">${sc?`${num(sc.value)} <span style="color:var(--dim)">${METRIC[sc.metric]}</span>`:"—"}</td>
+    </tr>`;
+  }).join("");
 }
 
 function renderCycle(){
@@ -348,7 +453,7 @@ function openDetail(id){
     const n = days(d.date), tag = d.status === "confirmed" ? "" :
       ` <span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`;
     return `<div class="dl ${n<0?"done":""}"><span class="l">${esc(d.label)}${tag}</span>
-      <span class="d">${fmt(d.date)}${d.tz?" "+esc(d.tz):""} ${n>=0?`· D-${n}`:""}</span></div>`;
+      <span class="d">${fmt(d.date)}${d.tz?" "+esc(d.tz):""} ${n>=0?`· ${dday(n)}`:""}</span></div>`;
   }).join("") || `<p class="note">공지된 마감 없음 (업스트림 미등록 또는 학회 미발표)</p>`;
   const sc = c.scale;
   const links = [["학회 사이트", c.link], ...c.links.map(([a,b]) => [a,b])]
@@ -380,12 +485,10 @@ document.getElementById("veil").onclick = e => { if (e.target.id === "veil") clo
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 
 function render(){
-  for (const [v, el] of [["list","v-list"],["cyc","v-cyc"],["src","v-src"]])
-    document.getElementById(el).hidden = state.view !== v;
-  document.getElementById("bar2").style.display = state.view === "src" ? "none" : "";
-  if (state.view === "list") renderList();
-  else if (state.view === "cyc") renderCycle();
-  else renderSources();
+  for (const v of ["list","kb","tbl","cyc","src"])
+    document.getElementById("v-"+v).hidden = state.view !== v;
+  document.getElementById("bar2").style.display = (state.view === "src") ? "none" : "";
+  ({list:renderList, kb:renderKanban, tbl:renderTable, cyc:renderCycle, src:renderSources})[state.view]();
 }
 
 function bindGroup(sel, apply){
