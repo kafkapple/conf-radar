@@ -626,8 +626,8 @@ function renderKanban(){
 
 function renderTable(){
   const {items} = sortedItems();
-  const cols = [["학회","tier"],["CORE","rank"],["분야","field"],["제출 마감","deadline"],["D-day","deadline"],
-                ["개최","start"],["전형 주기","cycle"],["장소",null],["규모","scale"],["리뷰",null],["트랙",null],["연계",null]];
+  const cols = [["학회","tier"],["등급 · 인용","rank"],["분야","field"],["제출 마감","deadline"],["D-day","deadline"],
+                ["개최","start"],["전형 주기","cycle"],["장소",null],["투고 → 채택","scale"],["리뷰",null],["트랙",null],["연계",null]];
   document.querySelector("#v-tbl thead tr").innerHTML =
     cols.map(([t,k]) => `<th class="${k && k===state.sort?"on":""}">${t}</th>`).join("");
   document.querySelector("#v-tbl tbody").innerHTML = items.map(({c,d}) => {
@@ -636,7 +636,7 @@ function renderTable(){
     return `<tr data-id="${c.id}">
       <td class="w"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
         <b>${esc(c.title)}${c.next?" "+c.next:""}</b> <span class="chip t">T${c.tier}</span>${wsChip(c)}</td>
-      <td>${esc(c.rank.core || "—")}</td>
+      <td class="n">${esc(c.rank.core || "—")}${c.h5 ? ` <span style="color:var(--dim)">h5 ${c.h5}</span>` : ""}</td>
       <td>${esc(FIELD[c.field]||c.field)}</td>
       <td class="n">${d?fmt(d.date):"—"} ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</td>
       <td class="n" style="${d&&n<=14?"color:var(--urgent)":""}">${d?dday(n):(meetState(c)||"미공지")}</td>
@@ -644,8 +644,13 @@ function renderTable(){
       <td class="n">${t.deadline_month?t.deadline_month+"월":"?"}→${t.meeting_month}월
         <span style="color:var(--faint)">n=${t.n_meeting}</span></td>
       <td class="w">${esc([c.city,c.country].filter(Boolean).join(", ")) || "—"}</td>
-      <td class="n">${sc?`${num(sc.value)} <span style="color:var(--dim)">${METRIC[sc.metric]}</span>`:"—"}</td>
-      <td>${c.review ? REVIEW[c.review.level].icon : "—"}</td>
+      <td class="n">${(() => { const st = latestStat(c);
+        if (st && st.accepted) return `${num(st.submitted)} → ${num(st.accepted)}
+          <span style="color:var(--dim)">${(st.rate*100).toFixed(1)}% · ${st.year}</span>`;
+        return sc ? `${num(sc.value)} <span style="color:var(--dim)">${METRIC[sc.metric]} · ${sc.year}</span>` : "—"; })()}</td>
+      <td class="w">${c.review
+        ? `<span class="chip rv ${c.review.level}" title="${esc(c.review.note || "")}">${REVIEW[c.review.level].icon} ${esc(REVIEW[c.review.level].label.replace("리뷰 ",""))}</span>`
+        : "—"}</td>
       <td class="w">${trackChips(c) || (c.tracks && c.tracks.length ? "<span style=\"color:var(--faint)\">없음</span>" : "—")}</td>
       <td>${c.programs.length?esc(KIND[c.programs[0].kind]||"연계"):"—"}</td>
     </tr>`;
