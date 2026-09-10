@@ -7,18 +7,33 @@
 # 규칙 = neuro.yml 과 같다. 근거 URL 없는 수치는 넣지 않는다. 미공개는 항목을 비우고
 # note 로 왜 비었는지 적는다. "미공개"와 "0"은 다른 말이다.
 #
-# 🔴 업스트림과 어긋나는 값 2건 (2026-09-10 발견). 여기 값이 우선이고, 이유를 적어 둔다.
+# 🔴 업스트림과 어긋나는 값 (2026-09-10).
 #   - ICML 2024: 업스트림(csconfstats) accepted 2,609 · 우리 값 2,944.
 #     2,609 는 papercopilot 의 **poster 수**와 정확히 일치한다. 업스트림이 오랄·스포트라이트를
 #     빠뜨린 것으로 보인다. 총 채택은 2,944(오랄 144 + 스포트라이트 191 + 포스터 2,609).
-#   - ACL 2024: 업스트림 943 · 논문(arXiv 2512.04448) 865.
-#     long/short 집계 범위가 다른 것으로 보이나 어느 쪽이 무엇인지 확정 못 했다 → 🟡 미해결.
-#     업스트림 값을 그대로 두고 여기서는 건드리지 않는다.
+#   - ACL 2024: 업스트림 943 · 논문(arXiv 2512.04448) 865 → **943 으로 종결(260910)**.
+#     독립 집계 두 곳(csconfstats·openaccept.org)이 4,407/943/21.40% 로 일치한다. 논문 쪽 계열은
+#     "692 long-paper submissions" 로 시작하는 long 전용 시계열이라 865 는 long 만으로 읽힌다.
+#     확정은 아니지만 2대1 이고 범위 설명이 붙으므로 943 을 쓴다.
+#
+# ⚠️ ACL 은 "본 학회 채택"과 "전체 게재"가 크게 다르다. 2025 = 본 학회 1,699(20.3%) 인데
+#    Findings·Industry·Demo 를 합친 전체 게재는 3,091(37.0%) 이다. 다른 넷과 비교할 때는 본 학회 쪽.
+#
+# review = 리뷰 공개 수준. 세 단계로만 적는다.
+#   open    심사 중부터 논문·리뷰·토론이 공개되고 탈락분도 영구 공개 (ICLR)
+#   partial 결정 후 채택분만 공개. 심사 중에는 비공개 (NeurIPS · ICML)
+#   closed  리뷰가 공개되지 않음. OpenReview 를 써도 마찬가지 (CVPR · ACL/ARR)
 
 meta:
   verified: '2026-09-10'
 
 CVPR:
+  review:
+    level: closed
+    platform: OpenReview
+    note: 투고·심사는 OpenReview 로 옮겼지만 리뷰·리버틀·메타리뷰는 공개되지 않는다.
+    url: https://cvpr.thecvf.com/Conferences/2026/AuthorGuidelines
+    verified: '2026-09-10'
   tiers: [Oral, Highlight, Poster]
   tier_note: >-
     계층은 개최 2주 전쯤 확정 공개된다. 채택 통보 시점에는 등급이 안 붙는다.
@@ -36,6 +51,12 @@ CVPR:
       verified: '2026-09-10'
 
 NeurIPS:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 결정 후 채택분의 리뷰가 공개된다. 심사 중에는 비공개이고, 탈락분 공개는 저자 선택.
+    url: https://neurips.cc/Conferences/2025/ReviewerGuidelines
+    verified: '2026-09-10'
   tiers: [Oral, Spotlight, Poster]
   tier_counts:
     - year: 2025
@@ -66,6 +87,14 @@ NeurIPS:
       verified: '2026-09-10'
 
 ICLR:
+  review:
+    level: open
+    platform: OpenReview
+    note: >-
+      심사 기간부터 논문·리뷰·저자 응답이 누구에게나 보이고, 결정 뒤에는 탈락분까지 영구 공개된다.
+      투고 전에 리뷰 문화를 확인할 수 있는 유일한 곳이다.
+    url: https://iclr.cc/Conferences/2026/CallForPapers
+    verified: '2026-09-10'
   tiers: [Oral, Spotlight, Poster]
   tier_counts:
     - year: 2026
@@ -100,6 +129,14 @@ ICLR:
       verified: '2026-09-10'
 
 ICML:
+  review:
+    level: partial
+    platform: OpenReview
+    note: >-
+      결정 후 채택분의 리뷰가 공개된다. 심사 중에는 비공개.
+      리뷰 점수의 초안-최종 변화는 공개하지 않는다(arXiv 2510.13201 은 이 점을 들어 ICML 을 closed 로 분류).
+    url: https://icml.cc/Conferences/2026/AuthorInstructions
+    verified: '2026-09-10'
   tiers: [Oral, Spotlight, Poster]
   tier_counts:
     - year: 2025
@@ -132,6 +169,27 @@ ICML:
       verified: '2026-09-10'
 
 ACL:
+  review:
+    level: closed
+    platform: ARR (OpenReview 위)
+    note: ARR 은 OpenReview 를 쓰지만 공개 리뷰가 아니다. 리뷰는 저자와 심사진에게만 보인다.
+    url: https://aclrollingreview.org/cfp
+    verified: '2026-09-10'
+  tier_counts:
+    - year: 2025
+      submitted: 8360
+      accepted: 1699
+      rate: 0.2032
+      source: https://openaccept.org/c/ai/acl/
+      note: >-
+        본 학회 기준. Findings·Industry·Demo 를 합친 전체 게재는 3,091(37.0%)
+        (papercopilot.com/statistics/acl-statistics/acl-2025-statistics/).
+    - year: 2024
+      submitted: 4407
+      accepted: 943
+      rate: 0.2140
+      source: https://openaccept.org/c/ai/acl/
+      note: 독립 집계 두 곳이 일치. 파일 머리말의 865 불일치 종결 근거.
   tiers: [Oral, Poster]
   tier_note: >-
     본 학회 채택분은 오랄과 포스터로 갈린다. 그 아래에 Findings 라는 별도 게재 등급이 있어

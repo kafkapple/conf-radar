@@ -232,6 +232,8 @@ def build(offline: bool = False) -> dict:
         s["tier_note"] = v.get("tier_note", "")
         s["tier_counts"] = v.get("tier_counts", [])
         s["tracks"] = v.get("tracks", [])
+        # 리뷰 공개 수준 = open / partial / closed. 투고처를 고를 때 트랙만큼 갈리는 축이다.
+        s["review"] = v.get("review")
         # 손으로 확인한 수치(근거 URL 동반)가 집계기보다 우선한다. 같은 해가 둘 다 있으면 덮는다.
         for tc in s["tier_counts"]:
             if not (tc.get("submitted") and tc.get("accepted")):
@@ -264,7 +266,9 @@ def build(offline: bool = False) -> dict:
                  # 트랙 이름도 검색어에 넣는다 — "포지션"·"Findings" 로 바로 걸러진다
                  search=" ".join([s["title"], s["full_name"], nx.get("city", ""),
                                   nx.get("country", ""), s["field"],
-                                  s["rank"].get("core", "")]
+                                  s["rank"].get("core", ""),
+                                  {"open": "공개리뷰 openreview", "partial": "부분공개",
+                                   "closed": "비공개"}.get((s["review"] or {}).get("level"), "")]
                                  + [t["name"] for t in s["tracks"]]).lower())
 
     data = {"generated": today.isoformat(), "series": series,
@@ -327,6 +331,8 @@ def check(d: dict) -> None:
         if x["major"]:
             assert x["tiers"], f"{x['title']}: 발표 계층 미기재 — data/venues.yml"
             assert x["tracks"], f"{x['title']}: 트랙 미기재 — data/venues.yml (없으면 kind: none)"
+            assert (x["review"] or {}).get("level") in ("open", "partial", "closed"), \
+                f"{x['title']}: 리뷰 공개 수준 미기재 — data/venues.yml"
     for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
     eds = [e for x in s for e in x["editions"]]
