@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # 학회 레이더 런처 — `conf` 알리아스가 이 파일을 부른다.
 #
-#   conf            메이저 학회만 (CORE A*) 로컬에서 열기
+#   conf            메이저 5곳을 타임라인으로 — 마감→개최 막대를 한 화면에서 본다
+#   conf list       메이저 5곳을 목록(D-day)으로
 #   conf all        전체 목록으로 열기
-#   conf web        공개 사이트(GitHub Pages) 열기 — 로컬 서버를 안 쓴다
+#   conf web        공개 사이트(GitHub Pages) 타임라인 — 로컬 서버를 안 쓴다
 #   conf update     업스트림 재수집 + 빌드 + 커밋·푸시 (공개 사이트 반영)
 #   conf stop       로컬 서버 종료
 #   conf status     로컬 서버 상태
@@ -38,9 +39,10 @@ serve(){
 }
 
 case "${1:-major}" in
-    major|"")  serve "#major" ;;
+    major|"")  serve "#major,cyc" ;;
+    list)      serve "#major" ;;
     all)       serve "" ;;
-    web)       open "$SITE#major" ;;
+    web)       open "$SITE#major,cyc" ;;
     stop)
         if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
             kill "$(cat "$PIDFILE")"; rm -f "$PIDFILE"
@@ -66,5 +68,5 @@ case "${1:-major}" in
         git diff --cached --quiet || git commit -m "chore: rebuild $(date +%F)"
         git push origin main
         echo "conf: main 푸시 완료 — Actions 가 gh-pages 로 배포한다 ($SITE)" ;;
-    *)  sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//' ;;
+    *)  sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac

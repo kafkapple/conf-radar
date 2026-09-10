@@ -648,21 +648,22 @@ function renderCycle(){
   const actual = state.cycMode === "actual";
   document.querySelector("#v-cyc .tl").hidden  = !actual;
   document.querySelector("#v-cyc .cyc").hidden =  actual;
-  const shown = (actual ? cycActual : cycTypical)();
-  // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다. 이유를 같이 적는다.
-  const hidden = visible().length - shown;
+  const drawn = new Set((actual ? cycActual : cycTypical)());
+  // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다.
+  // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
+  const missing = visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
     ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
-       ${hidden > 0 ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없는 학회 ${hidden}건은
-         빠져 있다 — 전형 주기 축에서 볼 것</span>` : ""}`
+       ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
+         ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
     : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">과거 회차에서 유도한 연 주기 · 연도를 접은 그림</span>`;
 }
 
-function cycTypical(){
+function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이 빠진 것을 이름으로 적는다)
   // 연도를 접어 "매년 대략 언제인가" 를 본다. 차기 회차가 없는 학회도 자리를 갖는다.
   const rows = visible().slice().sort((a,b) =>
     a.typical.meeting_month - b.typical.meeting_month || a.title.localeCompare(b.title));
@@ -681,7 +682,7 @@ function cycTypical(){
     }).join("");
     return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}</span></td>${cells}</tr>`;
   }).join("");
-  return rows.length;
+  return rows.map(c => c.id);   // 전형 축은 모두 자리를 갖는다 — 빠지는 것이 없다
 }
 
 function cycActual(){
@@ -734,7 +735,7 @@ function cycActual(){
                : `<span class="out ${to > 78 ? "l" : ""}">${esc(label)}</span>`}
     </div></div>`;
   }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
-  return rows.length;
+  return rows.map(r => r.c.id);
 }
 
 function renderSources(){
@@ -1038,10 +1039,24 @@ document.getElementById("foot").innerHTML =
    h5-index = <a href="https://scholar.google.com/citations?view_op=top_venues&amp;hl=en&amp;vq=eng_artificialintelligence" target="_blank" rel="noopener">Google Scholar Metrics</a> 2025 판(<code>data/impact.yml</code>).
    뇌과학 학회와 연계 제도는 수동 큐레이션(<code>data/neuro.yml</code> · <code>data/programs.yml</code>).<br>
    <b>추정</b>·<b>미공지</b> 배지가 붙은 마감은 공식 확정값이 아니다. 전형 주기는 과거 회차 평균이지 예고가 아니다.`;
-// #major 로 열면 메이저 모드로 시작한다. 셸 알리아스와 Alfred 가 이 주소를 쓴다.
-if (/major/i.test(location.hash)){
+// 주소 끝 토큰으로 첫 화면을 정한다 — `#major,cyc` = 메이저만 타임라인으로.
+// 셸 알리아스(conf)와 Alfred 앱이 이 주소를 쓴다. 구분자는 쉼표·#·/ 아무거나 받는다.
+const HASH = new Set(location.hash.slice(1).toLowerCase().split(/[,#/+]/).filter(Boolean));
+if (HASH.has("major")){
   state.major = true;
   document.getElementById("major").setAttribute("aria-pressed", true);
+}
+const hv = ["list","kb","tbl","map","cyc","src"].find(v => HASH.has(v));
+if (hv){
+  state.view = hv;
+  for (const b of document.querySelectorAll("[data-v]"))
+    b.setAttribute("aria-pressed", b.dataset.v === hv);
+}
+const hm = [6,12,24].find(m => HASH.has(m + "m"));
+if (hm){
+  state.months = hm;
+  for (const b of document.querySelectorAll("[data-mo]"))
+    b.setAttribute("aria-pressed", +b.dataset.mo === hm);
 }
 render();
 </script>

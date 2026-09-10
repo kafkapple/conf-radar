@@ -138,22 +138,38 @@ assert 로 잡는다. 업스트림 등급 파싱이나 h5 표가 깨지면 필�
 셸에서는 `conf` 하나로 끝난다 (알리아스 정의는 `~/.zshrc`, 실체는 `scripts/conf.sh`).
 
 ```
-conf            메이저 학회만, 로컬 서버(:8897) 로 열기
-conf all        전체 목록으로 열기
-conf web        공개 사이트 열기 (서버 안 씀)
+conf            메이저 5곳 타임라인 (마감→개최 막대를 한 화면에)
+conf list       메이저 5곳 목록 (D-day 순)
+conf all        전체 38건 목록
+conf web        공개 사이트 타임라인 (서버 안 씀)
 conf update     업스트림 재수집 + 빌드 + 커밋·푸시
 conf stop       로컬 서버 종료
 conf status     서버 상태
 ```
 
+**주소 끝 토큰으로 첫 화면이 정해진다.** `#major,cyc` = 메이저만 타임라인,
+`#major,tbl` = 표, `#24m` = 24개월 창. 받는 토큰 = `major` · `list|kb|tbl|map|cyc|src` ·
+`6m|12m|24m`, 구분자는 쉼표·`#`·`/`·`+` 아무거나.
+
 로컬 서버를 쓰는 이유 = `file://` 에서는 서비스 워커가 등록되지 않아 오프라인 캐시가 죽는다.
 서버를 끌 때 pid 파일만 본다 — `pkill -f` 는 그 명령 자신이 패턴에 걸린다.
 
-Alfred 는 키워드 하나를 사이트에 걸어 쓴다 (워크플로 plist 는 사람이 만든다).
+### Alfred
 
-- 셸 명령으로: Alfred 에서 `>conf` — 터미널이 열리며 알리아스가 그대로 돈다. 설정 불필요.
-- 웹 검색으로: Alfred 환경설정 → Features → Web Search → Add Custom Search,
-  URL `https://kafkapple.github.io/conf-radar/#major`, 키워드 `conf`.
+`bash scripts/make_alfred_apps.sh` 를 한 번 돌리면 `~/Applications` 에 앱 두 개가 생긴다.
+
+| Alfred 에서 | 하는 일 |
+|---|---|
+| `학회 레이더` | 서버 띄우고 메이저 타임라인 열기 |
+| `학회 레이더 종료` | 서버 종료 |
+
+「학회」 세 글자면 둘 다 뜬다. **Alfred 설정을 건드리지 않는다** — 워크플로·커스텀 검색은
+plist 안에 들어가서 사람이 만들어야 하지만, Alfred 는 `~/Applications` 를 기본으로 훑기
+때문에 앱 번들만 두면 잡힌다. GUI 로 뜨는 앱은 로그인 셸을 안 거쳐 `PATH` 가 최소라
+번들 안에서 `PATH` 를 직접 세운다.
+
+다른 경로 둘 — Alfred 에서 `>conf` (터미널 명령, 설정 불필요) · Web Search 커스텀 키워드로
+`https://kafkapple.github.io/conf-radar/#major,cyc` 등록.
 
 직접 돌릴 때:
 
