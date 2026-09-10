@@ -193,7 +193,11 @@ table.dense td.w{white-space:normal;min-width:150px}
   display:flex;align-items:center;padding:0 8px;background:var(--bg);font-size:12px;font-weight:700;
   border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tlname span.ai{box-shadow:inset 3px 0 0 var(--ai)} .tlname span.neuro{box-shadow:inset 3px 0 0 var(--neuro)}
-#tlctl[hidden]{display:none!important}   /* 인라인 display:contents 가 hidden 속성을 이긴다 */
+#tlctl[hidden]{display:none!important}
+.tlrow.sub{height:25px}
+.tlrow.sub .tlbar{top:3px;height:19px;font-size:11px}
+.tlrow.sub .tlname,.tlrow.sub .tlname span{height:25px}
+.tlname span.sub{font-weight:500;color:var(--dim);font-size:11px;padding-left:16px}   /* 인라인 display:contents 가 hidden 속성을 이긴다 */
 .tlname.hd{height:auto;align-self:stretch;flex:none}
 .tlname.hd span{height:100%;background:var(--card);color:var(--dim);font-weight:600;font-size:11px}
 /* 워크샵 막대 — 빗금으로 본 학회 개최와 구분한다 */
@@ -495,6 +499,11 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-tm="meet" title="개최 기간만">개최만</button>
     <button data-tm="ws" title="부설 워크샵 — 논문 창과 워크샵 날 (공식 권장일 또는 추산)">🧩 워크샵</button>
     <span class="sep"></span>
+    <span class="lbl">줄</span>
+    <button data-ts="cal" aria-pressed="true" title="전형 제출 마감이 이른 학회부터 — 1월 ACL·ICML → 5월 NeurIPS → 9월 ICLR → 11월 CVPR">연중 마감순</button>
+    <button data-ts="next" title="지금부터 가장 먼저 다가오는 일정 순">다가오는 순</button>
+    <button data-ts="name" title="학회 이름 순">이름순</button>
+    <span class="sep"></span>
     <button id="tl-now" class="now" title="오늘 위치로 스크롤">↦ 오늘로</button>
     </span>
   </div>
@@ -587,7 +596,7 @@ const loadMo = () => { try { const m = +localStorage.getItem(MO_KEY); return [3,
 // AND 로 걸려서, T1·2 를 눌러도 메이저 5곳만 남는 화면이 된다(260910 사용자 신고).
 const state = {view:"cyc", group:"all", rank:"major", sort:"deadline", q:"", subOnly:true,
                favOnly:false, withWs:true, openRev:false,
-               mapMode:"next", cycMode:"actual", months:loadMo(), tlMode:"both", fav:loadFav()};
+               mapMode:"next", cycMode:"actual", months:loadMo(), tlMode:"both", tlSort:"cal", fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -898,7 +907,7 @@ function renderCycle(){
   const missing = mode === "plan" || (actual && state.tlMode === "ws") ? []
     : visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = mode === "plan" ? "" : actual
-    ? `<span><b>📮 마감 → ⏳ 심사 → 🎤 개최</b> · 🧩 부설 워크샵(빗금 = 워크샵 날, 점선 = 추산)</span>
+    ? `<span><b>📮 마감 → ⏳ 심사 → 🎤 개최</b> · 🧩 부설 워크샵 = 각 학회 아래 ↳ 줄(빗금 = 워크샵 날, 점선 = 추산)</span>
        <span><span class="sw2 rev"></span> 회색 막대 = <b>심사 기간</b> (제출 → 통보)</span>
        <span><span class="sw2 act"></span> 안쪽 진한 칸 = <b>저자가 일하는 때</b> (제출·리버틀·최종본)</span>
        <span><span class="sw2 meet"></span> 진한 막대 = <b>개최 기간</b></span>
@@ -1090,25 +1099,27 @@ function cycActual(){
   // 회차 단위로 막대를 만든다. 시리즈에 붙어 있는 start/deadlines 는 차기 회차 것뿐이라,
   // 그것만 쓰면 과거 구간이 비어 버린다.
   const bars = [];
+  // 부설 워크샵 — 본 학회 바로 아래 ↳ 줄(sub)에 그린다. 같은 줄에 얹으면 NeurIPS 워크샵 마감(8/29)이
+  // 본 심사 막대(5/4→9/24) 한가운데 떨어져 겹친다. 창은 학회당 한 해 것만 공지되므로
+  // 다른 회차는 개최일 간격만큼 옮겨 추산한다.
+  const pushWs = (c, e) => {
+    const w = wsOf(c, e);
+    if (!w) return;
+    const pEnd = w.paper[1] > w.paper[0] ? w.paper[1] : addDays(w.paper[0], 3);
+    const ph = [{from: w.paper[0], to: pEnd, act: true, name: "워크샵 논문"},
+                ...(w.notify ? [{from: pEnd, to: w.notify, act: false, name: "결정 대기"}] : [])];
+    const a = pct(w.paper[0]), z = pct(ph[ph.length - 1].to), d0 = pct(w.days[0]), d1 = pct(w.days[1]);
+    if (z > 0 && a < 100)
+      bars.push({c, e, sub: true, dl: {date: w.paper[0], type: "paper", status: "confirmed", p: a}, kind: "wsp", ph, ws: w,
+                 from: Math.max(0, a), to: Math.min(100, Math.max(z, a + 0.15)), past: z < now, trunc: a < 0});
+    if (d1 > 0 && d0 < 100)
+      bars.push({c, e, sub: true, dl: null, kind: "wsd", ws: w, ms: d0, me: d1,
+                 from: Math.max(0, d0), to: Math.min(100, Math.max(d1, d0 + 0.15)), past: d1 < now, trunc: d0 < 0});
+  };
   for (const c of visible()) for (const e of c.editions){
     const subs = (e.deadlines || []).filter(d => SUBMIT.has(d.type)).sort((x, y) => x.date < y.date ? -1 : 1);
 
-    if (state.tlMode === "ws"){
-      // 부설 워크샵. 창은 학회당 한 해 것만 공지되므로 다른 회차는 개최일 간격만큼 옮겨 추산한다.
-      const w = wsOf(c, e);
-      if (!w) continue;
-      const pEnd = w.paper[1] > w.paper[0] ? w.paper[1] : addDays(w.paper[0], 3);
-      const ph = [{from: w.paper[0], to: pEnd, act: true, name: "워크샵 논문"},
-                  ...(w.notify ? [{from: pEnd, to: w.notify, act: false, name: "결정 대기"}] : [])];
-      const a = pct(w.paper[0]), z = pct(ph[ph.length - 1].to), d0 = pct(w.days[0]), d1 = pct(w.days[1]);
-      if (z > 0 && a < 100)
-        bars.push({c, e, dl: {date: w.paper[0], type: "paper", status: "confirmed", p: a}, kind: "wsp", ph, ws: w,
-                   from: Math.max(0, a), to: Math.min(100, Math.max(z, a + 0.15)), past: z < now, trunc: a < 0});
-      if (d1 > 0 && d0 < 100)
-        bars.push({c, e, dl: null, kind: "wsd", ws: w, ms: d0, me: d1,
-                   from: Math.max(0, d0), to: Math.min(100, Math.max(d1, d0 + 0.15)), past: d1 < now, trunc: d0 < 0});
-      continue;
-    }
+    if (state.tlMode === "ws"){ pushWs(c, e); continue; }
     if (state.tlMode === "dl"){
       // 회차 하나 = 막대 하나(첫 마감 → 마지막 마감). 마감마다 막대·라벨을 따로 달면
       // 초록·본문·보충이 며칠 간격이라 글자가 서로 겹쳐 깨졌다 (260910 사용자 신고).
@@ -1147,6 +1158,7 @@ function cycActual(){
             from: Math.max(0, ms), to: Math.min(100, Math.max(me, ms + 0.15)),
             past: me < now, trunc: ms < 0});
     }
+    pushWs(c, e);   // 마감→개최 모드에서도 워크샵을 ↳ 줄로 같이 본다 (260910 사용자 요청)
   }
 
   // 확정 일정이 없는 앞쪽은 과거 주기로 투영한다. 공지된 날이 아니므로 점선 + 표본 수.
@@ -1173,7 +1185,8 @@ function cycActual(){
   // 한 학회 = 한 줄. 막대마다 줄을 하나씩 주면 같은 학회가 여러 줄로 흩어지고 화면이 세 배로 길어진다.
   const byId = new Map();
   for (const b of bars){
-    const r = byId.get(b.c.id) ?? byId.set(b.c.id, {c: b.c, bars: []}).get(b.c.id);
+    const k = b.c.id + (b.sub ? ":ws" : "");
+    const r = byId.get(k) ?? byId.set(k, {c: b.c, sub: !!b.sub, bars: []}).get(k);
     r.bars.push(b);
   }
   const rows = [...byId.values()];
@@ -1183,7 +1196,22 @@ function cycActual(){
     const next = r.bars.find(b => b.to >= now);
     r.anchor = next ? next.from : 1e3;
   }
-  rows.sort((a, b) => a.anchor - b.anchor || a.c.title.localeCompare(b.c.title));
+  // 줄 순서. 기본 = 연중 마감순 — 전형 제출 마감월(1월부터), 같은 달이면 그 달 안의 날짜.
+  // "다가오는 순" 은 오늘 기준이라 달마다 순서가 바뀌어 한 해의 리듬이 안 읽힌다 (260910 사용자 요청).
+  const calKey = c => {
+    const m = c.typical.deadline_month || 13;
+    const dd = c.editions.flatMap(e => (e.deadlines || []).filter(x => SUBMIT.has(x.type)).map(x => x.date.slice(5)))
+      .filter(x => +x.slice(0, 2) === m).sort()[0];
+    return m * 100 + (dd ? +dd.slice(3, 5) : 99);
+  };
+  const byName = (a, b) => a.c.title.localeCompare(b.c.title);
+  rows.sort(state.tlSort === "next" ? (a, b) => a.anchor - b.anchor || byName(a, b)
+          : state.tlSort === "name" ? byName
+          : (a, b) => calKey(a.c) - calKey(b.c) || byName(a, b));
+  // ↳ 워크샵 줄은 자기 학회 바로 아래에 붙인다. 워크샵만 모드면 본 줄이 없으니 제자리에 둔다.
+  const wsRow = new Map(rows.filter(r => r.sub).map(r => [r.c.id, r]));
+  rows.splice(0, rows.length, ...rows.filter(r => !r.sub || !byId.has(r.c.id))
+    .flatMap(r => !r.sub && wsRow.has(r.c.id) ? [r, wsRow.get(r.c.id)] : [r]));
 
   document.querySelector("#v-cyc .tlin").style.setProperty("--tlw", totalPx + "px");
   document.querySelector("#v-cyc .tlin").style.setProperty("--namew", NAMEW + "px");
@@ -1246,7 +1274,9 @@ function cycActual(){
       </div>`;
     }).join("");
     const pre = r.c.kind === "workshop" ? "W " : r.c.kind === "track" ? "T " : "";
-    return `<div class="tlrow"><div class="tlname"><span class="${r.c.group}" title="${esc(r.c.full_name || r.c.title)}">${pre}${esc(r.c.title)}</span></div>${inner}</div>`;
+    const under = r.sub && state.tlMode !== "ws";          // 본 학회 줄 아래 붙은 워크샵 줄
+    const nm = r.sub ? (under ? "↳ 🧩 워크샵" : `🧩 ${esc(r.c.title)}`) : `${pre}${esc(r.c.title)}`;
+    return `<div class="tlrow${r.sub ? " sub" : ""}"><div class="tlname"><span class="${r.c.group}${under ? " sub" : ""}" title="${esc(r.c.full_name || r.c.title)}">${nm}</span></div>${inner}</div>`;
   }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
 
   // 열자마자 오늘이 보여야 한다. 36개월을 다 그려 두므로 스크롤 위치를 안 맞추면 작년이 먼저 보인다.
@@ -1587,6 +1617,7 @@ bindGroup("[data-c]", b => state.cycMode = b.dataset.c);
 bindGroup("[data-mo]", b => { state.months = +b.dataset.mo;
   try { localStorage.setItem(MO_KEY, String(state.months)); } catch {} });
 bindGroup("[data-tm]", b => state.tlMode = b.dataset.tm);
+bindGroup("[data-ts]", b => state.tlSort = b.dataset.ts);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
   e.target.setAttribute("aria-pressed", state.favOnly); render();
