@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# Alfred 용 앱 번들 2개를 ~/Applications 에 만든다 (실행 · 종료).
+# Alfred 용 앱 번들을 ~/Applications 에 만든다.
+#
+# 260910: 앱은 하나뿐이다. `conf` 가 공개 사이트를 열도록 되돌리면서 상시 도는 프로세스가
+# 없어졌고, 종료할 것이 없으니 Quit 앱도 없앴다. 로컬 서버는 `conf local` 로만 뜨고
+# 그건 터미널에서 하는 개발 동작이라 런처에 둘 이유가 없다.
 #
 # 이름은 영어다. Alfred 검색창에서 한글은 조합 중 매칭이 흔들리고, `conf` 세 글자가
 # 셸 알리아스와 같은 단어라 두 표면에서 같은 것을 친다 (260910 사용자 지시).
@@ -41,9 +45,9 @@ RUN
 }
 
 mkdir -p "$DEST"
-rm -rf "$DEST/학회 레이더.app" "$DEST/학회 레이더 종료.app"     # 260910 개명 전 이름
+rm -rf "$DEST/학회 레이더.app" "$DEST/학회 레이더 종료.app" \
+       "$DEST/Conference Radar Quit.app"                       # 260910 이전 이름·역할
 make_app "Conference Radar" ""
-make_app "Conference Radar Quit" "stop"
 # Alfred 가 새 앱을 바로 찾도록 Spotlight 색인에 알린다.
 /usr/bin/mdimport "$DEST" 2>/dev/null || true
-echo "Alfred 에서 conf 로 검색 — Conference Radar / Conference Radar Quit"
+echo "Alfred 에서 conf 로 검색 — Conference Radar"

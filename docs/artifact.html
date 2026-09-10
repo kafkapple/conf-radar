@@ -376,6 +376,11 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-mo="6">6개월</button>
     <button data-mo="12" aria-pressed="true">1년</button>
     <button data-mo="24">2년</button>
+    <span class="sep"></span>
+    <span class="lbl">창 이동</span>
+    <button id="tl-prev" title="창을 과거로 반 칸">◀ 이전</button>
+    <button id="tl-now" title="오늘이 포함된 기본 위치로">오늘</button>
+    <button id="tl-next" title="창을 미래로 반 칸">다음 ▶</button>
   </div>
   <div class="tl"><div class="tlin"><div class="tlhead"></div><div class="tlbody"></div></div></div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
@@ -411,7 +416,7 @@ const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s]
 // AND 로 걸려서, T1·2 를 눌러도 메이저 5곳만 남는 화면이 된다(260910 사용자 신고).
 const state = {view:"cyc", group:"all", rank:2, sort:"deadline", q:"", subOnly:true,
                favOnly:false, withWs:true, openRev:false,
-               mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
+               mapMode:"next", cycMode:"actual", months:12, tlShift:0, fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -717,11 +722,16 @@ function renderCycle(){
   // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다.
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
   const missing = visible().filter(c => !drawn.has(c.id));
+  const nowBtn = document.getElementById("tl-now");
+  nowBtn.textContent = state.tlShift === 0 ? "오늘"
+    : (state.tlShift < 0 ? `오늘 ← ${-state.tlShift}개월 전` : `오늘 → ${state.tlShift}개월 뒤`);
+  nowBtn.setAttribute("aria-pressed", state.tlShift !== 0);
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
     ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
+       <span style="color:var(--urgent)">▏빨간 세로선 = 오늘</span>
        <span style="opacity:.7">흐린 막대 = 이미 지난 회차. 창은 오늘 앞쪽 ${Math.max(1, Math.round(state.months / 4))}개월부터 시작한다</span>
        ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
          ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
@@ -758,7 +768,8 @@ function cycActual(){
   // 창은 오늘 앞뒤로 걸친다. 앞쪽 1/4 이 과거 — 방금 지난 마감과 직전 회차를 보려면 그게 필요하다.
   // 전부 미래로 두면 "지난달에 뭐가 있었나" 를 이 뷰에서 못 본다(260910 사용자 요청).
   const back = Math.max(1, Math.round(state.months / 4));
-  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - back, 1);
+  // tlShift = 「창 이동」 버튼이 밀어 놓은 개월 수. 고정된 앞 1/4 만으로는 더 먼 과거에 못 간다.
+  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - back + state.tlShift, 1);
   const t1 = new Date(t0.getFullYear(), t0.getMonth() + state.months, 1);
   const span = t1 - t0;
   const pct = iso => ((new Date(iso + "T00:00:00") - t0) / span) * 100;
@@ -1063,6 +1074,12 @@ document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
   e.target.setAttribute("aria-pressed", state.subOnly); render();
 };
+// 창 이동 = 반 칸씩. 한 칸씩 밀면 앞뒤 문맥이 끊겨 같은 회차를 다시 못 찾는다.
+for (const [id, d] of [["tl-prev", -1], ["tl-next", 1], ["tl-now", 0]])
+  document.getElementById(id).onclick = () => {
+    state.tlShift = d === 0 ? 0 : state.tlShift + d * Math.max(1, Math.round(state.months / 2));
+    render();
+  };
 document.getElementById("openrev").onclick = e => {
   state.openRev = !state.openRev;
   e.currentTarget.setAttribute("aria-pressed", state.openRev); render();
