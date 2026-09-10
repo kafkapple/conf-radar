@@ -186,7 +186,57 @@ table.dense td.w{white-space:normal;min-width:150px}
   font-size:11.5px;font-weight:650;white-space:nowrap}
 /* 막대가 화면 왼쪽 밖에서 시작하면 라벨도 같이 밀려 이름이 안 보였다.
    sticky 로 스크롤 뷰포트 왼쪽에 붙잡아 둔다 — 막대가 화면에 걸쳐 있는 동안 이름이 계속 보인다. */
-.tlbar .lab{overflow:hidden;text-overflow:ellipsis;position:sticky;left:14px}
+.tlbar .lab{overflow:hidden;text-overflow:ellipsis;position:sticky;left:calc(var(--namew,112px) + 8px)}
+/* 왼쪽 고정 이름 칸. 폭 0 인 sticky 틀에 이름표를 얹어, 막대 배치(%)를 밀지 않는다. */
+.tlname{position:sticky;left:0;z-index:4;width:0;height:30px;overflow:visible}
+.tlname span{position:absolute;left:0;top:0;height:30px;width:var(--namew,112px);box-sizing:border-box;
+  display:flex;align-items:center;padding:0 8px;background:var(--bg);font-size:12px;font-weight:700;
+  border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tlname span.ai{box-shadow:inset 3px 0 0 var(--ai)} .tlname span.neuro{box-shadow:inset 3px 0 0 var(--neuro)}
+#tlctl[hidden]{display:none!important}   /* 인라인 display:contents 가 hidden 속성을 이긴다 */
+.tlname.hd{height:auto;align-self:stretch;flex:none}
+.tlname.hd span{height:100%;background:var(--card);color:var(--dim);font-weight:600;font-size:11px}
+/* 워크샵 막대 — 빗금으로 본 학회 개최와 구분한다 */
+.tlbar.k-wsp{background:color-mix(in srgb,#a855f7 12%,transparent);border:1px solid #a855f7;color:var(--fg)}
+.tlbar.k-wsp .tlseg.act{background:color-mix(in srgb,#a855f7 55%,transparent)}
+.tlbar.k-wsd{background:repeating-linear-gradient(135deg,#a855f7 0 5px,color-mix(in srgb,#a855f7 45%,transparent) 5px 10px);
+  border:1px solid #a855f7;color:#fff;font-weight:700}
+/* 연간 계획표 */
+.plan{margin-top:2px}
+.pseasons{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 10px;font-size:12.5px;color:var(--dim)}
+.pseasons b{padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.pgrid{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.prow{display:grid;grid-template-columns:clamp(92px,19vw,168px) 1fr;border-top:1px solid var(--line)}
+.prow.hd{border-top:0}
+.prow.sub{background:color-mix(in srgb,var(--fg) 2.5%,transparent)}
+.pnm{padding:6px 8px;font-size:12.5px;font-weight:700;line-height:1.3;border-right:1px solid var(--line)}
+.pnm small{display:block;font-weight:500;color:var(--dim);font-size:10.5px}
+.prow.sub .pnm{font-weight:500;color:var(--dim);padding-left:14px;font-size:11.5px}
+.ptrack{position:relative;min-height:36px}
+.pmon{display:flex;height:100%}
+.pmon span{flex:1;min-width:0;border-left:1px solid var(--line);font-size:10.5px;color:var(--dim);padding:6px 0 6px 4px;overflow:hidden}
+.pmon span:first-child{border-left:0}
+.pbg{position:absolute;inset:0;display:flex;pointer-events:none}
+.pbg span{flex:1;border-left:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.pbg span:first-child{border-left:0}
+.pseg{position:absolute;top:11px;height:15px;border-radius:4px}
+.pseg.prep{background:repeating-linear-gradient(135deg,color-mix(in srgb,#e0a100 60%,transparent) 0 5px,color-mix(in srgb,#e0a100 22%,transparent) 5px 10px)}
+.pseg.prep2{background:#e0a100}
+.pseg.wait{background:color-mix(in srgb,var(--fg) 16%,transparent)}
+.pseg.reb{background:#3b82f6}
+.pseg.meet{background:#16a34a}
+.pseg.wsp{background:color-mix(in srgb,#a855f7 50%,transparent);border:1px solid #a855f7;box-sizing:border-box}
+.pseg.wsp.est{border-style:dashed;background:color-mix(in srgb,#a855f7 20%,transparent)}
+.pseg.wsd{background:repeating-linear-gradient(135deg,#a855f7 0 4px,color-mix(in srgb,#a855f7 45%,transparent) 4px 8px)}
+.pmark{position:absolute;top:0;transform:translateX(-50%);font-size:12px;line-height:1;z-index:2}
+.pnow{position:absolute;top:0;bottom:0;border-left:2px solid var(--urgent);opacity:.75;z-index:1}
+.plegend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--dim);margin:8px 2px;line-height:1.5}
+.plegend .pseg{position:static;display:inline-block;width:18px;height:10px;vertical-align:-1px;margin-right:4px}
+.pchain{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.pchain th,.pchain td{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.pchain th{color:var(--dim);font-weight:600}
+.pchain .dim{color:var(--dim)}
+.tltick{position:absolute;top:3px;bottom:3px;width:2px;margin-left:-1px;background:currentColor;opacity:.55}
 .tlbar .out{position:absolute;left:calc(100% + 6px);color:var(--fg);font-weight:650}
 .tlbar .out.l{left:auto;right:calc(100% + 6px)}
 .tlbar.ai{background:color-mix(in srgb,var(--ai) 26%,transparent);
@@ -195,7 +245,8 @@ table.dense td.w{white-space:normal;min-width:150px}
   border:1px solid color-mix(in srgb,var(--neuro) 60%,transparent);color:var(--fg)}
 .tlbar.est{border-style:dashed}
 .tlbar.ghost{background:transparent;border-style:dashed;opacity:.75}
-.tlbar.past{opacity:.42}                       /* 지난 회차 — 지우지 않고 뒤로 물린다 */
+/* 지난 회차 — 색을 빼서 뒤로 물린다. 예전엔 opacity .42 라 글자까지 흐려 연도가 안 읽혔다. */
+.tlbar.past{filter:grayscale(.9) brightness(.9)}
 /* 심사·리비전 구간과 개최 기간은 성격이 달라 색을 나눈다.
    심사 = 저채도 회색(그 사이에 내가 할 일은 리버틀뿐) · 개최 = 진한 그룹색(가야 하는 날) */
 .tlbar.k-rev{background:color-mix(in srgb,var(--fg) 9%,transparent);
@@ -429,6 +480,8 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <span class="lbl">축</span>
     <button data-c="actual" aria-pressed="true">타임라인</button>
     <button data-c="typical">전형 주기</button>
+    <button data-c="plan" title="메이저 5곳의 한 해를 접은 준비 달력">연간 계획표</button>
+    <span id="tlctl" style="display:contents">
     <span class="sep"></span>
     <span class="lbl">확대</span>
     <button data-mo="3" title="한 화면에 약 3개월">분기</button>
@@ -440,11 +493,14 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-tm="both" aria-pressed="true" title="마감에서 개최까지 한 막대">마감→개최</button>
     <button data-tm="dl" title="제출 마감만">마감만</button>
     <button data-tm="meet" title="개최 기간만">개최만</button>
+    <button data-tm="ws" title="부설 워크샵 — 논문 창과 워크샵 날 (공식 권장일 또는 추산)">🧩 워크샵</button>
     <span class="sep"></span>
     <button id="tl-now" class="now" title="오늘 위치로 스크롤">↦ 오늘로</button>
+    </span>
   </div>
   <div class="tl"><div class="tlin"><div class="tlhead"></div><div class="tlbody"></div></div></div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
+  <div class="plan" hidden></div>
   <p class="legend" id="cyc-legend"></p>
 </section>
 
@@ -522,12 +578,16 @@ const FAV_KEY = "confradar:fav";
 const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); }
                         catch { return new Set(); } };
 const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
+// 마지막으로 고른 확대 배율을 기억한다(이 브라우저에만). 기본 = 1년.
+const MO_KEY = "conf-radar:months";
+const loadMo = () => { try { const m = +localStorage.getItem(MO_KEY); return [3, 6, 12, 24].includes(m) ? m : 12; }
+                       catch { return 12; } };
 
 // rank = 등급 필터 하나. "major" 또는 티어 상한(1·2·3). 메이저를 별도 토글로 두면 티어와
 // AND 로 걸려서, T1·2 를 눌러도 메이저 5곳만 남는 화면이 된다(260910 사용자 신고).
 const state = {view:"cyc", group:"all", rank:"major", sort:"deadline", q:"", subOnly:true,
                favOnly:false, withWs:true, openRev:false,
-               mapMode:"next", cycMode:"actual", months:12, tlMode:"both", fav:loadFav()};
+               mapMode:"next", cycMode:"actual", months:loadMo(), tlMode:"both", fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -826,15 +886,20 @@ function renderMap(){
 }
 
 function renderCycle(){
-  const actual = state.cycMode === "actual";
-  document.querySelector("#v-cyc .tl").hidden  = !actual;
-  document.querySelector("#v-cyc .cyc").hidden =  actual;
-  const drawn = new Set((actual ? cycActual : cycTypical)());
+  const mode = state.cycMode, actual = mode === "actual";
+  document.querySelector("#v-cyc .tl").hidden   = !actual;
+  document.querySelector("#v-cyc .cyc").hidden  = mode !== "typical";
+  document.querySelector("#v-cyc .plan").hidden = mode !== "plan";
+  document.getElementById("tlctl").hidden = !actual;
+  const drawn = new Set(({actual: cycActual, typical: cycTypical, plan: cycPlan})[mode]());
   // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다.
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
-  const missing = visible().filter(c => !drawn.has(c.id));
-  document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
-    ? `<span><span class="sw2 rev"></span> 회색 막대 = <b>심사 기간</b> (제출 → 통보)</span>
+  // 계획표·워크샵 모드는 메이저만 그리는 것이 정상이라 "빠진 학회" 로 적지 않는다
+  const missing = mode === "plan" || (actual && state.tlMode === "ws") ? []
+    : visible().filter(c => !drawn.has(c.id));
+  document.getElementById("cyc-legend").innerHTML = mode === "plan" ? "" : actual
+    ? `<span><b>📮 마감 → ⏳ 심사 → 🎤 개최</b> · 🧩 부설 워크샵(빗금 = 워크샵 날, 점선 = 추산)</span>
+       <span><span class="sw2 rev"></span> 회색 막대 = <b>심사 기간</b> (제출 → 통보)</span>
        <span><span class="sw2 act"></span> 안쪽 진한 칸 = <b>저자가 일하는 때</b> (제출·리버틀·최종본)</span>
        <span><span class="sw2 meet"></span> 진한 막대 = <b>개최 기간</b></span>
        <span>▼ = 제출 마감일 · 막대에 올리면 단계별 날짜</span>
@@ -874,6 +939,130 @@ function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이
   return rows.map(c => c.id);   // 전형 축은 모두 자리를 갖는다 — 빠지는 것이 없다
 }
 
+const addDays = (iso, n) => new Date(Date.parse(iso + "T00:00:00Z") + n * 864e5).toISOString().slice(0, 10);
+// 워크샵 창은 학회당 한 해 것만 공지된다(data/venues.yml workshops). 다른 회차는 개최 시작일
+// 간격만큼 통째로 옮겨 추산한다 — 워크샵 날짜는 본 학회에 붙어 움직이기 때문이다.
+function wsOf(c, e){
+  const w = c.ws;
+  if (!w || !e.start) return null;
+  const ref = c.editions.find(x => x.year === w.year && x.start);
+  if (!ref) return null;
+  const sh = Math.round((Date.parse(e.start) - Date.parse(ref.start)) / 864e5);
+  const mv = iso => iso ? addDays(iso, sh) : null;
+  return {paper: w.paper.map(mv), notify: mv(w.notify), days: w.days.map(mv),
+          est: w.status !== "confirmed" || sh !== 0, shifted: sh !== 0, source: w.source};
+}
+
+// 연간 계획표 — 메이저의 한 해를 접어 "언제 무엇을 하나"를 본다 (260910 사용자 요청: 농사 달력).
+// 날짜 = 최근 회차들의 월·일을 **원형 평균**한 전형이지 공지된 날이 아니다. 12월↔1월을 넘나드는
+// 통보일(ICLR 12/16·1/25)을 산술평균하면 7월이 나온다 — 그래서 원형이다.
+function cycPlan(){
+  const Y = 365;
+  const doy = iso => { const d = new Date(iso + "T00:00:00Z"); return (d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 864e5; };
+  const cmean = xs => {
+    if (!xs.length) return null;
+    const a = xs.map(x => x / Y * 2 * Math.PI);
+    const m = Math.atan2(a.reduce((s, t) => s + Math.sin(t), 0), a.reduce((s, t) => s + Math.cos(t), 0));
+    return (m / (2 * Math.PI) * Y + Y) % Y;
+  };
+  const md = d => { const t = new Date(Date.UTC(2001, 0, 1) + Math.round(d) * 864e5); return `${t.getUTCMonth() + 1}/${t.getUTCDate()}`; };
+  const gap = (a, b) => ((b - a) % Y + Y) % Y;          // a 다음에 b 가 오기까지 며칠
+
+  const plans = DATA.series.filter(c => c.major).map(c => {
+    const eds = c.editions.filter(e => e.year >= TODAY.getFullYear() - 4);
+    const all = (types, last) => eds.map(e => {
+      const ds = (e.deadlines || []).filter(d => types.includes(d.type)).map(d => d.date).sort();
+      return ds.length ? doy(last ? ds[ds.length - 1] : ds[0]) : null;
+    }).filter(x => x !== null);
+    const first = all([...SUBMIT]);
+    const w = c.ws;
+    return {c, n: first.length, dl: cmean(first), sub: cmean(all([...SUBMIT], true)),
+            rr: cmean(all(["review_release"])), reb: cmean(all(ACT, true)), notif: cmean(all(["notification"])),
+            ms: cmean(eds.filter(e => e.start).map(e => doy(e.start))),
+            me: cmean(eds.filter(e => e.start).map(e => doy(e.end || e.start))),
+            ws: w && {p0: doy(w.paper[0]), p1: doy(w.paper[1]), n: w.notify ? doy(w.notify) : null,
+                      d0: doy(w.days[0]), d1: doy(w.days[1]), est: w.status !== "confirmed"}};
+  }).filter(p => p.dl !== null).sort((a, b) => a.dl - b.dl);
+
+  const seg = (a, b, cls, name) => {
+    if (a == null || b == null) return "";
+    const len = gap(a, b) || 2;
+    const parts = a + len <= Y ? [[a, a + len]] : [[a, Y], [0, a + len - Y]];
+    return parts.map(([x, y]) => `<span class="pseg ${cls}" title="${esc(name)}"
+      style="left:${(x / Y * 100).toFixed(2)}%;width:${Math.max(0.5, (y - x) / Y * 100).toFixed(2)}%"></span>`).join("");
+  };
+  const mark = (d, icon, name) => d == null ? "" :
+    `<span class="pmark" style="left:${(d / Y * 100).toFixed(2)}%" title="${esc(name)}">${icon}</span>`;
+  const bg = `<div class="pbg">${MONTHS.map(() => "<span></span>").join("")}</div>`;
+  const today = `<div class="pnow" style="left:${(doy(TODAY.toISOString().slice(0, 10)) / Y * 100).toFixed(2)}%"></div>`;
+
+  // 네 번의 시즌 — 마감월로 묶는다. 손으로 적지 않고 데이터에서 센다.
+  const byM = new Map();
+  for (const p of plans){
+    const m = new Date(Date.UTC(2001, 0, 1) + Math.round(p.dl) * 864e5).getUTCMonth() + 1;
+    byM.set(m, [...(byM.get(m) || []), p.c.title]);
+  }
+  const seasons = [...byM.entries()].map(([m, ts]) => `<b>📮 ${m}월 ${ts.map(esc).join("·")}</b>`).join(" → ");
+
+  const rows = plans.map(p => {
+    const main = seg(p.dl - 56, p.dl, "prep", `✍️ 준비 8주 (${md(p.dl - 56)}~${md(p.dl)})`)
+      + seg(p.dl, p.sub, "prep2", `📮 제출 (${md(p.dl)}~${md(p.sub)})`)
+      + seg(p.sub, p.rr ?? p.reb ?? p.notif, "wait", "⏳ 심사")
+      + (p.rr != null && p.reb != null && gap(p.rr, p.reb) < 60 ? seg(p.rr, p.reb, "reb", `💬 리버틀 (${md(p.rr)}~${md(p.reb)})`) : "")
+      + seg(p.reb ?? p.rr, p.notif, "wait", "⏳ 결정 대기")
+      + seg(p.ms, p.me, "meet", `🎤 개최 (${md(p.ms)}~${md(p.me)})`)
+      + mark(p.dl, "📮", `제출 마감 ${md(p.dl)}`) + mark(p.notif, "📨", p.notif == null ? "" : `통보 ${md(p.notif)}`)
+      + mark(p.ms, "🎤", `개최 ${md(p.ms)}`);
+    const sub = !p.ws ? "" : seg(p.ws.p0, p.ws.p1, "wsp" + (p.ws.est ? " est" : ""),
+        `🧩 워크샵 논문 ${md(p.ws.p0)}${p.ws.p1 !== p.ws.p0 ? "~" + md(p.ws.p1) : ""}${p.ws.est ? " (추산)" : ""}`)
+      + (p.ws.n != null ? seg(p.ws.p1, p.ws.n, "wait", "⏳ 워크샵 결정 대기") : "")
+      + seg(p.ws.d0, p.ws.d1, "wsd", `🧩 워크샵 ${md(p.ws.d0)}~${md(p.ws.d1)}`)
+      + mark(p.ws.p1, "📝", `워크샵 논문 마감 ${md(p.ws.p1)}${p.ws.est ? " (추산)" : ""}`)
+      + mark(p.ws.d0, "🧩", `워크샵 ${md(p.ws.d0)}~${md(p.ws.d1)}`);
+    const order = [`📮 ${md(p.dl)}`, p.notif != null ? `📨 ${md(p.notif)}` : "", p.ms != null ? `🎤 ${md(p.ms)}` : ""]
+      .filter(Boolean).join(" → ");
+    const wsOrder = p.ws ? `📝 ${md(p.ws.p1)} → 🧩 ${md(p.ws.d0)}` : "";
+    return `<div class="prow"><div class="pnm">${esc(p.c.title)}<small>${order} · n=${p.n}</small></div>
+        <div class="ptrack">${bg}${main}${today}</div></div>`
+      + (sub ? `<div class="prow sub"><div class="pnm">↳ 🧩 워크샵<small>${wsOrder} · ${p.ws.est ? "추산" : "공식 권장일"}</small></div>
+        <div class="ptrack">${bg}${sub}${today}</div></div>` : "");
+  }).join("");
+
+  // 떨어지면 다음은? — 통보 다음에 오는 첫 메이저 마감. 통보 3주 안쪽 전에 마감이 있으면
+  // "결과를 기다리면 못 내는 곳" 으로 따로 적는다. 실제로 사람이 가장 많이 놓치는 지점이다.
+  const chain = plans.filter(p => p.notif != null).map(p => {
+    const others = plans.filter(q => q !== p);
+    const next = others.slice().sort((a, b) => gap(p.notif, a.dl) - gap(p.notif, b.dl)).find(q => gap(p.notif, q.dl) > 3);
+    // 못 내는 곳 = 통보 3주 전 ~ 통보 3일 뒤 사이에 마감이 있는 곳. 통보 이틀 뒤 마감(NeurIPS→ICLR)은
+    // 달력상 가능해 보여도 결과를 보고 고쳐 낼 시간이 없다 — 앞선 판정은 이것을 "—" 로 흘렸다.
+    const miss = others.filter(q => gap(q.dl, p.notif) <= 21 || gap(p.notif, q.dl) <= 3);
+    return `<tr><td><b>${esc(p.c.title)}</b> 📨 ${md(p.notif)}</td>
+      <td>${next ? `${esc(next.c.title)} 📮 ${md(next.dl)} <span class="dim">(${Math.round(gap(p.notif, next.dl))}일 뒤)</span>` : "—"}</td>
+      <td>${miss.map(q => `${esc(q.c.title)} 📮 ${md(q.dl)} <span class="dim">(${gap(q.dl, p.notif) <= 21
+          ? `통보 ${Math.round(gap(q.dl, p.notif))}일 전 마감` : `통보 ${Math.round(gap(p.notif, q.dl))}일 뒤 마감 — 고칠 시간 없음`})</span>`).join("<br>") || "—"}</td></tr>`;
+  }).join("");
+
+  document.querySelector("#v-cyc .plan").innerHTML = `
+    <div class="pseasons">탑티어의 한 해 = ${seasons}</div>
+    <div class="pgrid">
+      <div class="prow hd"><div class="pnm">학회</div><div class="ptrack"><div class="pmon">${MONTHS.map(m => `<span>${m}</span>`).join("")}</div></div></div>
+      ${rows}
+    </div>
+    <div class="plegend">
+      <span><i class="pseg prep"></i>✍️ 준비 8주</span><span><i class="pseg prep2"></i>📮 제출(초록→본문)</span>
+      <span><i class="pseg wait"></i>⏳ 심사·결정 대기</span><span><i class="pseg reb"></i>💬 리버틀</span>
+      <span>📨 통보</span><span><i class="pseg meet"></i>🎤 개최</span>
+      <span><i class="pseg wsp"></i>🧩 워크샵 논문 창</span><span><i class="pseg wsp est"></i>점선 = 추산</span>
+      <span><i class="pseg wsd"></i>🧩 워크샵 날</span><span style="color:var(--urgent)">▏오늘</span>
+    </div>
+    <table class="pchain"><thead><tr><th>이 학회에서 떨어지면</th><th>다음으로 낼 수 있는 곳</th>
+      <th>결과를 기다리면 못 내는 곳</th></tr></thead><tbody>${chain}</tbody></table>
+    <div class="plegend">날짜 = 최근 5년 회차의 월·일 원형 평균(n = 표본 회차 수). 공지된 날이 아니라 전형이다.
+      ✍️ 준비 8주는 경험칙. 🧩 워크샵 창은 NeurIPS·ICML·ICLR 은 학회 공식 권장일, CVPR·ACL 은
+      개별 워크샵이 정해 학회 차원 날짜가 없어 전형 창을 추산했다.</div>`;
+  return plans.map(p => p.c.id);
+}
+
 function cycActual(){
   // 구글 캘린더 일정 보기식 막대. 막대 하나 = 제출 마감 → 개최 종료.
   // 왼쪽 끝 세로선 = 마감, 오른쪽 진한 조각 = 실제 개최 기간, 그 사이 = 심사·준비 구간.
@@ -883,7 +1072,12 @@ function cycActual(){
   // 맞췄기 때문에 내용이 컨테이너보다 좁아 가로 스크롤이 아예 안 생겼고, 그래서 범위를
   // 옮기는 버튼을 따로 둬야 했다. 이제 이동 수단은 가로 스크롤 하나다.
   const BACK = 12, FWD = 24, SPAN = BACK + FWD;
-  const PX = {3: 240, 6: 130, 12: 86, 24: 46}[state.months] || 86;
+  // 「1년」 = 한 화면에 정확히 12개월. 고정 px 표를 쓰면 화면 폭에 따라 10개월만 보이기도 했다.
+  // 왼쪽 학회 이름 칸이 막대를 가리므로 그 폭을 빼고 나눈다.
+  const vw = document.querySelector("#v-cyc .tl").clientWidth;
+  const NAMEW = Math.round(Math.min(124, Math.max(76, vw * 0.2)));
+  const PX = vw > 0 ? Math.max(28, (vw - NAMEW) / state.months)
+                    : ({3: 240, 6: 130, 12: 86, 24: 46}[state.months] || 86);
   const totalPx = SPAN * PX;
   const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - BACK, 1);
   const t1 = new Date(t0.getFullYear(), t0.getMonth() + SPAN, 1);
@@ -899,14 +1093,30 @@ function cycActual(){
   for (const c of visible()) for (const e of c.editions){
     const subs = (e.deadlines || []).filter(d => SUBMIT.has(d.type)).sort((x, y) => x.date < y.date ? -1 : 1);
 
-    if (state.tlMode === "dl"){                    // 마감만 — 마감 하나가 막대 하나
-      for (const d of subs){
-        const at = pct(d.date), wk = pct(d.date) + 5 / (SPAN * 30.4) * 100;
-        if (wk <= 0 || at >= 100) continue;
-        bars.push({c, e, dl: {...d, p: at}, from: Math.max(0, at), to: Math.min(100, wk),
-                   ms: null, me: null, past: at < now, dlOnly: true,
-                   trunc: at < 0});
-      }
+    if (state.tlMode === "ws"){
+      // 부설 워크샵. 창은 학회당 한 해 것만 공지되므로 다른 회차는 개최일 간격만큼 옮겨 추산한다.
+      const w = wsOf(c, e);
+      if (!w) continue;
+      const pEnd = w.paper[1] > w.paper[0] ? w.paper[1] : addDays(w.paper[0], 3);
+      const ph = [{from: w.paper[0], to: pEnd, act: true, name: "워크샵 논문"},
+                  ...(w.notify ? [{from: pEnd, to: w.notify, act: false, name: "결정 대기"}] : [])];
+      const a = pct(w.paper[0]), z = pct(ph[ph.length - 1].to), d0 = pct(w.days[0]), d1 = pct(w.days[1]);
+      if (z > 0 && a < 100)
+        bars.push({c, e, dl: {date: w.paper[0], type: "paper", status: "confirmed", p: a}, kind: "wsp", ph, ws: w,
+                   from: Math.max(0, a), to: Math.min(100, Math.max(z, a + 0.15)), past: z < now, trunc: a < 0});
+      if (d1 > 0 && d0 < 100)
+        bars.push({c, e, dl: null, kind: "wsd", ws: w, ms: d0, me: d1,
+                   from: Math.max(0, d0), to: Math.min(100, Math.max(d1, d0 + 0.15)), past: d1 < now, trunc: d0 < 0});
+      continue;
+    }
+    if (state.tlMode === "dl"){
+      // 회차 하나 = 막대 하나(첫 마감 → 마지막 마감). 마감마다 막대·라벨을 따로 달면
+      // 초록·본문·보충이 며칠 간격이라 글자가 서로 겹쳐 깨졌다 (260910 사용자 신고).
+      if (!subs.length) continue;
+      const a = pct(subs[0].date), z = pct(subs[subs.length - 1].date) + 5 / (SPAN * 30.4) * 100;
+      if (z <= 0 || a >= 100) continue;
+      bars.push({c, e, dl: {...subs[0], p: a}, subs, from: Math.max(0, a), to: Math.min(100, z),
+                 ms: null, me: null, past: z < now, dlOnly: true, trunc: a < 0});
       continue;
     }
     if (state.tlMode === "meet"){                  // 개최만 — 회의 기간만
@@ -942,7 +1152,7 @@ function cycActual(){
   // 확정 일정이 없는 앞쪽은 과거 주기로 투영한다. 공지된 날이 아니므로 점선 + 표본 수.
   // 확정 마감과 45일 안쪽이면 같은 회차를 두 번 그리는 것이라 버린다. 과거는 투영하지 않는다.
   const pad = n => String(n).padStart(2, "0");
-  for (const c of visible()){
+  for (const c of state.tlMode === "ws" ? [] : visible()){
     // 마감만·마감→개최 모드는 전형 마감월을, 개최만 모드는 전형 개최월을 투영한다
     const dm = state.tlMode === "meet" ? c.typical.meeting_month : c.typical.deadline_month;
     if (!dm) continue;
@@ -972,12 +1182,12 @@ function cycActual(){
     // 정렬 기준 = 앞으로 다가올 것 중 가장 이른 것. 지난 것만 있으면 맨 아래로 보낸다.
     const next = r.bars.find(b => b.to >= now);
     r.anchor = next ? next.from : 1e3;
-    r.nameOn = r.bars.indexOf(next ?? r.bars[r.bars.length - 1]);   // 이름을 달 막대
   }
   rows.sort((a, b) => a.anchor - b.anchor || a.c.title.localeCompare(b.c.title));
 
   document.querySelector("#v-cyc .tlin").style.setProperty("--tlw", totalPx + "px");
-  document.querySelector("#v-cyc .tlhead").innerHTML = cols.map(d =>
+  document.querySelector("#v-cyc .tlin").style.setProperty("--namew", NAMEW + "px");
+  document.querySelector("#v-cyc .tlhead").innerHTML = `<b class="tlname hd"><span>학회</span></b>` + cols.map(d =>
     `<div>${d.getMonth() === 0 || d === cols[0]
       ? `${String(d.getFullYear()).slice(2)}년 ${d.getMonth()+1}월` : (d.getMonth()+1)+"월"}</div>`).join("");
 
@@ -989,45 +1199,54 @@ function cycActual(){
     const inner = r.bars.map((b, i) => {
       const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, ph} = b;
       const w = to - from;
-      // 같은 줄에서 학회 이름을 매번 되풀이하지 않는다. 두 번째부터는 연도만.
-      const head = i === r.nameOn
-        ? `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title} ` : "";
+      const head = "";   // 학회 이름은 왼쪽 고정 칸에 있다 — 막대에서 되풀이하지 않는다
       const DLNAME = {abstract:"초록", abstract_late:"초록(연장)", paper:"본문",
                       submission:"본문", supplementary:"보충"};
       // 라벨에 날짜를 같이 적는다. 하나하나 올려 봐야 아는 것은 "보인다"가 아니다 (260910 지적).
       const md = iso => `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
       const label = ghost
         ? `${head}예상 ${state.tlMode === "meet" ? "개최" : "마감"} (n=${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline})`
-        : b.dlOnly ? `${head}${e.year} ${DLNAME[dl.type] || dl.type} ${md(dl.date)}`
-        : kind === "rev"    ? `${head}${e.year} 심사 ${md(dl.date)}→${md(ph[ph.length - 1].to)}`
-        : kind === "dlonly" ? `${head}${e.year} 마감 ${md(dl.date)}`
-        : kind === "meet"   ? `${head}${e.year} 개최 ${md(e.start)}${e.end && e.end !== e.start ? "~" + md(e.end) : ""}`
+        : kind === "wsp"    ? `🧩 논문 ${md(b.ws.paper[0])}${b.ws.paper[1] !== b.ws.paper[0] ? "~" + md(b.ws.paper[1]) : ""}${b.ws.est ? " 추산" : ""}`
+        : kind === "wsd"    ? `🧩 ${md(b.ws.days[0])}~${md(b.ws.days[1])}`
+        : b.dlOnly ? `📮 ${e.year} ${b.subs.map(d => `${DLNAME[d.type] || d.type} ${md(d.date)}`).join(" · ")}`
+        : kind === "rev"    ? `⏳ ${e.year} 심사 ${md(dl.date)}→${md(ph[ph.length - 1].to)}`
+        : kind === "dlonly" ? `📮 ${e.year} 마감 ${md(dl.date)}`
+        : kind === "meet"   ? `🎤 ${e.year} 개최 ${md(e.start)}${e.end && e.end !== e.start ? "~" + md(e.end) : ""}`
                             : `${head}${e ? e.year : ""}`;
-      const inside = w / 100 * totalPx > label.length * 8 + 10;
+      const tw = t => [...t].reduce((a, ch) => a + (ch >= "\u1100" ? 11.5 : 6.8), 0) + 14;
+      const inside = w / 100 * totalPx > tw(label);
+      // 밖에 다는 라벨이 옆 막대까지 닿으면 달지 않는다. 겹친 글자는 아무것도 전하지 않는다 —
+      // 날짜는 커서를 올리면 오버레이에 다 나온다.
+      const left = to > 88;
+      const gap = left ? from - (r.bars[i - 1]?.to ?? 0) : (r.bars[i + 1]?.from ?? 100) - to;
+      const outOK = gap / 100 * totalPx > tw(label);
       const meetW = (ms !== null && me !== null)
         ? Math.max(0.3, Math.min(100, me) - Math.max(from, ms)) : 0;
       const tip = ghost
         ? `${c.title} — 과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월. 공지된 날짜가 아니다`
+        : kind === "wsp" || kind === "wsd" ? `${c.title} ${e.year} 부설 워크샵${b.ws.est ? " (추산)" : ""}`
         : kind === "rev"    ? `${c.title} ${e.year} — ${ph.map(p => `${p.name} ${p.from}~${p.to}`).join(" · ")}`
         : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} 마감 (통보일 미공지)`
         : kind === "meet"   ? `${c.title} ${e.year} 개최 — ${e.date_text}`
                             : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
-      const bi = tlInfo.push({c, e, dl, ph, kind, ghost}) - 1;
-      return `<div class="tlbar ${c.group} ${kind ? "k-" + kind : ""} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
+      const bi = tlInfo.push({c, e, dl, ph, kind, ghost, ws: b.ws}) - 1;
+      return `<div class="tlbar ${c.group} ${kind ? "k-" + kind : ""} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${(dl && dl.status !== "confirmed") || b.ws?.est ? "est" : ""} ${trunc ? "trunc" : ""}"
         data-id="${c.id}" data-b="${bi}" title="${esc(tip)}"
         style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
         ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
+        ${b.subs ? b.subs.slice(1).map(d => `<span class="tltick" style="left:${((pct(d.date) - from) / w * 100).toFixed(1)}%"></span>`).join("") : ""}
         ${meetW && !kind ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
-        ${kind === "rev" ? ph.map(p => {
+        ${kind === "rev" || kind === "wsp" ? ph.map(p => {
             const a = (pct(p.from) - from) / w * 100, z = (pct(p.to) - from) / w * 100;
             return `<span class="tlseg ${p.act ? "act" : ""}" title="${esc(p.name)} ${p.from} ~ ${p.to}"
                      style="left:${Math.max(0, a).toFixed(2)}%;width:${(Math.min(100, z) - Math.max(0, a)).toFixed(2)}%"></span>`;
           }).join("") : ""}
         ${inside ? `<span class="lab">${esc(label)}</span>`
-                 : `<span class="out ${to > 88 ? "l" : ""}">${esc(label)}</span>`}
+          : outOK ? `<span class="out ${left ? "l" : ""}">${esc(label)}</span>` : ""}
       </div>`;
     }).join("");
-    return `<div class="tlrow">${inner}</div>`;
+    const pre = r.c.kind === "workshop" ? "W " : r.c.kind === "track" ? "T " : "";
+    return `<div class="tlrow"><div class="tlname"><span class="${r.c.group}" title="${esc(r.c.full_name || r.c.title)}">${pre}${esc(r.c.title)}</span></div>${inner}</div>`;
   }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
 
   // 열자마자 오늘이 보여야 한다. 36개월을 다 그려 두므로 스크롤 위치를 안 맞추면 작년이 먼저 보인다.
@@ -1365,7 +1584,8 @@ bindGroup("[data-t]", b => state.rank = b.dataset.t === "major" ? "major" : +b.d
 bindGroup("[data-s]", b => state.sort  = b.dataset.s);
 bindGroup("[data-m]", b => state.mapMode = b.dataset.m);
 bindGroup("[data-c]", b => state.cycMode = b.dataset.c);
-bindGroup("[data-mo]", b => state.months = +b.dataset.mo);
+bindGroup("[data-mo]", b => { state.months = +b.dataset.mo;
+  try { localStorage.setItem(MO_KEY, String(state.months)); } catch {} });
 bindGroup("[data-tm]", b => state.tlMode = b.dataset.tm);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
@@ -1515,18 +1735,25 @@ if (hv){
   for (const b of document.querySelectorAll("[data-v]"))
     b.setAttribute("aria-pressed", b.dataset.v === hv);
 }
-const htm = ["both", "dl", "meet"].find(m => HASH.has(m));
+const htm = ["both", "dl", "meet", "ws"].find(m => HASH.has(m));
 if (htm){
   state.tlMode = htm;
   for (const b of document.querySelectorAll("[data-tm]"))
     b.setAttribute("aria-pressed", b.dataset.tm === htm);
 }
-const hm = [3, 6, 12, 24].find(m => HASH.has(m + "m"));
-if (hm){
-  state.months = hm;
-  for (const b of document.querySelectorAll("[data-mo]"))
-    b.setAttribute("aria-pressed", +b.dataset.mo === hm);
+if (HASH.has("plan")){
+  state.view = "cyc"; state.cycMode = "plan";
+  for (const b of document.querySelectorAll("[data-c]")) b.setAttribute("aria-pressed", b.dataset.c === "plan");
+  for (const b of document.querySelectorAll("[data-v]")) b.setAttribute("aria-pressed", b.dataset.v === "cyc");
 }
+const hm = [3, 6, 12, 24].find(m => HASH.has(m + "m"));
+if (hm) state.months = hm;
+for (const b of document.querySelectorAll("[data-mo]"))     // 기억한 배율도 버튼에 반영
+  b.setAttribute("aria-pressed", +b.dataset.mo === state.months);
+// 창 폭이 바뀌면 「1년」의 월당 px 도 바뀐다
+let rsz;
+addEventListener("resize", () => { clearTimeout(rsz);
+  rsz = setTimeout(() => { if (state.view === "cyc") render(); }, 150); });
 render();
 </script>
 </body>

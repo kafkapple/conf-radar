@@ -265,6 +265,7 @@ def build(offline: bool = False) -> dict:
         s["tracks"] = v.get("tracks", [])
         # 리뷰 공개 수준 = open / partial / closed. 투고처를 고를 때 트랙만큼 갈리는 축이다.
         s["review"] = v.get("review")
+        s["ws"] = v.get("workshops")   # 부설 워크샵 창 — 화면이 회차별로 옮겨 추산한다
         # 업스트림이 아직 안 실어 온 회차 일정을 공식 페이지 직독분으로 채운다.
         for extra_dl in v.get("deadlines", []):
             ed = next((e for e in s["editions"] if e["year"] == extra_dl["year"]), None)

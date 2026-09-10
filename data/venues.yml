@@ -42,6 +42,17 @@ meta:
   verified: '2026-09-10'
 
 CVPR:
+  # 부설 워크샵 — 논문 창 [시작, 끝] · 통보 · 워크샵 날. 공식 권장일이면 창의 두 끝이 같다.
+  # CVPR 은 학회 차원 권장일이 없고 개별 워크샵이 정한다 → 전형 창을 추산으로 적는다.
+  # ⚠️ 공식 Dates 의 "Workshop Submission Deadline Nov 03 '25" 는 워크샵 *제안서* 마감이지 논문 마감이 아니다.
+  workshops:
+    year: 2026
+    paper: ['2026-03-01', '2026-03-20']
+    notify:
+    days: ['2026-06-03', '2026-06-04']
+    status: estimated
+    source: https://cvpr.thecvf.com/Conferences/2026/Dates
+    verified: '2026-09-10'
   # 업스트림(ai-deadlines·ccf)은 CVPR 2027 의 마감 두 개만 실어 왔다. 나머지는 공식 페이지 직독.
   deadlines:
     - year: 2027
@@ -102,6 +113,14 @@ CVPR:
       verified: '2026-09-10'
 
 NeurIPS:
+  workshops:
+    year: 2026
+    paper: ['2026-08-29', '2026-08-29']   # Suggested Submission Date for Workshop Contributions
+    notify: '2026-09-29'                   # Mandatory Accept/Reject Notification Date
+    days: ['2026-12-11', '2026-12-13']     # 시드니 11-12 · 파리·애틀랜타 12-13
+    status: confirmed
+    source: https://neurips.cc/Conferences/2026/CallForWorkshops
+    verified: '2026-09-10'
   review:
     level: partial
     platform: OpenReview
@@ -138,6 +157,14 @@ NeurIPS:
       verified: '2026-09-10'
 
 ICLR:
+  workshops:
+    year: 2026
+    paper: ['2026-01-30', '2026-01-30']
+    notify: '2026-03-01'
+    days: ['2026-04-26', '2026-04-27']
+    status: confirmed
+    source: https://iclr.cc/Conferences/2026/CallForWorkshops
+    verified: '2026-09-10'
   review:
     level: open
     platform: OpenReview
@@ -180,6 +207,14 @@ ICLR:
       verified: '2026-09-10'
 
 ICML:
+  workshops:
+    year: 2026
+    paper: ['2026-04-24', '2026-04-24']
+    notify: '2026-05-15'
+    days: ['2026-07-10', '2026-07-11']
+    status: confirmed
+    source: https://icml.cc/Conferences/2026/CallForWorkshops
+    verified: '2026-09-10'
   review:
     level: partial
     platform: OpenReview
@@ -220,6 +255,15 @@ ICML:
       verified: '2026-09-10'
 
 ACL:
+  # 학회 차원 권장일 없음 — 개별 워크샵이 정한다. 3월 말~4월 중순이 전형 창(추산).
+  workshops:
+    year: 2026
+    paper: ['2026-03-25', '2026-04-15']
+    notify:
+    days: ['2026-07-03', '2026-07-04']
+    status: estimated
+    source: https://2026.aclweb.org/
+    verified: '2026-09-10'
   review:
     level: closed
     platform: ARR (OpenReview 위)
