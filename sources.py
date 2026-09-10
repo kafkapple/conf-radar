@@ -106,12 +106,14 @@ def canon(title: str) -> str:
 
 def month_of(text: str) -> int | None:
     """'June 19 - June 24, 2022' → 6. 자유 문장에서 첫 월 이름만 집는다."""
-    m = re.search(r"[A-Za-z]{3,}", text or "")
-    while m:
+    # re.search 의 세 번째 인자는 pos 가 아니라 flags 다. 여기에 오프셋을 넣으면
+    # 그 정수가 플래그로 읽혀 "Fall 2024"(끝 4 = re.LOCALE)에서 ValueError 로 죽는다.
+    # 260910 발견 — 국내 학회 date_text 를 넣기 전까지 맞는 오프셋이 안 나와 잠복해 있었다.
+    for m in re.finditer(r"[A-Za-z]{3,}", text or ""):
+        head = m.group(0).lower()[:3]
         for i, name in enumerate(MONTHS, 1):
-            if name.startswith(m.group(0).lower()[:3]) and m.group(0).lower()[:3] == name[:3]:
+            if head == name[:3]:
                 return i
-        m = re.search(r"[A-Za-z]{3,}", text, m.end())
     return None
 
 
@@ -126,7 +128,8 @@ def editions_from_hf(tf) -> dict[str, list[dict]]:
         if slug not in TRACKED_AI or "year" not in e:
             continue
         dls = [{"type": d.get("type", "paper"), "label": d.get("label", d.get("type", "")),
-                "date": str(d["date"])[:10], "tz": d.get("timezone", ""), "status": "confirmed"}
+                "date": str(d["date"])[:10], "t": str(d["date"])[11:19],
+                "tz": d.get("timezone", ""), "status": "confirmed"}
                for d in (e.get("deadlines") or []) if d.get("date")]
         DISPLAY.setdefault(canon(e["title"]), str(e["title"]))
         out.setdefault(canon(e["title"]), []).append({
@@ -156,7 +159,7 @@ def editions_from_ccf(tf) -> tuple[dict[str, list[dict]], dict[str, dict]]:
                 for key, label in (("abstract_deadline", "Abstract deadline"), ("deadline", "Paper deadline")):
                     if tl.get(key):
                         dls.append({"type": "abstract" if "abstract" in key else "paper",
-                                    "label": label, "date": str(tl[key])[:10],
+                                    "label": label, "date": str(tl[key])[:10], "t": str(tl[key])[11:19],
                                     "tz": c.get("timezone", ""), "status": "confirmed"})
             eds.setdefault(t, []).append({
                 "year": int(c["year"]), "start": "", "end": "",

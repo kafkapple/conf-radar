@@ -214,6 +214,27 @@ table.dense td.w{white-space:normal;min-width:150px}
 /* 화면 왼쪽 밖에서 시작한 막대 — 왼쪽 모서리를 각지게 해 "이어짐"을 표시 */
 .tlbar.trunc{border-left:0;border-radius:0 5px 5px 0}
 .tlbar:hover{filter:brightness(1.25)}
+/* 날짜 오버레이 — 기본 툴팁은 늦게 뜨고 줄바꿈·시간대 변환을 못 담는다 */
+#tlpop{position:fixed;z-index:60;width:max-content;max-width:min(640px,94vw);pointer-events:none;
+  background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;
+  box-shadow:0 8px 26px rgba(0,0,0,.34);font-size:12px;line-height:1.5}
+#tlpop b{font-size:13px}
+#tlpop table{border-collapse:collapse;margin:5px 0 2px;width:100%}
+#tlpop td{padding:1px 0;vertical-align:top;white-space:nowrap}
+#tlpop td:nth-child(2){padding-left:10px;color:var(--dim);font-variant-numeric:tabular-nums}
+#tlpop td.k{padding-left:10px;color:var(--ai);font-weight:650;white-space:normal}
+#tlpop td .na{color:var(--dim);font-weight:400}
+#tlpop tr.mt td{padding-top:4px;border-top:1px solid var(--line)}
+#tlpop .pn{color:var(--dim);white-space:normal;margin-top:4px}
+/* 분야별 수록 범위 표 */
+table.cov{border-collapse:collapse;width:100%;margin:4px 0 8px;font-size:12px}
+table.cov th,table.cov td{text-align:left;padding:3px 8px 3px 0;vertical-align:top;
+  border-bottom:1px solid var(--line)}
+table.cov th{color:var(--dim);font-weight:600}
+.ct{display:inline-block;padding:0 6px;margin:1px 2px 1px 0;border-radius:99px;
+  border:1px solid var(--line);font-size:11px}
+.ct.t1{border-color:color-mix(in srgb,var(--ai) 55%,transparent)}
+.ct.t3{color:var(--dim)}
 /* 오른쪽 끝의 진한 조각 = 실제 개최 기간. 막대 전체는 마감부터의 준비 구간이다 */
 /* 막대 하나에 두 가지가 들어 있다 — 왼쪽 = 제출 마감, 오른쪽 = 실제 개최.
    3px 세로선으로는 안 갈렸다(260910 사용자 신고). 마감은 굵은 블록 + 아래쪽 삼각 표식으로 세운다. */
@@ -438,8 +459,30 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 const DATA = __DATA__;
 const TODAY = new Date(new Date().toDateString());
 const MONTHS = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+const WD = ["일","월","화","수","목","금","토"];
+
+// 마감 시각을 한국시간으로 옮긴다. AoE(Anywhere on Earth) = UTC-12 이므로 KST 와 21시간 차다 —
+// "11/16 마감"이 한국에서는 11/17 저녁까지라는 뜻이고, 이 하루 차이가 실제로 사람을 놓치게 한다.
+// 업스트림이 쓰는 표기가 제각각이라(AoE · UTC-12 · UTC-08 · PST · CEST …) 둘 다 훑는다.
+const TZNAME = {AoE: -12, PST: -8, PDT: -7, EST: -5, EDT: -4, CET: 1, CEST: 2, KST: 9, UTC: 0, GMT: 0};
+function tzHours(tz){
+  if (!tz) return null;
+  const k = tz.trim();
+  if (k in TZNAME) return TZNAME[k];
+  const m = /^(?:UTC|GMT)\s*([+-])\s*(\d{1,2})$/.exec(k);
+  return m ? (m[1] === "-" ? -1 : 1) * parseInt(m[2], 10) : null;
+}
+function kstText(d){
+  const off = tzHours(d.tz);
+  // 시각 표기가 없는 AoE 마감은 그날 23:59 로 본다 — AoE 는 날짜만 적는 것이 관례다.
+  const clock = d.t || (off === -12 ? "23:59:00" : "");
+  if (off === null || !clock) return "";
+  const k = new Date(Date.parse(`${d.date}T${clock}Z`) + (9 - off) * 3600e3);
+  const p = n => String(n).padStart(2, "0");
+  return `${k.getUTCMonth() + 1}/${k.getUTCDate()}(${WD[k.getUTCDay()]}) ${p(k.getUTCHours())}:${p(k.getUTCMinutes())} KST`;
+}
 const FIELD = {ml:"머신러닝", vision:"비전·3D", nlp:"자연어·음성", robotics:"로보틱스",
-               medical:"의료영상", neuro:"신경과학", neuroimaging:"뇌영상", cognitive:"인지·시지각"};
+               medical:"의료영상", neuro:"신경과학", neuroimaging:"뇌영상", cognitive:"인지·시지각", neuroai:"NeuroAI·brain-inspired"};
 const METRIC = {submitted:"투고", attendees:"참가"};
 const KIND = {shared_review:"공용 리뷰", journal_option:"저널 연계", journal_invite:"저널 초청",
               society_journal:"학회 저널", none:"제도 없음"};
@@ -941,6 +984,7 @@ function cycActual(){
   const grid = `<div class="tlgrid">${cols.map(() => "<span></span>").join("")}</div>` +
     `<div class="tlnow" style="left:${now.toFixed(2)}%"></div>`;
 
+  tlInfo = [];
   document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(r => {
     const inner = r.bars.map((b, i) => {
       const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, ph} = b;
@@ -950,12 +994,14 @@ function cycActual(){
         ? `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title} ` : "";
       const DLNAME = {abstract:"초록", abstract_late:"초록(연장)", paper:"본문",
                       submission:"본문", supplementary:"보충"};
+      // 라벨에 날짜를 같이 적는다. 하나하나 올려 봐야 아는 것은 "보인다"가 아니다 (260910 지적).
+      const md = iso => `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
       const label = ghost
         ? `${head}예상 ${state.tlMode === "meet" ? "개최" : "마감"} (n=${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline})`
-        : b.dlOnly ? `${head}${e.year} ${DLNAME[dl.type] || dl.type}`
-        : kind === "rev"    ? `${head}${e.year} 심사`
-        : kind === "dlonly" ? `${head}${e.year} 마감`
-        : kind === "meet"   ? `${head}${e.year} 개최`
+        : b.dlOnly ? `${head}${e.year} ${DLNAME[dl.type] || dl.type} ${md(dl.date)}`
+        : kind === "rev"    ? `${head}${e.year} 심사 ${md(dl.date)}→${md(ph[ph.length - 1].to)}`
+        : kind === "dlonly" ? `${head}${e.year} 마감 ${md(dl.date)}`
+        : kind === "meet"   ? `${head}${e.year} 개최 ${md(e.start)}${e.end && e.end !== e.start ? "~" + md(e.end) : ""}`
                             : `${head}${e ? e.year : ""}`;
       const inside = w / 100 * totalPx > label.length * 8 + 10;
       const meetW = (ms !== null && me !== null)
@@ -966,8 +1012,9 @@ function cycActual(){
         : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} 마감 (통보일 미공지)`
         : kind === "meet"   ? `${c.title} ${e.year} 개최 — ${e.date_text}`
                             : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
+      const bi = tlInfo.push({c, e, dl, ph, kind, ghost}) - 1;
       return `<div class="tlbar ${c.group} ${kind ? "k-" + kind : ""} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
-        data-id="${c.id}" title="${esc(tip)}"
+        data-id="${c.id}" data-b="${bi}" title="${esc(tip)}"
         style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
         ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
         ${meetW && !kind ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
@@ -985,7 +1032,68 @@ function cycActual(){
 
   // 열자마자 오늘이 보여야 한다. 36개월을 다 그려 두므로 스크롤 위치를 안 맞추면 작년이 먼저 보인다.
   scrollToToday(now);
+  bindPop();
   return rows.map(r => r.c.id);
+}
+
+// 막대 위에 실제 날짜를 띄운다. 브라우저 기본 툴팁은 1초쯤 지나야 뜨고 줄바꿈도 시간대 변환도
+// 못 담는다 — 그런데 이 화면에서 사람이 정말 알고 싶은 것은 "그래서 며칠 몇 시까지냐"다.
+// 260910 사용자 요청.
+let tlInfo = [];
+const DLNAME2 = {abstract: "초록 등록", abstract_late: "초록(연장)", paper: "본문 제출",
+                 submission: "본문 제출", supplementary: "보충자료", registration: "논문 등록",
+                 review_release: "리뷰 공개", rebuttal_start: "리버틀 개시",
+                 rebuttal_end: "리버틀 마감", author_response: "저자 응답",
+                 rebuttal_and_revision: "리버틀·수정본", notification: "최종 결정",
+                 commitment_deadline: "커밋 마감", withdrawal: "철회 마감",
+                 camera_ready: "최종본 마감"};
+
+function popHTML(i){
+  const {c, e, dl, ph, kind, ghost} = tlInfo[i] || {};
+  if (!c) return "";
+  if (ghost) return `<b>${esc(c.title)}</b><div class="pn">과거 ${c.typical.n_deadline}회에서 유도한
+    전형 마감월 — 공지된 날짜가 아니다</div>`;
+  const dls = (e.deadlines || []).filter(d => DLNAME2[d.type]);
+  const line = d => {
+    const k = kstText(d);
+    return `<tr><td>${esc(DLNAME2[d.type])}</td>
+      <td>${esc(d.date)}${d.t ? " " + esc(d.t.slice(0, 5)) : ""} ${esc(d.tz || "")}</td>
+      <td class="k">${k ? "→ " + esc(k) : "<span class=\"na\">시각 미표기</span>"}</td></tr>`;
+  };
+  const meet = e.start
+    ? `<tr class="mt"><td>개최</td><td colspan="2">${esc(e.start)} ~ ${esc(e.end || e.start)}</td></tr>` : "";
+  const seg = (ph || []).length
+    ? `<div class="pn">${ph.map(p => `${esc(p.name)} ${p.from}~${p.to}`).join(" · ")}</div>` : "";
+  return `<b>${esc(c.title)} ${e.year}</b>
+    <table>${dls.map(line).join("")}${meet}</table>${seg}
+    <div class="pn">마감 시각은 학회 표기 그대로 두고 KST 로 환산해 함께 적는다.
+      AoE = UTC-12 라 KST 와 21시간 차다.</div>`;
+}
+
+function bindPop(){
+  const body = document.querySelector("#v-cyc .tlbody");
+  let pop = document.getElementById("tlpop");
+  if (!pop){
+    pop = document.createElement("div");
+    pop.id = "tlpop"; pop.hidden = true;
+    document.body.appendChild(pop);
+  }
+  const place = (ev) => {
+    const w = pop.offsetWidth, h = pop.offsetHeight, m = 10;
+    pop.style.left = Math.max(m, Math.min(innerWidth - w - m, ev.clientX + 14)) + "px";
+    // 위로 뒤집었을 때 화면 밖으로 나가면 그냥 위쪽에 붙인다. 잘려 나가면 없는 것과 같다.
+    const up = ev.clientY + h + 24 > innerHeight;
+    pop.style.top = Math.max(m, Math.min(innerHeight - h - m, up ? ev.clientY - h - 12 : ev.clientY + 18)) + "px";
+  };
+  body.onmousemove = (ev) => {
+    const bar = ev.target.closest(".tlbar");
+    if (!bar){ pop.hidden = true; return; }
+    const i = +bar.dataset.b;
+    if (pop.dataset.b !== String(i)){ pop.dataset.b = String(i); pop.innerHTML = popHTML(i); }
+    pop.hidden = false;
+    place(ev);
+  };
+  body.onmouseleave = () => { pop.hidden = true; };
 }
 
 // 오늘선을 왼쪽 1/4 지점에 둔다. 마지막으로 그린 위치를 기억해 「오늘로」 버튼이 다시 쓴다 —
@@ -1004,6 +1112,25 @@ function scrollToToday(now, smooth){
 }
 
 // 기준·근거 설명은 전부 여기 모은다. 목록 화면에 두면 매번 읽어야 하는 벽이 된다.
+
+// 「빠진 분야가 있나」는 손으로 적으면 데이터가 늘 때마다 틀린다. 세어서 그린다.
+function coverage(){
+  const by = new Map();
+  for (const c of DATA.series){
+    if (!by.has(c.field)) by.set(c.field, []);
+    by.get(c.field).push(c);
+  }
+  const order = ["ml","vision","nlp","robotics","medical","neuro","neuroimaging","cognitive","neuroai"];
+  const row = f => {
+    const xs = (by.get(f) || []).slice().sort((a, b) => a.tier - b.tier || a.title.localeCompare(b.title));
+    const nm = x => `${esc(x.title)}${x.kind === "workshop" ? " (W)" : x.kind === "track" ? " (T)" : ""}`;
+    return `<tr><td><b>${esc(FIELD[f] || f)}</b></td><td>${xs.length}</td>
+      <td>${xs.map(x => `<span class="ct t${x.tier}">${nm(x)}</span>`).join(" ")}</td></tr>`;
+  };
+  return `<table class="cov"><thead><tr><th>분야</th><th>수</th><th>수록 학회 (T1 → T3 순, W=워크샵·T=트랙)</th></tr></thead>
+    <tbody>${order.map(row).join("")}</tbody></table>`;
+}
+
 const CRITERIA = `
   <div class="srcgrp"><h3>기준과 한계</h3>
     <div class="srcitem"><div class="t">메이저 = 세 조건을 모두 만족하는 5곳</div>
@@ -1022,6 +1149,17 @@ const CRITERIA = `
     <div class="srcitem"><div class="t">준비 착수 줄 = 마감 8주 전</div>
       <div class="n">고정 경험칙이고 학회가 정한 날이 아니다.
         차기 마감이 아직 없으면 <b>전형 착수 N월</b>(과거 전형 마감월 − 2개월)로 대신하고 표본 수를 함께 적는다.</div></div>
+    <div class="srcitem"><div class="t">분야별 수록 범위 — 무엇이 들어 있고 무엇이 빠졌나</div>
+      <div class="n">%%COVERAGE%%
+        <b>AI 쪽은 자동, 뇌과학 쪽은 수동이다.</b> AI 학회는 업스트림 둘이 실어 오는 목록을 그대로 쓰고,
+        뇌과학·NeuroAI 는 <code>data/neuro.yml</code> 에 손으로 적는다. 그래서 누락의 성격이 다르다 —
+        AI 는 업스트림이 안 실으면 없고, 뇌과학은 우리가 안 적으면 없다.<br>
+        <b>뇌과학 쪽에 넣는 기준</b>: 학술단체의 <b>정기</b> 총회·학술대회일 것 ·
+        공개 URL 로 회차와 일정을 확인할 수 있을 것 · 위 네 분야 중 하나에 속할 것.
+        T1 이 아니어도 넣는다 — 티어는 분야 대표성이지 수록 여부가 아니다.<br>
+        <b>알려진 얇은 곳</b>: 의료영상은 MICCAI 하나뿐이다(IPMI·ISBI·SPIE MI 미수록).
+        국내 학회는 초록 마감을 공식 페이지에 안 올리고 사무국 공지로만 도는 곳이 많아
+        일정만 있고 마감이 비는 경우가 있다.</div></div>
     <div class="srcitem"><div class="t">심사 단계 — 회차 하나에 쓰는 일곱 이름</div>
       <div class="n">타임라인의 심사 막대는 아래 경계들로 잘린다. <b>안쪽 진한 칸 = 저자가 일하는 때</b>,
         빈 칸 = 기다리는 때.<br>
@@ -1070,7 +1208,7 @@ function renderSources(){
       <div class="t">현재 필터 결과 내보내기 (.ics)</div>
       <div class="n">지금 보고 있는 목록 그대로. 현재 ${visible().length}건.</div></div>
   </div>`;
-  document.getElementById("v-src").innerHTML = cal + CRITERIA + DATA.sources.map(g => `
+  document.getElementById("v-src").innerHTML = cal + CRITERIA.replace("%%COVERAGE%%", coverage()) + DATA.sources.map(g => `
     <div class="srcgrp"><h3>${esc(g.group)}</h3>` + g.items.map(i => `
       <a class="srcitem" href="${esc(i.url)}" target="_blank" rel="noopener">
         <div class="t">${esc(i.name)}</div>

@@ -49,7 +49,7 @@ def check(d: dict) -> None:
             assert x["tracks"], f"{x['title']}: 트랙 미기재 — data/venues.yml (없으면 kind: none)"
             assert (x["review"] or {}).get("level") in ("open", "partial", "closed"), \
                 f"{x['title']}: 리뷰 공개 수준 미기재 — data/venues.yml"
-    for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
+    for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive", "neuroai"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
     eds = [e for x in s for e in x["editions"]]
     located = [e for e in eds if e["lat"] is not None]

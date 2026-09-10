@@ -58,7 +58,7 @@
       date: August 3-6, 2026
       place: New York University
   tier: 1
-  field: neuro
+  field: neuroai
   scale:
     metric: attendees
     value: 650
@@ -280,3 +280,284 @@
   tags: [cognitive-science]
   source: https://cognitivesciencesociety.org/future-conference-organizers/
   verified: '2026-09-02'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 260910 추가 — 국내외 뇌과학 + NeuroAI·brain-inspired 보강 (사용자 요청)
+#
+# 넣는 기준 (지목이 아니라 조건):
+#   1. 학술단체의 **정기** 총회·학술대회일 것 (일회성 심포지엄·서머스쿨 제외)
+#   2. 공개 URL 로 회차·일정을 확인할 수 있을 것
+#   3. field 중 하나에 속할 것 — neuro · neuroimaging · cognitive · neuroai
+# T1 이 아니어도 넣는다. tier 는 분야 대표성이지 수록 여부가 아니다.
+#
+# field: neuroai 신설 — **회의의 공식 범위 설명이 신경과학과 인공지능의 교차를 명시**하는 곳.
+#   CCN(Cognitive Computational Neuroscience) 을 neuro 에서 옮겨 이 축의 T1 로 둔다.
+#   COSYNE·Bernstein·CNS* 는 계산신경과학이지 AI 교차를 표방하지 않으므로 neuro 에 남긴다.
+#
+# ⚠️ 이름 충돌 — `CNS*` = OCNS 계산신경과학회, `CNS` = Cognitive Neuroscience Society.
+#    별표는 OCNS 가 이 충돌 때문에 쓰는 표기다. 우리가 만든 구분이 아니다.
+
+- title: CNS
+  year: 2027
+  id: cns_cogneuro27
+  past:
+    - year: 2026
+      date: March 7-10, 2026
+      place: Vancouver, Canada
+    - year: 2025
+      date: March 29 - April 1, 2025
+      place: Boston, USA
+    - year: 2024
+      date: April 13-16, 2024
+      place: Toronto, Canada
+  tier: 1
+  field: cognitive
+  scale:   # 근거 있는 참가자 수를 못 찾음
+  full_name: Cognitive Neuroscience Society Annual Meeting (OCNS 의 CNS* 와 다른 학회)
+  link: https://www.cogneurosociety.org/annual-meeting/
+  deadlines:
+    - type: submission
+      label: Symposium Submission Deadline
+      date: '2026-09-22'
+      timezone: ''
+      status: confirmed
+    - type: notification
+      label: Symposium Accept/Reject Notifications
+      date: '2026-10-16'
+      timezone: ''
+      status: confirmed
+    - type: abstract
+      label: Poster Submission Deadline
+      date: '2026-11-03'
+      timezone: ''
+      status: confirmed
+    - type: abstract_late
+      label: Late-Breaking Poster Submissions Deadline
+      date: '2027-01-19'
+      timezone: ''
+      status: confirmed
+  city: Boston
+  country: USA
+  date: March 20-23, 2027
+  start: '2027-03-20'
+  end: '2027-03-23'
+  tags: [cognitive-neuroscience]
+  source: https://www.cogneurosociety.org/annual-meeting/dates-and-deadlines/
+  verified: '2026-09-10'
+
+- title: FENS Forum
+  year: 2028
+  id: fens28
+  past:
+    - year: 2026
+      date: July 6-10, 2026
+      place: Barcelona, Spain
+      deadline: '2026-02-05'   # 연장된 정규 초록 마감
+    - year: 2024
+      date: June 25-29, 2024
+      place: Vienna, Austria
+  tier: 1
+  field: neuro
+  scale:   # 근거 있는 참가자 수를 못 찾음
+  full_name: FENS Forum of Neuroscience (유럽 최대 규모, 격년)
+  link: https://fensforum.org/
+  deadlines: []   # 2028 초록 접수 미개시
+  city: Glasgow
+  country: UK
+  date: July 8-12, 2028
+  start: '2028-07-08'
+  end: '2028-07-12'
+  tags: [neuroscience, europe, biennial]
+  source: https://fensforum.org/
+  verified: '2026-09-10'
+
+- title: KHBM 춘계
+  year: 2026
+  id: khbm26s
+  past:
+    - year: 2025
+      date: Spring 2025
+      place: Korea
+  tier: 2
+  field: neuroimaging
+  scale:
+  full_name: 대한뇌기능매핑학회 춘계학술대회 (Korean Society for Human Brain Mapping)
+  link: https://www.khbm.org/
+  deadlines: []   # 초록 마감이 공식 페이지에 안 올라옴 (사무국 공지로만 돈다)
+  city: 대구
+  country: Korea
+  venue: 한국뇌연구원 (KBRI)
+  date: May 15-16, 2026
+  start: '2026-05-15'
+  end: '2026-05-16'
+  tags: [neuroimaging, korea]
+  source: https://bcs.kaist.ac.kr/sub0601/view/id/475
+  verified: '2026-09-10'
+
+- title: KHBM 추계
+  year: 2025
+  id: khbm25f
+  past:
+    - year: 2024
+      date: Fall 2024
+      place: Korea
+  tier: 2
+  field: neuroimaging
+  scale:
+  full_name: 대한뇌기능매핑학회 추계학술대회 (연 2회 중 가을 회차)
+  link: https://www.khbm.org/
+  deadlines: []   # 2026 추계 미공지
+  city: 서울
+  country: Korea
+  venue: 한성대학교 미래관
+  date: November 6-7, 2025
+  start: '2025-11-06'
+  end: '2025-11-07'
+  tags: [neuroimaging, korea]
+  source: https://khbm.org/html/?pmode=BBBS0029100001&seq=1821&smode=view
+  verified: '2026-09-10'
+
+- title: KCogSci
+  year: 2025
+  id: kcogsci25
+  past:
+    - year: 2024
+      date: May 24, 2024
+      place: Seoul, Korea
+  tier: 2
+  field: cognitive
+  scale:
+  full_name: 한국인지과학회 학술대회 (영문 약칭은 학회 사이트 표기 kcogsci 를 따랐다)
+  link: https://www.cogsci.or.kr/
+  deadlines: []   # 2026 회차 미공지
+  city: 서울
+  country: Korea
+  date: May 30, 2025
+  start: '2025-05-30'
+  end: '2025-05-30'
+  tags: [cognitive-science, korea]
+  source: https://www.cogsci.or.kr/
+  verified: '2026-09-10'
+
+- title: NICE
+  year: 2027
+  id: nice27
+  past:
+    - year: 2026
+      date: March 24-27, 2026
+      place: Atlanta, USA
+    - year: 2025
+      date: March 25-28, 2025
+      place: Heidelberg, Germany
+  tier: 2
+  field: neuroai
+  scale:
+  full_name: Neuro-Inspired Computational Elements Conference
+  link: https://niceworkshop.org/nice-2027/
+  deadlines:
+    - type: paper
+      label: Paper submission deadline
+      date: '2026-11-11'
+      timezone: ''
+      status: confirmed
+    - type: notification
+      label: Acceptance notification (late December)
+      date: '2026-12-31'
+      timezone: ''
+      status: estimated   # 공식 표기가 "late December 2026" 로 날짜가 아니라 구간
+  city: Brighton
+  country: UK
+  venue: University of Sussex
+  date: April 6-8, 2027 (tutorials Apr 9)
+  start: '2027-04-06'
+  end: '2027-04-09'
+  tags: [neuroai, brain-inspired, neuromorphic]
+  source: https://niceworkshop.org/nice-2027/
+  verified: '2026-09-10'
+
+- title: ICONS
+  year: 2026
+  id: icons26
+  past:
+    - year: 2025
+      date: July 29-31, 2025
+      place: Bellevue, USA
+    - year: 2024
+      date: July 30 - August 2, 2024
+      place: Arlington, USA
+  tier: 2
+  field: neuroai
+  scale:
+  full_name: ACM International Conference on Neuromorphic Systems
+  link: https://iconsneuromorphic.cc/
+  deadlines:
+    - type: paper
+      label: Submissions due (No Extension)
+      date: '2026-04-08'
+      timezone: AoE
+      status: confirmed
+    - type: notification
+      label: Final Notification of Acceptance
+      date: '2026-06-05'
+      timezone: ''
+      status: confirmed
+    - type: camera_ready
+      label: Camera-Ready Papers Due
+      date: '2026-06-24'
+      timezone: ''
+      status: confirmed
+  city: ''
+  country: ''
+  date: August 4-6, 2026
+  start: '2026-08-04'
+  end: '2026-08-06'
+  tags: [neuroai, brain-inspired, neuromorphic]
+  source: https://iconsneuromorphic.cc/calls-2026/
+  verified: '2026-09-10'
+
+- title: SNUFA
+  year: 2026
+  id: snufa26
+  past:
+    - year: 2025
+      date: November 5-6, 2025
+      place: online
+    - year: 2024
+      date: November 5-6, 2024
+      place: online
+  tier: 3
+  field: neuroai
+  scale:
+  full_name: Spiking Neural Networks as Universal Function Approximators (온라인 워크샵)
+  link: https://snufa.net/
+  deadlines: []   # 초록 마감이 사이트에 없다. 개최일도 "likely" 표기
+  city: online
+  country: ''
+  date: November 4-5, 2026 (예정)
+  start: '2026-11-04'
+  end: '2026-11-05'
+  tags: [neuroai, brain-inspired, spiking]
+  source: https://snufa.net/
+  verified: '2026-09-10'
+
+- title: NAISys
+  year: 2024
+  id: naisys24
+  past:
+    - year: 2022
+      date: April 5-9, 2022
+      place: Cold Spring Harbor, USA
+  tier: 2
+  field: neuroai
+  scale:
+  full_name: From Neuroscience to Artificially Intelligent Systems (CSHL, 격년)
+  link: https://meetings.cshl.edu/meetings.aspx?meet=NAISYS
+  deadlines: []   # 2026·2027 회차가 CSHL 일정표에 없다 (260910 확인). 재개 여부 미상
+  city: Cold Spring Harbor
+  country: USA
+  date: September 28 - October 2, 2024
+  start: '2024-09-28'
+  end: '2024-10-02'
+  tags: [neuroai, brain-inspired]
+  source: https://meetings.cshl.edu/neuroscience-meetings
+  verified: '2026-09-10'

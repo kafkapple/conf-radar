@@ -18,6 +18,10 @@ Anaheim, United States:
   lat: 33.8348
   lon: -117.9117
   matched: Anaheim, Orange County, California, United States
+Arlington, USA:
+  lat: 32.7356
+  lon: -97.1071
+  matched: Arlington, Tarrant County, Texas, United States
 Atlanta, USA:
   lat: 33.7545
   lon: -84.3898
@@ -38,14 +42,26 @@ Barcelona, Spain:
   lat: 41.3826
   lon: 2.1771
   matched: Barcelona, Barcelonès, Barcelona, Catalunya, España
+Bellevue, USA:
+  lat: 47.6144
+  lon: -122.1923
+  matched: Bellevue, King County, Washington, United States
 Bordeaux, France:
   lat: 44.8412
   lon: -0.58
   matched: Bordeaux, Gironde, Nouvelle-Aquitaine, France métropolitaine, France
+Boston, USA:
+  lat: 42.3588
+  lon: -71.0578
+  matched: Boston, Suffolk County, Massachusetts, United States
 Bremen, Germany:
   lat: 53.0758
   lon: 8.8072
   matched: Bremen, Deutschland
+Brighton, UK:
+  lat: 50.8215
+  lon: -0.1401
+  matched: Brighton, Brighton and Hove, England, BN1 1HJ, United Kingdom
 Budapest, Hungary:
   lat: 47.4979
   lon: 19.0402
@@ -62,6 +78,11 @@ Cape Town, South Africa.:
   lat: -33.9288
   lon: 18.4172
   matched: Cape Town, City of Cape Town, Western Cape, 8001, South Africa
+Cold Spring Harbor, USA:
+  lat: 40.8601
+  lon: -73.4529
+  matched: Cold Spring Harbor, Town of Huntington, Suffolk County, New York, 11724,
+    United States
 Daegu, Republic of Korea:
   lat: 35.8713
   lon: 128.6018
@@ -111,6 +132,10 @@ Frankfurt am Main, Germany:
   lat: 50.1106
   lon: 8.6821
   matched: Frankfurt am Main, Hessen, Deutschland
+Glasgow, UK:
+  lat: 55.8612
+  lon: -4.2502
+  matched: Glasgow, Glasgow City, Alba / Scotland, G2 1AL, United Kingdom
 Gran Canaria, Spain:
   lat: 27.958
   lon: -15.6062
@@ -128,6 +153,10 @@ Hawaii Convention Center,Hawaii, USA:
   lon: -157.8366
   matched: Hawaii Convention Center, 1801, Kalākaua Avenue, McCully, East Honolulu,
     Honolulu, Honolulu County, Hawaii, 96815, Unite
+Heidelberg, Germany:
+  lat: 49.4094
+  lon: 8.6947
+  matched: Heidelberg, Baden-Württemberg, Deutschland
 Honolulu, Hawaii:
   lat: 21.3045
   lon: -157.8557
@@ -152,6 +181,10 @@ Kigali, Rwanda:
   lat: -1.9534
   lon: 30.114
   matched: City of Kigali, Rwanda
+Korea:
+  lat: 36.6384
+  lon: 127.6961
+  matched: 대한민국
 Kyoto, Japan:
   lat: 35.0116
   lon: 135.7681
@@ -309,6 +342,10 @@ Seattle, USA:
   lat: 47.6038
   lon: -122.3301
   matched: Seattle, King County, Washington, United States
+Seoul, Korea:
+  lat: 37.5667
+  lon: 126.9783
+  matched: 서울특별시, 대한민국
 Seoul, South Korea:
   lat: 37.5667
   lon: 126.9783
@@ -403,7 +440,16 @@ Yokohama, Japan:
   lat: 35.4503
   lon: 139.6344
   matched: 横浜市, 神奈川県, 231-0017, 日本
+online: null
+대구, Korea:
+  lat: 35.8713
+  lon: 128.6018
+  matched: 대구광역시, 대한민국
 대전, Korea:
   lat: 36.3497
   lon: 127.3849
   matched: 대전광역시, 대한민국
+서울, Korea:
+  lat: 37.5667
+  lon: 126.9783
+  matched: 서울특별시, 대한민국

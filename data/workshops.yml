@@ -110,3 +110,62 @@
   tags: [position-paper, track]
   source: https://neurips.cc/Conferences/2026/CallForPositionPapers
   verified: '2026-09-02'
+
+# 260910 추가 — NeurIPS 2026 부설 중 뇌·인지 관련 나머지 2건.
+# 공식 목록(blog.neurips.cc 2026-08-10)에서 뇌·신경표현·발달인지를 제목에 명시한 것은
+# BrainBodyFM · NeurReps · BabyVLM · DevAI 넷뿐이다. 앞 둘은 시드니, 뒤 둘은 애틀랜타.
+
+- title: NeurReps
+  year: 2026
+  id: neurreps26
+  parent: NeurIPS
+  kind: workshop
+  tier: 1
+  field: neuroai
+  full_name: Symmetry and Geometry in Neural Representations (NeurIPS 2026 Workshop)
+  link: https://www.neurreps.org/
+  deadlines:
+    - type: paper
+      label: Submission Deadline (마감됨)
+      date: '2026-08-24 23:59:59'
+      timezone: AoE
+      status: confirmed
+    - type: notification
+      label: Accept / Reject Notification
+      date: '2026-09-29'
+      timezone: ''
+      status: confirmed
+  city: Sydney
+  country: Australia
+  venue: NeurIPS 2026 부설 (Sydney)
+  date: December 11, 2026
+  start: '2026-12-11'
+  end: '2026-12-11'
+  tags: [neuroai, neural-representations, workshop]
+  source: https://www.neurreps.org/
+  verified: '2026-09-10'
+
+- title: DevAI
+  year: 2026
+  id: devai26
+  parent: NeurIPS
+  kind: workshop
+  tier: 2
+  field: cognitive
+  full_name: DevAI 2026 — Developmental Perspectives on AI (NeurIPS 2026 Workshop)
+  link: https://sites.google.com/view/devai-workshop-2026/
+  deadlines:
+    - type: paper
+      label: 원 마감 9/7 에서 3일 연장 (마감됨)
+      date: '2026-09-10 12:59:00'
+      timezone: UTC
+      status: confirmed
+  city: Atlanta
+  country: USA
+  venue: NeurIPS 2026 부설 (Atlanta)
+  date: December 12-13, 2026
+  start: '2026-12-12'
+  end: '2026-12-13'
+  tags: [cognitive-development, workshop]
+  source: https://aiworkshoptracker.com/workshop/neurips-2026-devai/
+  verified: '2026-09-10'

@@ -220,14 +220,14 @@ def build(offline: bool = False) -> dict:
             "date_text": e.get("date", ""), "city": e.get("city", ""), "country": e.get("country", ""),
             "venue": e.get("venue", ""), "link": e.get("link", ""), "src": "manual",
             "deadlines": valid([{"type": d.get("type", "abstract"), "label": d.get("label", ""),
-                                 "date": str(d["date"])[:10], "tz": d.get("timezone", ""),
+                                 "date": str(d["date"])[:10], "t": str(d["date"])[11:19], "tz": d.get("timezone", ""),
                                  "status": d.get("status", "confirmed")} for d in e.get("deadlines") or []]),
         }], [{
             "year": int(p["year"]), "start": "", "end": "", "date_text": p.get("date", ""),
             "city": p.get("place", ""), "country": "", "venue": p.get("place", ""),
             "link": e.get("link", ""), "src": "manual",
             "deadlines": valid([{"type": "abstract", "label": "Abstract deadline",
-                                 "date": str(p["deadline"])[:10], "tz": "", "status": "confirmed"}]
+                                 "date": str(p["deadline"])[:10], "t": "", "tz": "", "status": "confirmed"}]
                                if p.get("deadline") else []),
         } for p in e.get("past") or []])
         s = build_series(canon(e["title"]), eds, "neuro", int(e["tier"]), e["field"],
@@ -271,7 +271,8 @@ def build(offline: bool = False) -> dict:
             if ed is None:
                 continue
             row = {"type": extra_dl["type"], "label": extra_dl.get("label", extra_dl["type"]),
-                   "date": str(extra_dl["date"])[:10], "tz": extra_dl.get("timezone", ""),
+                   "date": str(extra_dl["date"])[:10], "t": str(extra_dl["date"])[11:19],
+               "tz": extra_dl.get("timezone", ""),
                    "status": "confirmed"}
             if not any(d["type"] == row["type"] and d["date"] == row["date"] for d in ed["deadlines"]):
                 ed["deadlines"] = sorted(ed["deadlines"] + [row], key=lambda d: d["date"])
