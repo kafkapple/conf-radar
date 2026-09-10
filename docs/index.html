@@ -184,6 +184,7 @@ table.dense td.w{white-space:normal;min-width:150px}
   border:1px solid color-mix(in srgb,var(--neuro) 60%,transparent);color:var(--fg)}
 .tlbar.est{border-style:dashed}
 .tlbar.ghost{background:transparent;border-style:dashed;opacity:.75}
+.tlbar.past{opacity:.42}                       /* 지난 회차 — 지우지 않고 뒤로 물린다 */
 .tlbar.ghost .lab,.tlbar.ghost .out{color:var(--dim);font-weight:500}
 /* 화면 왼쪽 밖에서 시작한 막대 — 왼쪽 모서리를 각지게 해 "이어짐"을 표시 */
 .tlbar.trunc{border-left:0;border-radius:0 5px 5px 0}
@@ -727,6 +728,7 @@ function renderCycle(){
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
+       <span style="opacity:.7">흐린 막대 = 이미 지난 회차. 창은 오늘 앞쪽 ${Math.max(1, Math.round(state.months / 4))}개월부터 시작한다</span>
        ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
          ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
     : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
@@ -759,27 +761,34 @@ function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이
 function cycActual(){
   // 구글 캘린더 일정 보기식 막대. 막대 하나 = 제출 마감 → 개최 종료.
   // 왼쪽 끝 세로선 = 마감, 오른쪽 진한 조각 = 실제 개최 기간, 그 사이 = 심사·준비 구간.
-  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+  // 창은 오늘 앞뒤로 걸친다. 앞쪽 1/4 이 과거 — 방금 지난 마감과 직전 회차를 보려면 그게 필요하다.
+  // 전부 미래로 두면 "지난달에 뭐가 있었나" 를 이 뷰에서 못 본다(260910 사용자 요청).
+  const back = Math.max(1, Math.round(state.months / 4));
+  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - back, 1);
   const t1 = new Date(t0.getFullYear(), t0.getMonth() + state.months, 1);
   const span = t1 - t0;
   const pct = iso => ((new Date(iso + "T00:00:00") - t0) / span) * 100;
   const cols = Array.from({length: state.months}, (_, i) =>
     new Date(t0.getFullYear(), t0.getMonth() + i, 1));
 
-  const rows = visible().map(c => {
-    const dl = c.deadlines.filter(d => SUBMIT.has(d.type))
+  // 회차 단위로 그린다. 시리즈에 붙어 있는 start/deadlines 는 차기 회차 것뿐이라,
+  // 그것만 쓰면 창을 과거로 넓혀도 지난 회차가 안 나온다.
+  const rows = [];
+  for (const c of visible()) for (const e of c.editions){
+    const dl = (e.deadlines || []).filter(d => SUBMIT.has(d.type))
       .map(d => ({...d, p: pct(d.date)})).sort((x, y) => x.p - y.p)
       .find(d => d.p < 100);                       // 창 안에서 가장 이른 마감
-    const ms = c.start ? pct(c.start) : null, me = c.end ? pct(c.end) : null;
-    if ((ms === null || ms >= 100) && !dl) return null;
-    if (ms !== null && me < 0 && (!dl || dl.p < 0)) return null;   // 통째로 과거
+    const ms = e.start ? pct(e.start) : null, me = e.end ? pct(e.end) : null;
+    if ((ms === null || ms >= 100) && !dl) continue;
+    if (ms !== null && me < 0 && (!dl || dl.p < 0)) continue;      // 통째로 창 이전
     const from = Math.max(0, dl ? dl.p : ms);
     const to   = Math.min(100, me !== null ? me : (dl ? dl.p : 0));
-    if (to <= 0 || from >= 100) return null;
-    return {c, dl, from, to: Math.max(to, from + 0.4), ms, me,
-            anchor: ms !== null ? ms : (dl ? dl.p : 999),
-            trunc: from === 0 && (dl ? dl.p : ms) < 0};   // 창 이전에 시작한 막대
-  }).filter(Boolean);
+    if (to <= 0 || from >= 100) continue;
+    rows.push({c, e, dl, from, to: Math.max(to, from + 0.4), ms, me,
+               past: (me !== null ? me : (dl ? dl.p : 0)) < pct(TODAY.toISOString().slice(0, 10)),
+               anchor: ms !== null ? ms : (dl ? dl.p : 999),
+               trunc: from === 0 && (dl ? dl.p : ms) < 0});        // 창 이전에 시작한 막대
+  }
 
   // 확정 일정이 없는 구간은 과거 주기로 투영해 점선 막대를 둔다 — 옆으로 스크롤하면 내년 대략을 본다.
   // 학회가 공지한 날이 아니므로 실선과 구별하고 표본 수를 라벨에 붙인다.
@@ -795,7 +804,7 @@ function cycActual(){
       const a = `${y}-${pad(dm)}-01`, b = `${y}-${pad(dm)}-28`;
       if (real.some(r => Math.abs(r - new Date(a + "T00:00:00")) < 45 * 864e5)) continue;
       const gf = pct(a), gt = pct(b);
-      if (gt <= 0 || gf >= 100) continue;
+      if (gt <= pct(TODAY.toISOString().slice(0, 10)) || gf >= 100) continue;   // 과거는 투영하지 않는다
       ghosts.push({c, ghost: true, from: Math.max(0, gf), to: Math.min(100, gt), anchor: gf});
     }
   }
@@ -810,19 +819,19 @@ function cycActual(){
   const grid = `<div class="tlgrid">${cols.map(() => "<span></span>").join("")}</div>` +
     (now >= 0 && now <= 100 ? `<div class="tlnow" style="left:${now.toFixed(2)}%"></div>` : "");
 
-  document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, dl, from, to, ms, me, trunc, ghost}) => {
+  document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, e, dl, from, to, ms, me, trunc, ghost, past}) => {
     const w = to - from;
     const label = ghost
       ? `${c.title} 예상 마감 (n=${c.typical.n_deadline})`
-      : `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title}${c.next ? " " + c.next : ""}`;
+      : `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title}${e ? " " + e.year : ""}`;
     // 막대가 좁으면 글자가 잘린다 — 그럴 때만 이름을 막대 밖 오른쪽에 둔다
     const inside = w * (state.months <= 6 ? 12 : 7) > label.length * 8;   // 좁은 창일수록 글자가 들어간다
     const meetW = (ms !== null && me !== null)
       ? Math.max(0.5, Math.min(100, me) - Math.max(from, ms)) : 0;
     const tip = ghost
       ? `과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월 — 공지된 날짜가 아니다`
-      : `${dl ? dl.date + " 마감 · " : ""}${c.date_text}`;
-    return `<div class="tlrow"><div class="tlbar ${c.group} ${ghost ? "ghost" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
+      : `${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
+    return `<div class="tlrow"><div class="tlbar ${c.group} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
       data-id="${c.id}" title="${esc(tip)}"
       style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
       ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
