@@ -318,11 +318,12 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 </div>
 
 <p class="note" id="majornote" hidden>
-  <b>메이저 = 독립된 두 외부 정본이 동의하는 9개</b> — CORE A* 등급 <b>이면서</b> Google Scholar h5-index 200 이상.
-  CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ECCV 262 · ICCV 256 · ACL 236 · AAAI 232 · EMNLP 218.
-  손으로 학회를 더하지 않는다.<br>
-  등급 하나만 쓰면 헐거워진다 — CORE A* 안에 COLT(h5 74) · RSS(83) · IJCAI(136) · ICRA(129) 가 NeurIPS 와 같은 칸에 있다.
-  이 넷이 h5 조건에서 빠진다. SIGGRAPH 는 본회의 논문이 ACM TOG 로 집계돼(h5 114) 이 수치가 학회를 과소평가한다.<br>
+  <b>메이저 = 독립된 두 외부 정본이 동의하는 6개</b> — CORE A* 등급 <b>이면서</b> Google Scholar h5-index 250 이상.
+  CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ECCV 262 · ICCV 256.
+  ECCV 와 ICCV 는 격년으로 번갈아 열리므로 <b>한 해에 마감이 도는 것은 5곳</b>이다.<br>
+  <b>손으로 뺀 학회는 없다.</b> 문턱 하나가 나머지를 가른다 — 바로 아래가 ACL 236 이고 간격이 20 이다.
+  ACL · AAAI 232 · EMNLP 218 · IJCAI 136 · ICRA 129 · SIGGRAPH 114 · RSS 83 · COLT 는 전부 CORE A* 지만 이 문턱 아래다.
+  SIGGRAPH 는 본회의 논문이 ACM TOG 로 집계돼 이 수치가 학회를 과소평가한다.<br>
   뇌과학 학회에는 CORE 등급이 부여되지 않아 이 필터에 잡히지 않는다 — 뇌과학은 <b>뇌과학</b> 탭에서 볼 것.<br>
   각 카드의 <b>준비 착수</b> 줄 = 마감 8주 전. 학회가 정한 날이 아니라 고정된 경험칙이다.<br>
   차기 마감이 아직 없는 학회는 <b>전형 착수 N월</b> — 과거 회차의 전형 마감월에서 2개월 당긴 값이고, 표본 수를 함께 적는다.
@@ -995,8 +996,8 @@ document.getElementById("foot").innerHTML =
    · 개인 축 = 이 연구(3D 비전 · 행동/뇌 계측 · NeuroAI)와의 거리.<br>
    · <b>T1</b> = 둘 다 충족(분야 최상위 <b>이면서</b> 투고·필독 대상). 분야마다 최소 1개는 T1 이 있다.
      <b>T2</b> = 한 축만 충족. <b>T3</b> = 마감 캘린더용.<br>
-   · <b>메이저</b> 필터는 티어와 별개다. CORE A* 등급 ∩ Google Scholar h5-index 200 이상 — 두 외부 정본의 교집합이라
-     개인 축이 섞이지 않는다. 임계 200 은 넓은 구간에서 같은 답을 준다(A* 중 h5 137~218 인 학회가 없다).
+   · <b>메이저</b> 필터는 티어와 별개다. CORE A* 등급 ∩ Google Scholar h5-index 250 이상 — 두 외부 정본의 교집합이라
+     개인 축이 섞이지 않는다. 임계 250 은 넓은 구간에서 같은 답을 준다(A* 중 h5 237~256 인 학회가 없다).
      h5 는 규모 편향이 있고 격년제·소규모 학회에 불리하다. 뇌과학 학회는 CORE 등급이 없어 잡히지 않는다.<br>
    · <b>준비 착수</b> = 마감 8주 전. 고정 경험칙이고 학회가 공지한 날이 아니다.
      차기 마감이 없으면 <b>전형 착수 N월</b>(전형 마감월 − 2개월, 표본 수 병기)로 대신한다.<br><br>

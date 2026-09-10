@@ -28,12 +28,18 @@ DATA = ROOT / "data"
 
 SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
 
-# 메이저 = 독립된 두 외부 정본의 교집합 — CORE A* 등급 ∩ Google Scholar h5-index >= 200.
-# CORE 만 쓰면 너무 헐겁다(A* 안에 COLT 74 와 NeurIPS 371 이 같이 있다). h5 만 쓰면 규모
+# 메이저 = 독립된 두 외부 정본의 교집합 — CORE A* 등급 ∩ Google Scholar h5-index >= 250.
+# CORE 만 쓰면 너무 헐겁다(A* 안에 COLT 0 과 NeurIPS 371 이 같이 있다). h5 만 쓰면 규모
 # 편향이 등급 자리를 차지한다(data/impact.yml 의 한계 3가지). 둘이 동의할 때만 메이저다.
-# 임계값 200 은 넓은 구간에서 같은 답을 준다 — A* 중 h5 가 137~218 사이인 학회가 없어
-# 임계를 140 으로 낮추든 218 로 올리든 결과 집합이 바뀌지 않는다(260910 실측).
-MAJOR_H5 = 200
+#
+# 임계 250 은 **문턱 하나**로 6곳을 남긴다. 손으로 빼는 항목은 없다 — 특정 학회를 지목해
+# 제외하기 시작하면 외부 정본이 아니라 취향이 된다. 260910 사용자 지시("5개 내외 전체
+# 탑티어만")를 이 문턱 하나로 실현했다.
+# 둔감성: A* 중 h5 가 237~256 인 학회가 없어 임계를 237 로 내리든 256 으로 올리든 같은 6곳.
+# 바로 아래 경계는 ACL 236 이고 간격이 20 이다(그 위 ICCV 256).
+# 더 줄일 수는 없다 — 5곳으로 만들려면 ECCV 262 와 ICCV 256 사이(간격 6)를 갈라야 하는데
+# 둘은 격년으로 번갈아 열리는 같은 급이라 가를 근거가 없다. 대신 한 해에 열리는 것은 5곳이다.
+MAJOR_H5 = 250
 
 
 MON = {m[:3]: i for i, m in enumerate(
@@ -310,12 +316,12 @@ def check(d: dict) -> None:
         assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
     # 메이저는 업스트림 CORE 등급과 수동 h5 표에 함께 의존한다. 어느 쪽이 깨져도 조용히 틀린다.
     major = {x["title"] for x in s if x["major"]}
-    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ICCV", "ECCV", "ACL", "AAAI", "EMNLP"):
+    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ICCV", "ECCV"):
         assert t in major, f"{t} 이 메이저에서 빠졌다 — CORE 등급 또는 data/impact.yml 확인"
-    # 이 넷은 CORE A* 지만 h5 가 임계 아래다. 여기 끼어들면 교집합 규칙이 깨진 것이다.
-    for t in ("COLT", "RSS", "IJCAI", "ICRA"):
+    # 전부 CORE A* 지만 h5 가 임계 아래다. 여기 끼어들면 교집합 규칙이 깨진 것이다.
+    for t in ("ACL", "AAAI", "EMNLP", "IJCAI", "ICRA", "SIGGRAPH", "RSS", "COLT"):
         assert t not in major, f"{t} 이 메이저에 들어왔다 — MAJOR_H5 또는 impact.yml 확인"
-    assert len(major) == 9, f"메이저 {len(major)}건 (기대 9) — {sorted(major)}"
+    assert len(major) == 6, f"메이저 {len(major)}건 (기대 6) — {sorted(major)}"
     for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
     eds = [e for x in s for e in x["editions"]]
