@@ -19,6 +19,7 @@ from pathlib import Path
 
 import yaml
 
+from ics import build_ics
 from sources import (DISPLAY, FIELD_AI, PAPERCOPILOT, TRACKED_AI, canon,
                      editions_from_ccf, editions_from_hf, fetch, month_of,
                      rates_from_ccf, valid)
@@ -28,18 +29,25 @@ DATA = ROOT / "data"
 
 SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
 
-# 메이저 = 독립된 두 외부 정본의 교집합 — CORE A* 등급 ∩ Google Scholar h5-index >= 250.
-# CORE 만 쓰면 너무 헐겁다(A* 안에 COLT 0 과 NeurIPS 371 이 같이 있다). h5 만 쓰면 규모
-# 편향이 등급 자리를 차지한다(data/impact.yml 의 한계 3가지). 둘이 동의할 때만 메이저다.
+# 메이저 = 세 조건의 교집합 — CORE A* 등급 ∩ 매년 개최 ∩ Google Scholar h5-index >= 237.
+# 결과 5곳: CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ACL 236.
 #
-# 임계 250 은 **문턱 하나**로 6곳을 남긴다. 손으로 빼는 항목은 없다 — 특정 학회를 지목해
-# 제외하기 시작하면 외부 정본이 아니라 취향이 된다. 260910 사용자 지시("5개 내외 전체
-# 탑티어만")를 이 문턱 하나로 실현했다.
-# 둔감성: A* 중 h5 가 237~256 인 학회가 없어 임계를 237 로 내리든 256 으로 올리든 같은 6곳.
-# 바로 아래 경계는 ACL 236 이고 간격이 20 이다(그 위 ICCV 256).
-# 더 줄일 수는 없다 — 5곳으로 만들려면 ECCV 262 와 ICCV 256 사이(간격 6)를 갈라야 하는데
-# 둘은 격년으로 번갈아 열리는 같은 급이라 가를 근거가 없다. 대신 한 해에 열리는 것은 5곳이다.
-MAJOR_H5 = 250
+# 왜 셋인가 — 어느 하나만으로는 틀린다.
+#   CORE 만: 4단계뿐이라 A* 안의 격차를 못 나타낸다(COLT 와 NeurIPS 371 이 같은 칸).
+#   h5 만: 규모 편향이 등급 자리를 차지한다(data/impact.yml 의 한계 3가지).
+#   매년 개최만: 주기는 급을 뜻하지 않는다. 순위 조건과 같이 써야 의미가 있다.
+#
+# 매년 개최 조건은 260910 사용자 결정이다. 이 뷰어의 용도가 "언제 준비를 시작할 것인가"라
+# 격년 학회(ECCV 짝수 해 · ICCV 홀수 해)는 해마다 도는 달력에 안 맞는다. 급이 낮아서가
+# 아니다 — ECCV 262 · ICCV 256 은 ACL 236 보다 위다.
+#
+# 손으로 빼는 항목은 없다. 세 조건이 전부 가른다.
+#
+# 🔴 이 임계는 둔감하지 않다. 위 여유는 크지만(ICML 272 까지 36) 아래가 ACL 236 · AAAI 232 로
+# 간격이 4뿐이다. 233~236 만이 ACL 을 넣고 AAAI 를 빼며, Scholar 판이 바뀌어 둘의 순서가
+# 뒤집히면 결과가 뒤집힌다. 앞선 컷들(문턱 200·250)은 간격 20 이상이었고 이건 다르다.
+# 그래서 check() 가 ACL > AAAI 관계 자체를 assert 로 잡는다 — 뒤집히면 빌드가 실패한다.
+MAJOR_H5 = 236
 
 
 MON = {m[:3]: i for i, m in enumerate(
@@ -93,7 +101,14 @@ def merge_editions(a: list[dict], b: list[dict]) -> list[dict]:
     return sorted(by_year.values(), key=lambda e: e["year"])
 
 
-SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
+def annual(eds: list[dict]) -> bool:
+    """회차 연도에 연속한 쌍이 하나라도 있으면 매년 개최로 본다.
+
+    격년(ECCV 짝수 해 · ICCV 홀수 해)은 연속 쌍이 절대 안 생긴다. 표본이 1건뿐이면
+    판정할 수 없으므로 False 를 준다 — 매년일 수도 있으니 메이저에서 빠지는 쪽이 안전하다.
+    """
+    ys = {e["year"] for e in eds}
+    return any(y + 1 in ys for y in ys)
 
 
 def typical(eds: list[dict]) -> dict:
@@ -209,10 +224,35 @@ def build(offline: bool = False) -> dict:
             e["lat"], e["lon"] = (hit["lat"], hit["lon"]) if hit else (None, None)
 
     impact = yaml.safe_load((DATA / "impact.yml").read_text())
+    venues = yaml.safe_load((DATA / "venues.yml").read_text())
+    for s in series:
+        # 발표 계층과 별도 트랙은 업스트림이 안 나른다. 투고처를 고를 때는 총 채택률보다 결정적이다.
+        v = venues.get(s["title"]) or {}
+        s["tiers"] = v.get("tiers", [])
+        s["tier_note"] = v.get("tier_note", "")
+        s["tier_counts"] = v.get("tier_counts", [])
+        s["tracks"] = v.get("tracks", [])
+        # 손으로 확인한 수치(근거 URL 동반)가 집계기보다 우선한다. 같은 해가 둘 다 있으면 덮는다.
+        for tc in s["tier_counts"]:
+            if not (tc.get("submitted") and tc.get("accepted")):
+                continue
+            row = {"year": tc["year"], "submitted": tc["submitted"], "accepted": tc["accepted"],
+                   "rate": tc.get("rate") or round(tc["accepted"] / tc["submitted"], 4),
+                   "source": tc["source"]}
+            s["history"] = [h for h in s["history"] if h["year"] != row["year"]] + [row]
+        s["history"].sort(key=lambda h: h["year"])
+        # 규모 막대는 history 의 최신 해를 쓴다. 위에서 해를 더했으면 다시 잡아야 한다.
+        if s["history"] and s["group"] == "ai":
+            h = s["history"][-1]
+            s["scale"] = {"metric": "submitted", "value": h["submitted"],
+                          "year": h["year"], "source": h["source"]}
+
     for s in series:
         # 손으로 학회를 더하지 않는다. 두 외부 정본이 동의하는 것만 메이저다.
         s["h5"] = impact["h5"].get(s["title"])
-        s["major"] = s["rank"].get("core") == "A*" and (s["h5"] or 0) >= MAJOR_H5
+        s["annual"] = annual(s["editions"])
+        s["major"] = (s["rank"].get("core") == "A*" and s["annual"]
+                      and (s["h5"] or 0) >= MAJOR_H5)
 
     for s in series:                                     # 도시/국가는 차기 회차 것을 대표로
         nx = next((x for x in s["editions"] if x["year"] == s["next"]), None) or (s["editions"][-1] if s["editions"] else {})
@@ -221,15 +261,19 @@ def build(offline: bool = False) -> dict:
                  deadlines=nx.get("deadlines", []), next_year=nx.get("year"),
                  # 사이클 뷰는 '전형 개최월'을 쓴다 — 차기 회차가 없는 학회도 자리를 갖는다
                  start_month=s["typical"]["meeting_month"],
+                 # 트랙 이름도 검색어에 넣는다 — "포지션"·"Findings" 로 바로 걸러진다
                  search=" ".join([s["title"], s["full_name"], nx.get("city", ""),
                                   nx.get("country", ""), s["field"],
-                                  s["rank"].get("core", "")]).lower())
+                                  s["rank"].get("core", "")]
+                                 + [t["name"] for t in s["tracks"]]).lower())
 
     data = {"generated": today.isoformat(), "series": series,
             "world": json.loads((DATA / "world.json").read_text()),
             "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
             "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    # 날짜 단위로 찍는다. 초 단위면 데이터가 그대로여도 .ics 가 매 빌드 달라져서, Actions 가
+    # 밀어야 할 변경이 없는데도 커밋을 만들고 그 커밋 때문에 다음 푸시가 매번 막힌다(260910 실측).
+    stamp = today.strftime("%Y%m%dT000000Z")
     (ROOT / "docs" / "deadlines.ics").write_text(build_ics(series, stamp), newline="")
     # 위젯·단축어가 읽을 기계가독 사본. 뷰어는 인라인 데이터를 쓰므로 이 파일에 의존하지 않는다.
     (ROOT / "docs" / "data.json").write_text(json.dumps(
@@ -248,60 +292,6 @@ def build(offline: bool = False) -> dict:
     return data
 
 
-def ics_escape(t: str) -> str:
-    return str(t).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
-
-
-def fold(line: str) -> str:
-    """RFC 5545 는 한 줄 75 옥텟 제한이다. 한글은 3바이트라 금방 넘고, 안 접으면
-    캘린더 앱이 줄을 잘라 제목이 깨진다. 바이트 기준으로 접고 이어지는 줄은 공백으로 시작."""
-    b = line.encode()
-    if len(b) <= 73:
-        return line
-    out, cur = [], b
-    while len(cur) > 73:
-        cut = 73
-        while cut > 0 and (cur[cut] & 0xC0) == 0x80:   # UTF-8 문자 중간에서 자르지 않는다
-            cut -= 1
-        out.append(cur[:cut].decode())
-        cur = b" " + cur[cut:]
-    out.append(cur.decode())
-    return "\r\n".join(out)
-
-
-def build_ics(series: list[dict], stamp: str) -> str:
-    """구독용 캘린더. 아이폰에서 한 번 구독해 두면 Actions 가 갱신할 때마다 따라온다."""
-    L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//conf-radar//KR", "CALSCALE:GREGORIAN",
-         "METHOD:PUBLISH", "X-WR-CALNAME:학회 레이더", "X-WR-TIMEZONE:Asia/Seoul",
-         "X-PUBLISHED-TTL:PT12H"]
-    for s in series:
-        for d in s["deadlines"]:
-            if d["type"] not in SUBMIT:
-                continue
-            y, m, dd = d["date"].split("-")
-            nxt = (date(int(y), int(m), int(dd)) + timedelta(days=1)).strftime("%Y%m%d")
-            tag = "" if d["status"] == "confirmed" else (" (미공지)" if d["status"] == "tba" else " (추정)")
-            L += ["BEGIN:VEVENT", f"UID:{s['id']}-{d['type']}-{d['date']}@conf-radar",
-                  f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{y}{m}{dd}", f"DTEND;VALUE=DATE:{nxt}",
-                  f"SUMMARY:🔴 {ics_escape(s['title'])} 마감{ics_escape(tag)}",
-                  fold(f"DESCRIPTION:{ics_escape(d['label'])} · {ics_escape(s['date_text'])} "
-                       f"{ics_escape(s['city'])}\\n{ics_escape(s['link'])}"),
-                  f"URL:{s['link']}", "TRANSP:TRANSPARENT",
-                  "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY",
-                  f"DESCRIPTION:{ics_escape(s['title'])} 마감 1주 전", "END:VALARM",
-                  "END:VEVENT"]
-        if s["start"] and s["end"]:
-            ey, em, ed = s["end"].split("-")
-            nxt = (date(int(ey), int(em), int(ed)) + timedelta(days=1)).strftime("%Y%m%d")
-            L += ["BEGIN:VEVENT", f"UID:{s['id']}-meeting@conf-radar", f"DTSTAMP:{stamp}",
-                  f"DTSTART;VALUE=DATE:{s['start'].replace('-','')}", f"DTEND;VALUE=DATE:{nxt}",
-                  f"SUMMARY:📍 {ics_escape(s['title'])} {s.get('next') or ''}",
-                  f"LOCATION:{ics_escape(s['venue'] or s['city'])}",
-                  f"URL:{s['link']}", "TRANSP:TRANSPARENT", "END:VEVENT"]
-    L.append("END:VCALENDAR")
-    return "\r\n".join(fold(x) for x in L) + "\r\n"
-
-
 def check(d: dict) -> None:
     s, c = d["series"], d["counts"]
     assert c["hf"] >= 20 and c["ccf"] >= 200 and c["rates"] >= 60, f"업스트림 fetch 실패 의심: {c}"
@@ -316,12 +306,27 @@ def check(d: dict) -> None:
         assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
     # 메이저는 업스트림 CORE 등급과 수동 h5 표에 함께 의존한다. 어느 쪽이 깨져도 조용히 틀린다.
     major = {x["title"] for x in s if x["major"]}
-    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ICCV", "ECCV"):
-        assert t in major, f"{t} 이 메이저에서 빠졌다 — CORE 등급 또는 data/impact.yml 확인"
-    # 전부 CORE A* 지만 h5 가 임계 아래다. 여기 끼어들면 교집합 규칙이 깨진 것이다.
-    for t in ("ACL", "AAAI", "EMNLP", "IJCAI", "ICRA", "SIGGRAPH", "RSS", "COLT"):
-        assert t not in major, f"{t} 이 메이저에 들어왔다 — MAJOR_H5 또는 impact.yml 확인"
-    assert len(major) == 6, f"메이저 {len(major)}건 (기대 6) — {sorted(major)}"
+    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ACL"):
+        assert t in major, f"{t} 이 메이저에서 빠졌다 — CORE 등급·개최 주기·impact.yml 확인"
+    # 전부 CORE A* 다. ECCV·ICCV 는 격년이라, 나머지는 h5 가 임계 아래라 빠진다.
+    for t in ("ECCV", "ICCV", "AAAI", "EMNLP", "IJCAI", "ICRA", "SIGGRAPH", "RSS", "COLT"):
+        assert t not in major, f"{t} 이 메이저에 들어왔다 — MAJOR_H5·annual 판정 확인"
+    # 격년 판정이 조용히 뒤집히면 ECCV·ICCV 가 다시 들어온다. 판정 자체를 직접 잡는다.
+    for t in ("ECCV", "ICCV"):
+        assert not next(x for x in s if x["title"] == t)["annual"], f"{t} 이 매년 개최로 판정됐다"
+    for t in ("CVPR", "NeurIPS", "ICML", "ICLR", "ACL"):
+        assert next(x for x in s if x["title"] == t)["annual"], f"{t} 이 격년으로 판정됐다"
+    # 이 컷은 ACL 236 과 AAAI 232 사이 4점 차에 얹혀 있다. 순서가 뒤집히면 조용히 틀리는 대신
+    # 여기서 멈춘다 — Scholar 판을 갱신했을 때 사람이 다시 판단해야 하는 지점이다.
+    h5 = {x["title"]: x["h5"] for x in s}
+    assert h5["ACL"] > h5["AAAI"], \
+        f"ACL({h5['ACL']}) <= AAAI({h5['AAAI']}) — 메이저 경계 근거가 무너졌다, 규칙 재검토 필요"
+    assert len(major) == 5, f"메이저 {len(major)}건 (기대 5) — {sorted(major)}"
+    # 메이저 5곳은 계층·트랙이 반드시 채워져 있어야 한다. 비면 화면에 빈 칸이 조용히 남는다.
+    for x in s:
+        if x["major"]:
+            assert x["tiers"], f"{x['title']}: 발표 계층 미기재 — data/venues.yml"
+            assert x["tracks"], f"{x['title']}: 트랙 미기재 — data/venues.yml (없으면 kind: none)"
     for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
     eds = [e for x in s for e in x["editions"]]

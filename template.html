@@ -446,6 +446,14 @@ const h5Chip = c => c.h5 ? `<span class="chip r" title="Google Scholar h5-index 
 // 워크샵은 본 학회와 마감이 완전히 다르다. 어느 학회 부설인지 같이 안 보이면 오해한다.
 const wsChip = c => c.kind === "workshop" ? `<span class="chip w">W · ${esc(c.parent)} 부설</span>`
   : c.kind === "track" ? `<span class="chip w">T · ${esc(c.parent)} 트랙</span>` : "";
+// 계층 이름은 학회마다 다르다(CVPR 하이라이트 · 나머지 스포트라이트). 옮기지 말고 그대로 보인다.
+const TIERNAME = {Oral:"오랄", Highlight:"하이라이트", Spotlight:"스포트라이트", Poster:"포스터"};
+const TRACKNAME = {position:"포지션", datasets:"데이터셋·평가", findings:"Findings",
+                   other:"기타 트랙", none:"없음"};
+// 투고처를 고를 때 실제로 갈리는 것 셋만 카드에 낸다. 나머지(블로그·주제·ARR)는 상세에서.
+const CARD_TRACKS = new Set(["position", "datasets", "findings"]);
+const trackChips = c => (c.tracks || []).filter(t => CARD_TRACKS.has(t.kind))
+  .map(t => `<span class="chip p" title="${esc(t.name)}">${esc(TRACKNAME[t.kind])}</span>`).join("");
 const progChip = c => c.programs.length
   ? `<span class="chip p" title="${esc(c.programs[0].name)}">${esc(KIND[c.programs[0].kind] || "연계")}</span>` : "";
 
@@ -474,7 +482,7 @@ function cardHTML(c){
           aria-label="즐겨찾기">${state.fav.has(c.id)?"★":"☆"}</button>
         ${esc(c.title)}${c.next?" "+c.next:""}
         <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
-        <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}${progChip(c)}
+        <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}${trackChips(c)}${progChip(c)}
         ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}
       </div>
       <div class="meta">${d ? `<b>${fmt(d.date)}</b> ${esc(d.label)}`
@@ -559,7 +567,7 @@ function renderKanban(){
           <div class="top"><span class="dd ${d && n<=14?"hot":""}">${d?dday(n):(meetState(c)||"미공지")}</span>
             <span class="nm2">${esc(c.title)}${c.next?" "+c.next:""}</span>
             <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
-            <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}
+            <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}${trackChips(c)}
             ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
           <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:(c.next?"제출 마감 종료":"차기 회차 미공지")}</div>
           ${prepLine(c, d)?`<div class="sm">${prepLine(c, d)}</div>`:""}
@@ -809,6 +817,34 @@ function openDetail(id){
           ${p.url?`<br><a href="${esc(p.url)}" target="_blank" rel="noopener">근거 ↗</a>
             · ${esc(p.verified)} 확인`:""}</p></div>`).join("")
     : `<p class="note">연계 제도를 확인하지 못했다. <b>제도가 없다는 뜻이 아니라 조사하지 않았다는 뜻</b>이다.</p>`;
+  // 계층 수치는 "채택되면 어떤 등급으로 실리는가"를 답한다. 총 채택률만으로는 안 보인다.
+  const KEYS = [["oral","Oral"],["highlight","Highlight"],["spotlight","Spotlight"],["poster","Poster"]];
+  const tierRows = (c.tier_counts || []).map(x => {
+    const parts = KEYS.filter(([k]) => x[k] != null)
+      .map(([k,n]) => `${TIERNAME[n]} <b>${num(x[k])}</b>`).join(" · ");
+    const head = x.submitted && x.accepted
+      ? `<b>${num(x.submitted)}</b> 투고 → <b>${num(x.accepted)}</b> 채택 (${(x.rate*100).toFixed(1)}%)`
+      : "총계 미기재";
+    return `<div style="margin-bottom:9px">
+      <div><b>${x.year}</b> · ${head}</div>
+      ${parts ? `<div class="meta">${parts}</div>` : ""}
+      ${x.note ? `<p class="note" style="margin-top:2px">${esc(x.note)}</p>` : ""}
+      ${x.source ? `<p class="note" style="margin-top:2px"><a href="${esc(x.source)}" target="_blank" rel="noopener">출처 ↗</a></p>` : ""}
+    </div>`;
+  }).join("");
+  const tiersBlock = (c.tiers || []).length ? `
+    <h4>발표 계층</h4>
+    <p class="meta">${c.tiers.map(n => esc(TIERNAME[n] || n)).join(" · ")}</p>
+    ${c.tier_note ? `<p class="note">${esc(c.tier_note)}</p>` : ""}
+    ${tierRows || `<p class="note">계층별 편수를 아직 확인하지 못했다. <b>없다는 뜻이 아니다.</b></p>`}` : "";
+  const tracksBlock = (c.tracks || []).length ? `
+    <h4>별도 트랙</h4>` + c.tracks.map(t => `
+      <div style="margin-bottom:9px">
+        <div><b>${esc(t.name)}</b> <span class="chip p">${esc(TRACKNAME[t.kind] || t.kind)}</span>
+          ${t.since ? `<span class="meta">${t.since}년~</span>` : ""}</div>
+        ${t.note ? `<p class="note" style="margin-top:2px">${esc(t.note)}</p>` : ""}
+        ${(t.url || t.source) ? `<p class="note" style="margin-top:2px"><a href="${esc(t.url || t.source)}" target="_blank" rel="noopener">근거 ↗</a>${t.verified ? ` · ${esc(t.verified)} 확인` : ""}</p>` : ""}
+      </div>`).join("") : "";
   const sc = c.scale, t = c.typical;
   const links = [["학회 사이트", c.link], ...c.links]
     .filter(([,u]) => u).map(([x,u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(x)} ↗</a>`).join("");
@@ -835,6 +871,8 @@ function openDetail(id){
              ${sc.source?`· <a href="${esc(sc.source)}" target="_blank" rel="noopener">출처 ↗</a>`:""}</p>`
          : `<p class="note">근거 있는 규모 수치를 찾지 못했다. 추측으로 채우지 않는다.</p>`}
     ${c.history.length ? `<h4>연도별 투고·채택 추세</h4>${trendSVG(c.history)}` : ""}
+    ${tiersBlock}
+    ${tracksBlock}
 
     <h4>저널·학회 연계</h4>${progs}
 

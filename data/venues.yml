@@ -1,0 +1,161 @@
+# 발표 계층(오랄·하이라이트·스포트라이트·포스터)과 별도 트랙 — 수동 큐레이션.
+#
+# 왜 수동인가 — 업스트림 둘(ai-deadlines·ccf-deadlines)은 마감과 총 채택 수만 나른다.
+# "채택되면 어떤 등급으로 실리는가"와 "포지션·벤치마크 트랙이 따로 있는가"는 아무도 기계가독으로
+# 안 준다. 투고처를 고를 때는 이쪽이 총 채택률보다 결정적이다.
+#
+# 규칙 = neuro.yml 과 같다. 근거 URL 없는 수치는 넣지 않는다. 미공개는 항목을 비우고
+# note 로 왜 비었는지 적는다. "미공개"와 "0"은 다른 말이다.
+#
+# 🔴 업스트림과 어긋나는 값 2건 (2026-09-10 발견). 여기 값이 우선이고, 이유를 적어 둔다.
+#   - ICML 2024: 업스트림(csconfstats) accepted 2,609 · 우리 값 2,944.
+#     2,609 는 papercopilot 의 **poster 수**와 정확히 일치한다. 업스트림이 오랄·스포트라이트를
+#     빠뜨린 것으로 보인다. 총 채택은 2,944(오랄 144 + 스포트라이트 191 + 포스터 2,609).
+#   - ACL 2024: 업스트림 943 · 논문(arXiv 2512.04448) 865.
+#     long/short 집계 범위가 다른 것으로 보이나 어느 쪽이 무엇인지 확정 못 했다 → 🟡 미해결.
+#     업스트림 값을 그대로 두고 여기서는 건드리지 않는다.
+
+meta:
+  verified: '2026-09-10'
+
+CVPR:
+  tiers: [Oral, Highlight, Poster]
+  tier_note: >-
+    계층은 개최 2주 전쯤 확정 공개된다. 채택 통보 시점에는 등급이 안 붙는다.
+  tier_counts:
+    - year: 2025
+      accepted: 2878
+      highlight: 388
+      source: https://papercopilot.com/statistics/cvpr-statistics/
+      note: 오랄 수는 공식 집계를 못 찾았다. 채택분의 3.3% 라는 보도만 있다.
+  tracks:
+    - name: 별도 포지션·데이터셋 트랙 없음
+      kind: none
+      note: 데이터셋·벤치마크 논문은 본 학회 주제 영역으로 그냥 투고한다.
+      source: https://cvpr.thecvf.com/
+      verified: '2026-09-10'
+
+NeurIPS:
+  tiers: [Oral, Spotlight, Poster]
+  tier_counts:
+    - year: 2025
+      submitted: 21575
+      accepted: 5290
+      rate: 0.2452
+      oral: 77
+      spotlight: 683
+      poster: 4515
+      source: https://blog.neurips.cc/2025/09/30/reflections-on-the-2025-review-process-from-the-program-committee-chairs/
+      note: >-
+        제출·채택·비율은 프로그램 의장 공식 글. 계층 3수는 papercopilot(OpenReview 집계)이고
+        합이 5,275 로 공식 채택 5,290 과 15편 차이가 난다.
+  tracks:
+    - name: Evaluations & Datasets (ED) 트랙
+      kind: datasets
+      since: 2021
+      note: >-
+        2021년 Datasets & Benchmarks 로 신설, 2026년부터 Evaluations & Datasets (ED) 로 개명.
+        2025년 제출 1,995편.
+      url: https://blog.neurips.cc/2026/03/23/introducing-the-evaluations-datasets-track-at-neurips-2026/
+      verified: '2026-09-10'
+    - name: Position Paper 트랙
+      kind: position
+      since: 2025
+      note: AI 전반에 대한 관점 논문. 2025년 신설.
+      url: https://openreview.net/group?id=NeurIPS.cc/2025/Position_Paper_Track
+      verified: '2026-09-10'
+
+ICLR:
+  tiers: [Oral, Spotlight, Poster]
+  tier_counts:
+    - year: 2026
+      submitted: 19814
+      accepted: 5340
+      rate: 0.2695
+      spotlight: 223
+      poster: 5117
+      source: https://papercopilot.com/statistics/iclr-statistics/
+      note: >-
+        오랄 수가 이 집계에 없다. 별도 목록은 224편이라고 하나 출처 등급이 낮아 넣지 않았다.
+        포스터+스포트라이트 합이 채택 수와 같아, 오랄이 아직 미배정일 가능성이 높다.
+    - year: 2025
+      submitted: 11672
+      accepted: 3703
+      rate: 0.3173
+      oral: 213
+      spotlight: 380
+      poster: 3110
+      source: https://papercopilot.com/statistics/iclr-statistics/
+  tracks:
+    - name: Blogposts 트랙
+      kind: other
+      since: 2022
+      note: 기존 논문을 해설·비평하는 블로그 글. 본 논문 트랙과 별개다.
+      url: https://iclr-blogposts.github.io/
+      verified: '2026-09-10'
+    - name: 별도 포지션·데이터셋 트랙 없음
+      kind: none
+      note: 데이터셋·벤치마크는 일반 논문으로 투고한다.
+      source: https://iclr.cc/
+      verified: '2026-09-10'
+
+ICML:
+  tiers: [Oral, Spotlight, Poster]
+  tier_counts:
+    - year: 2025
+      submitted: 12107
+      accepted: 3260
+      rate: 0.2693
+      oral: 108
+      spotlight: 313
+      poster: 2947
+      source: https://papercopilot.com/statistics/icml-statistics/
+    - year: 2024
+      submitted: 9653
+      accepted: 2944
+      rate: 0.3050
+      oral: 144
+      spotlight: 191
+      poster: 2609
+      source: https://papercopilot.com/statistics/icml-statistics/
+      note: 업스트림은 이 해 채택을 2,609(=포스터만)로 갖고 있다. 파일 머리말 참조.
+  tracks:
+    - name: Position Paper 트랙
+      kind: position
+      since: 2024
+      note: 2024년 신설. 첫 해 286편 제출·75편 채택(26%), 그중 오랄 15·스포트라이트 11·포스터 49.
+      url: https://icml.cc/Conferences/2025/CallForPositionPapers
+      verified: '2026-09-10'
+    - name: 별도 데이터셋 트랙 없음
+      kind: none
+      source: https://icml.cc/
+      verified: '2026-09-10'
+
+ACL:
+  tiers: [Oral, Poster]
+  tier_note: >-
+    본 학회 채택분은 오랄과 포스터로 갈린다. 그 아래에 Findings 라는 별도 게재 등급이 있어
+    "본 학회 채택률"과 "전체 게재율"이 크게 다르다. 다른 네 곳과 비교할 때 주의.
+  tracks:
+    - name: Findings of ACL
+      kind: findings
+      since: 2020
+      note: 본 학회에 안 실리지만 심사를 통과한 논문의 별도 게재 등급. 발표 슬롯은 없다.
+      url: https://aclanthology.org/venues/findings/
+      verified: '2026-09-10'
+    - name: 특별 주제(Theme) 트랙
+      kind: other
+      since: 2020
+      note: 해마다 주제가 바뀐다. 본 논문과 같은 마감을 쓴다.
+      url: https://2026.aclweb.org/calls/main_conference_papers/
+      verified: '2026-09-10'
+    - name: ARR 필수 경유
+      kind: other
+      note: 직접 투고가 아니라 ACL Rolling Review 에 먼저 내고 리뷰를 commit 한다.
+      url: https://aclrollingreview.org/
+      verified: '2026-09-10'
+    - name: 별도 포지션·데이터셋 트랙 없음
+      kind: none
+      note: 자원·평가(Resources and Evaluation)는 본 학회의 주제 영역이지 별도 트랙이 아니다.
+      source: https://2026.aclweb.org/calls/main_conference_papers/
+      verified: '2026-09-10'
