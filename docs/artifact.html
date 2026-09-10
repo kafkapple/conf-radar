@@ -151,7 +151,9 @@ table.dense td.w{white-space:normal;min-width:150px}
    막대 안에 학회 이름이 들어간다. 점 격자보다 '언제부터 언제까지'가 즉시 읽힌다 ── */
 .tl{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow-x:auto;
   -webkit-overflow-scrolling:touch}
-.tlin{position:relative;min-width:760px;padding:0 0 10px}
+/* 월당 최소 폭을 준다. 창 전체를 화면에 욱여넣으면 2년 창의 막대가 서로 붙어 못 읽고,
+   가로 스크롤도 안 생긴다 — 내용이 컨테이너보다 좁으면 스크롤바가 없다. */
+.tlin{position:relative;min-width:var(--tlw,760px);padding:0 0 10px}
 .tlhead{position:sticky;top:0;z-index:3;display:flex;background:var(--card);
   border-bottom:1px solid var(--line)}
 .tlhead div{flex:1 0 0;font-size:11px;color:var(--dim);padding:7px 0 6px 7px;
@@ -732,6 +734,7 @@ function renderCycle(){
        <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
        <span style="color:var(--urgent)">▏빨간 세로선 = 오늘</span>
+       <span style="opacity:.7">가로로 밀어 볼 수 있다 (트랙패드 두 손가락 · shift+휠). 창 밖은 「창 이동」</span>
        <span style="opacity:.7">흐린 막대 = 이미 지난 회차. 창은 오늘 앞쪽 ${Math.max(1, Math.round(state.months / 4))}개월부터 시작한다</span>
        ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
          ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
@@ -816,6 +819,9 @@ function cycActual(){
   rows.push(...ghosts);
   rows.sort((a, b) => a.anchor - b.anchor || a.c.title.localeCompare(b.c.title));
 
+  // 월당 86px. 분기·6개월은 760px 하한에 걸려 그대로 꽉 차고, 1년부터 가로 스크롤이 생긴다.
+  document.querySelector("#v-cyc .tlin").style.setProperty("--tlw",
+    Math.max(760, state.months * 86) + "px");
   document.querySelector("#v-cyc .tlhead").innerHTML = cols.map(d =>
     `<div>${d.getMonth() === 0 || d === cols[0]
       ? `${String(d.getFullYear()).slice(2)}년 ${d.getMonth()+1}월` : (d.getMonth()+1)+"월"}</div>`).join("");
@@ -845,6 +851,14 @@ function cycActual(){
                : `<span class="out ${to > 78 ? "l" : ""}">${esc(label)}</span>`}
     </div></div>`;
   }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
+
+  // 열자마자 오늘이 보여야 한다. 스크롤이 생기는 폭이면 오늘선을 왼쪽 1/4 쯤에 둔다.
+  const tl = document.querySelector("#v-cyc .tl");
+  requestAnimationFrame(() => {
+    const over = tl.scrollWidth - tl.clientWidth;
+    if (over > 0 && now >= 0 && now <= 100)
+      tl.scrollLeft = Math.max(0, Math.min(over, tl.scrollWidth * now / 100 - tl.clientWidth * 0.25));
+  });
   return rows.map(r => r.c.id);
 }
 
