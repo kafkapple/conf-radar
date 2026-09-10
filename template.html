@@ -48,6 +48,9 @@ h1{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:0 0 3px}
 button{font:inherit;font-size:13px;padding:5px 11px;border:1px solid var(--line);border-radius:99px;
   background:var(--card);color:var(--dim);cursor:pointer}
 button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+/* 「오늘로」 는 상태 토글이 아니라 이동 명령이다. 줄 끝에 묻혀 안 보인다는 지적(260910). */
+button.now{border-color:var(--urgent);color:var(--urgent);font-weight:650}
+button.now:hover{background:var(--urgent);color:var(--bg)}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
 input[type=search]{font:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--line);
   border-radius:99px;background:var(--card);color:var(--fg);flex:1;min-width:110px}
@@ -84,6 +87,7 @@ h2.grp{font-size:11.5px;color:var(--dim);font-weight:600;margin:19px 0 7px;lette
 .sw2{display:inline-block;width:16px;height:9px;border-radius:3px;vertical-align:0}
 .sw2.rev{background:color-mix(in srgb,var(--fg) 9%,transparent);border:1px solid color-mix(in srgb,var(--fg) 26%,transparent)}
 .sw2.meet{background:var(--ai)}
+.sw2.act{background:color-mix(in srgb,var(--ai) 60%,transparent);border:1px solid color-mix(in srgb,var(--fg) 26%,transparent)}
 .ext{margin-left:7px;font-size:11px;color:var(--ai);text-decoration:none;white-space:nowrap}
 .ext:hover{text-decoration:underline}
 .meta{color:var(--dim);font-size:12.5px;margin-top:2px}
@@ -197,6 +201,12 @@ table.dense td.w{white-space:normal;min-width:150px}
 .tlbar.k-rev{background:color-mix(in srgb,var(--fg) 9%,transparent);
   border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);color:var(--dim)}
 .tlbar.k-dlonly{background:transparent;border-width:0}
+/* 심사 막대 안의 단계 — 저자가 일하는 때(act)만 색을 채운다. 나머지는 기다리는 때. */
+.tlseg{position:absolute;top:0;bottom:0;pointer-events:auto}
+.tlseg+.tlseg{border-left:1px solid color-mix(in srgb,var(--fg) 34%,transparent)}
+.tlbar.ai .tlseg.act{background:color-mix(in srgb,var(--ai) 60%,transparent)}
+.tlbar.neuro .tlseg.act{background:color-mix(in srgb,var(--neuro) 60%,transparent)}
+.tlbar .lab,.tlbar .out{z-index:2}   /* position 은 건드리지 않는다 — .lab 의 sticky 가 죽는다 */
 .tlbar.k-meet{color:#fff;font-weight:700}
 .tlbar.ai.k-meet{background:var(--ai);border-color:var(--ai)}
 .tlbar.neuro.k-meet{background:var(--neuro);border-color:var(--neuro)}
@@ -410,7 +420,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-tm="dl" title="제출 마감만">마감만</button>
     <button data-tm="meet" title="개최 기간만">개최만</button>
     <span class="sep"></span>
-    <button id="tl-now" title="오늘 위치로 스크롤">오늘로</button>
+    <button id="tl-now" class="now" title="오늘 위치로 스크롤">↦ 오늘로</button>
   </div>
   <div class="tl"><div class="tlin"><div class="tlhead"></div><div class="tlbody"></div></div></div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
@@ -435,6 +445,34 @@ const KIND = {shared_review:"공용 리뷰", journal_option:"저널 연계", jou
               society_journal:"학회 저널", none:"제도 없음"};
 // 실제로 "내야 하는" 마감. notification·rebuttal·camera_ready 는 그 질문의 답이 아니다.
 const SUBMIT = new Set(["abstract","paper","submission","supplementary","abstract_late"]);
+
+// 심사 막대 안을 단계로 자른다. 투고 계획의 실제 질문은 "언제 내나"가 아니라
+// "언제 또 손이 가나"다 — 리버틀과 최종본은 저자가 일하는 때이고 나머지는 기다리는 때다.
+// 일정 이름은 업스트림(ccf-deadlines) 어휘 그대로 쓴다 (build.py 의 SUBMIT/PHASE 가 정본).
+// 없는 단계는 만들지 않는다. 모르는 구간을 추정해 그리면 화면이 없는 정보를 만든다.
+const ACT = ["rebuttal_start","rebuttal_end","author_response","rebuttal_and_revision"];
+function phases(e, firstSub){
+  const dls = e.deadlines || [];
+  const days = t => dls.filter(d => d.type === t).map(d => d.date).sort();
+  const one = t => days(t)[0] || null;
+  const resp = dls.filter(d => ACT.includes(d.type)).map(d => d.date).sort();
+  const rr = one("review_release"), notif = one("notification"), cam = one("camera_ready");
+  const close = resp.length ? resp[resp.length - 1] : null;
+  // 응답 날짜가 하나뿐이면 그것이 마감이고, 시작은 리뷰가 공개된 날이다.
+  const open = resp.length > 1 ? resp[0] : (rr && close && rr < close ? rr : close);
+  const lastSub = dls.filter(d => SUBMIT.has(d.type)).map(d => d.date).sort().pop() || firstSub;
+  const out = [];
+  const add = (from, to, act, name) => { if (from && to && from < to) out.push({from, to, act, name}); };
+  // 리뷰 공개일을 안 싣는 학회가 있다. 그럴 때 심사 구간은 응답이 시작되는 날까지로 본다.
+  const revStart = rr || open || notif;
+  add(firstSub, lastSub, true,  "제출");        // 초록 → 본문 → 보충. 저자가 아직 쓰는 중
+  add(lastSub,  revStart, false, "심사");
+  add(rr,       open,    false, "리뷰 숙독");   // 공개일과 응답 시작이 다른 학회가 있다
+  add(open,     close,   true,  "리버틀");
+  add(close || rr, notif, false, "결정 대기");
+  add(notif,    cam,     true,  "최종본");
+  return out;
+}
 const RANKORD = {"A*":0, "A":1, "B":2, "C":3};
 
 const FAV_KEY = "confradar:fav";
@@ -753,10 +791,11 @@ function renderCycle(){
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
   const missing = visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
-    ? `<span><span class="sw2 rev"></span> 회색 = <b>심사·리비전</b> (제출 마감 → 통보)</span>
-       <span><span class="sw2 meet"></span> 진한 색 = <b>개최 기간</b></span>
-       <span>▼ = 제출 마감일</span>
-       <span style="opacity:.7">통보일이 안 나온 회차는 마감 표식만 찍는다 — 없는 기간을 길게 그리지 않는다</span>
+    ? `<span><span class="sw2 rev"></span> 회색 막대 = <b>심사 기간</b> (제출 → 통보)</span>
+       <span><span class="sw2 act"></span> 안쪽 진한 칸 = <b>저자가 일하는 때</b> (제출·리버틀·최종본)</span>
+       <span><span class="sw2 meet"></span> 진한 막대 = <b>개최 기간</b></span>
+       <span>▼ = 제출 마감일 · 막대에 올리면 단계별 날짜</span>
+       <span style="opacity:.7">공지 안 된 단계는 안 그린다 — 없는 기간을 길게 그리지 않는다</span>
        <span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
@@ -839,13 +878,13 @@ function cycActual(){
     // 실제로 진행되는 것은 심사·리비전(제출 마감 → 통보)뿐이고, 통보 뒤 개최까지는 빈 구간이다.
     // 그래서 둘을 **다른 색 막대 두 개**로 나눈다 (260910 사용자 요청).
     const dl = subs.map(d => ({...d, p: pct(d.date)})).find(d => d.p < 100);
-    const notif = (e.deadlines || []).find(d => d.type === "notification");
+    const ph = phases(e, dl && dl.date);
     const push = (o) => { if (o.to > 0 && o.from < 100) bars.push(o); };
 
     if (dl){
-      // 통보일이 있으면 심사 구간, 없으면 마감 표식만. 없는 것을 길게 그리지 않는다.
-      const end = notif ? pct(notif.date) : dl.p + 5 / (SPAN * 30.4) * 100;
-      push({c, e, dl, kind: notif ? "rev" : "dlonly", notif,
+      // 단계를 하나도 못 얻으면 마감 표식만. 없는 기간을 길게 그리지 않는다.
+      const end = ph.length ? pct(ph[ph.length - 1].to) : dl.p + 5 / (SPAN * 30.4) * 100;
+      push({c, e, dl, kind: ph.length ? "rev" : "dlonly", ph,
             from: Math.max(0, dl.p), to: Math.min(100, Math.max(end, dl.p + 0.15)),
             past: end < now, trunc: dl.p < 0});
     }
@@ -904,7 +943,7 @@ function cycActual(){
 
   document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(r => {
     const inner = r.bars.map((b, i) => {
-      const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, notif} = b;
+      const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, ph} = b;
       const w = to - from;
       // 같은 줄에서 학회 이름을 매번 되풀이하지 않는다. 두 번째부터는 연도만.
       const head = i === r.nameOn
@@ -923,7 +962,7 @@ function cycActual(){
         ? Math.max(0.3, Math.min(100, me) - Math.max(from, ms)) : 0;
       const tip = ghost
         ? `${c.title} — 과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월. 공지된 날짜가 아니다`
-        : kind === "rev"    ? `${c.title} ${e.year} 심사·리비전 — ${dl.date} 마감 → ${notif.date} 통보`
+        : kind === "rev"    ? `${c.title} ${e.year} — ${ph.map(p => `${p.name} ${p.from}~${p.to}`).join(" · ")}`
         : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} 마감 (통보일 미공지)`
         : kind === "meet"   ? `${c.title} ${e.year} 개최 — ${e.date_text}`
                             : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
@@ -932,6 +971,11 @@ function cycActual(){
         style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
         ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
         ${meetW && !kind ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
+        ${kind === "rev" ? ph.map(p => {
+            const a = (pct(p.from) - from) / w * 100, z = (pct(p.to) - from) / w * 100;
+            return `<span class="tlseg ${p.act ? "act" : ""}" title="${esc(p.name)} ${p.from} ~ ${p.to}"
+                     style="left:${Math.max(0, a).toFixed(2)}%;width:${(Math.min(100, z) - Math.max(0, a)).toFixed(2)}%"></span>`;
+          }).join("") : ""}
         ${inside ? `<span class="lab">${esc(label)}</span>`
                  : `<span class="out ${to > 88 ? "l" : ""}">${esc(label)}</span>`}
       </div>`;
@@ -978,6 +1022,17 @@ const CRITERIA = `
     <div class="srcitem"><div class="t">준비 착수 줄 = 마감 8주 전</div>
       <div class="n">고정 경험칙이고 학회가 정한 날이 아니다.
         차기 마감이 아직 없으면 <b>전형 착수 N월</b>(과거 전형 마감월 − 2개월)로 대신하고 표본 수를 함께 적는다.</div></div>
+    <div class="srcitem"><div class="t">심사 단계 — 회차 하나에 쓰는 일곱 이름</div>
+      <div class="n">타임라인의 심사 막대는 아래 경계들로 잘린다. <b>안쪽 진한 칸 = 저자가 일하는 때</b>,
+        빈 칸 = 기다리는 때.<br>
+        <b>제출</b>(초록·등록 → 본문 → 보충) · <b>심사</b>(제출 → 리뷰 공개) ·
+        <b>리뷰 숙독</b>(공개 → 응답 시작) · <b>리버틀</b>(응답 시작 → 응답 마감) ·
+        <b>결정 대기</b>(응답 마감 → 통보) · <b>최종본</b>(통보 → 카메라레디)<br>
+        이름은 <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a>
+        가 쓰는 어휘를 그대로 쓴다 — 우리가 따로 지으면 같은 뜻의 이름이 둘 공존한다.
+        업스트림이 모르는 이름을 실어 오면 빌드가 멈춘다(조용히 안 그려지는 대신).<br>
+        <b>공지 안 된 단계는 그리지 않는다.</b> 추정으로 길이를 주면 화면이 없는 정보를 만든다 —
+        ACL 2027 은 ARR 2027 주기가 아직 안 나와 마감 표식만 찍힌다.</div></div>
     <div class="srcitem"><div class="t">인용 h5 · 투고 → 채택 — 다른 수치다</div>
       <div class="n"><b>인용 h5</b> = Google Scholar h5-index. 최근 5년(2020-2024) 게재분 중 h편이 각각
         h회 이상 인용된 최대 h. <b>투고 편수가 아니다</b> — 메이저 필터의 두 축 중 하나일 뿐이다.<br>

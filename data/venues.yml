@@ -21,7 +21,17 @@
 #
 # deadlines = 업스트림이 아직 안 실어 온 회차 일정. 학회 공식 페이지에서 읽은 것만 넣는다.
 #   빌드가 해당 연도 회차에 합쳐 넣고, 같은 (종류, 날짜) 가 이미 있으면 건드리지 않는다.
-#   심사 구간 막대는 "제출 마감 → 통보" 로 그리므로 notification 이 없으면 막대가 안 생긴다.
+#
+#   🔴 type 은 새로 짓지 말 것. 어휘 정본 = build.py 의 SUBMIT / PHASE / OTHER 이고,
+#      그 이름들은 ccf-deadlines 가 쓰는 것을 그대로 가져온 것이다. 우리가 따로 지으면
+#      업스트림이 나중에 같은 사실을 실어 올 때 같은 뜻의 이름이 둘 공존한다.
+#      어휘에 없는 이름은 `build.py --check` 가 멈춘다 (화면에서 조용히 사라지는 대신).
+#
+#   화면의 심사 막대는 이 이름들로 구간을 자른다 —
+#     제출(abstract·registration → paper → supplementary) · 심사(→ review_release) ·
+#     리뷰 숙독(→ rebuttal_start) · 리버틀(→ rebuttal_end·author_response) ·
+#     결정 대기(→ notification) · 최종본(→ camera_ready)
+#   없는 단계는 안 그린다. notification 이 없으면 막대 자체가 안 생기고 마감 표식만 남는다.
 #
 # review = 리뷰 공개 수준. 세 단계로만 적는다.
 #   open    심사 중부터 논문·리뷰·토론이 공개되고 탈락분도 영구 공개 (ICLR)
@@ -47,6 +57,20 @@ CVPR:
       date: '2027-01-25'
       timezone: AoE
       source: https://cvpr.thecvf.com/Conferences/2027/Dates
+      verified: '2026-09-10'
+    - year: 2027
+      type: rebuttal_start
+      label: Rebuttal Period Opens
+      date: '2027-01-25'
+      timezone: AoE
+      source: https://cvpr.thecvf.com/Conferences/2027/CallForPapers
+      verified: '2026-09-10'
+    - year: 2027
+      type: rebuttal_end
+      label: Rebuttal Deadline
+      date: '2027-02-01'
+      timezone: AoE
+      source: https://cvpr.thecvf.com/Conferences/2027/CallForPapers
       verified: '2026-09-10'
     - year: 2027
       type: notification

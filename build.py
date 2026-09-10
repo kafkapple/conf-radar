@@ -27,7 +27,18 @@ from sources import (DISPLAY, FIELD_AI, PAPERCOPILOT, TRACKED_AI, canon,
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"
 
-SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
+# 회차 일정 어휘 — 이름은 ccf-deadlines 가 쓰는 것을 그대로 쓴다. 우리가 따로 지으면
+# 업스트림이 나중에 같은 사실을 실어 올 때 같은 뜻의 이름이 둘 공존한다.
+#
+# SUBMIT = 저자가 "내야 하는" 날. PHASE = 낸 뒤에 흐르는 심사 단계의 경계.
+# 화면의 심사 막대는 이 경계들 사이를 구간으로 잘라 그린다 — 어느 구간이 저자가 일하는
+# 때(리버틀·최종본)이고 어느 구간이 기다리는 때인지가 투고 계획의 핵심이다.
+SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late", "registration"}
+PHASE = {"review_release", "rebuttal_start", "rebuttal_end", "author_response",
+         "rebuttal_and_revision", "notification", "commitment_deadline",
+         "withdrawal", "camera_ready"}
+# 저자와 무관한 날. 어휘에는 두되 화면에는 안 쓴다 — 빼면 assert 가 매번 걸린다.
+OTHER = {"reviewer_registration"}
 
 # 메이저 = 세 조건의 교집합 — CORE A* 등급 ∩ 매년 개최 ∩ Google Scholar h5-index >= 237.
 # 결과 5곳: CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ACL 236.
@@ -326,62 +337,6 @@ def build(offline: bool = False) -> dict:
     return data
 
 
-def check(d: dict) -> None:
-    s, c = d["series"], d["counts"]
-    assert c["hf"] >= 20 and c["ccf"] >= 200 and c["rates"] >= 60, f"업스트림 fetch 실패 의심: {c}"
-    ai = [x for x in s if x["group"] == "ai"]
-    neuro = [x for x in s if x["group"] == "neuro"]
-    assert len(ai) >= 24, f"AI 시리즈 {len(ai)}건 — TRACKED_AI 매칭 확인"
-    assert len(neuro) >= 9, f"neuro 시리즈 {len(neuro)}건"
-    # 차기 회차가 없어도 남는 것이 이 모델의 존재 이유다. 전형 시기가 비면 아무 값도 못 준다.
-    for x in s:
-        assert x["editions"], f"{x['title']}: 회차 0건"
-        assert x["typical"]["meeting_month"], f"{x['title']}: 전형 개최월 유도 실패"
-        assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
-    # 메이저는 업스트림 CORE 등급과 수동 h5 표에 함께 의존한다. 어느 쪽이 깨져도 조용히 틀린다.
-    major = {x["title"] for x in s if x["major"]}
-    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ACL"):
-        assert t in major, f"{t} 이 메이저에서 빠졌다 — CORE 등급·개최 주기·impact.yml 확인"
-    # 전부 CORE A* 다. ECCV·ICCV 는 격년이라, 나머지는 h5 가 임계 아래라 빠진다.
-    for t in ("ECCV", "ICCV", "AAAI", "EMNLP", "IJCAI", "ICRA", "SIGGRAPH", "RSS", "COLT"):
-        assert t not in major, f"{t} 이 메이저에 들어왔다 — MAJOR_H5·annual 판정 확인"
-    # 격년 판정이 조용히 뒤집히면 ECCV·ICCV 가 다시 들어온다. 판정 자체를 직접 잡는다.
-    for t in ("ECCV", "ICCV"):
-        assert not next(x for x in s if x["title"] == t)["annual"], f"{t} 이 매년 개최로 판정됐다"
-    for t in ("CVPR", "NeurIPS", "ICML", "ICLR", "ACL"):
-        assert next(x for x in s if x["title"] == t)["annual"], f"{t} 이 격년으로 판정됐다"
-    # 이 컷은 ACL 236 과 AAAI 232 사이 4점 차에 얹혀 있다. 순서가 뒤집히면 조용히 틀리는 대신
-    # 여기서 멈춘다 — Scholar 판을 갱신했을 때 사람이 다시 판단해야 하는 지점이다.
-    h5 = {x["title"]: x["h5"] for x in s}
-    assert h5["ACL"] > h5["AAAI"], \
-        f"ACL({h5['ACL']}) <= AAAI({h5['AAAI']}) — 메이저 경계 근거가 무너졌다, 규칙 재검토 필요"
-    assert len(major) == 5, f"메이저 {len(major)}건 (기대 5) — {sorted(major)}"
-    # 메이저 5곳은 계층·트랙이 반드시 채워져 있어야 한다. 비면 화면에 빈 칸이 조용히 남는다.
-    for x in s:
-        if x["major"]:
-            assert x["tiers"], f"{x['title']}: 발표 계층 미기재 — data/venues.yml"
-            assert x["tracks"], f"{x['title']}: 트랙 미기재 — data/venues.yml (없으면 kind: none)"
-            assert (x["review"] or {}).get("level") in ("open", "partial", "closed"), \
-                f"{x['title']}: 리뷰 공개 수준 미기재 — data/venues.yml"
-    for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
-        assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
-    eds = [e for x in s for e in x["editions"]]
-    located = [e for e in eds if e["lat"] is not None]
-    # 좌표가 대량으로 비면 지도가 조용히 빈 화면이 된다. 캐시 미스는 prep.py --geo 로 채운다.
-    assert len(located) / len(eds) > 0.85, \
-        f"좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} — python prep.py --geo 실행 필요"
-    assert d["world"]["paths"], "world.json 비어 있음"
-    # 개최일을 못 얻은 회차가 많으면 타임라인 막대가 길이 0으로 뭉개진다
-    nodate = [e for e in eds if not e["start"]]
-    assert len(nodate) / len(eds) < 0.1, \
-        f"개최일 미상 회차 {len(nodate)}/{len(eds)} — parse_range 확인: {[e['date_text'] for e in nodate[:4]]}"
-    ws = [x for x in s if x["kind"] != "conference"]
-    assert len(ws) >= 3, f"워크샵·트랙 {len(ws)}건 — workshops.yml 로드 확인"
-    assert all(x["parent"] and x["kind"] in ("workshop", "track") for x in ws), "워크샵 parent/kind 미지정"
-    no_next = [x["title"] for x in s if not x["next"]]
-    print(f"OK  AI {len(ai)} · neuro {len(neuro)} · 차기 미공지 {len(no_next)}건({', '.join(no_next[:6])})")
-
-
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--offline", action="store_true", help="캐시된 업스트림 tarball 사용")
@@ -389,5 +344,6 @@ if __name__ == "__main__":
     a = p.parse_args()
     d = build(a.offline)
     if a.check:
+        from checks import check   # 순환 import 를 피해 여기서 부른다
         check(d)
     print(f"docs/index.html  ({len(d['series'])} series, generated {d['generated']})")
