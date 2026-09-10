@@ -177,7 +177,9 @@ table.dense td.w{white-space:normal;min-width:150px}
 .tlbar{position:absolute;top:4px;height:22px;border-radius:5px;cursor:pointer;
   display:flex;align-items:center;gap:5px;padding:0 7px;overflow:visible;
   font-size:11.5px;font-weight:650;white-space:nowrap}
-.tlbar .lab{overflow:hidden;text-overflow:ellipsis}
+/* 막대가 화면 왼쪽 밖에서 시작하면 라벨도 같이 밀려 이름이 안 보였다.
+   sticky 로 스크롤 뷰포트 왼쪽에 붙잡아 둔다 — 막대가 화면에 걸쳐 있는 동안 이름이 계속 보인다. */
+.tlbar .lab{overflow:hidden;text-overflow:ellipsis;position:sticky;left:14px}
 .tlbar .out{position:absolute;left:calc(100% + 6px);color:var(--fg);font-weight:650}
 .tlbar .out.l{left:auto;right:calc(100% + 6px)}
 .tlbar.ai{background:color-mix(in srgb,var(--ai) 26%,transparent);
@@ -192,10 +194,17 @@ table.dense td.w{white-space:normal;min-width:150px}
 .tlbar.trunc{border-left:0;border-radius:0 5px 5px 0}
 .tlbar:hover{filter:brightness(1.25)}
 /* 오른쪽 끝의 진한 조각 = 실제 개최 기간. 막대 전체는 마감부터의 준비 구간이다 */
-.tlmeet{position:absolute;top:-1px;bottom:-1px;right:-1px;min-width:5px;border-radius:0 5px 5px 0}
+/* 막대 하나에 두 가지가 들어 있다 — 왼쪽 = 제출 마감, 오른쪽 = 실제 개최.
+   3px 세로선으로는 안 갈렸다(260910 사용자 신고). 마감은 굵은 블록 + 아래쪽 삼각 표식으로 세운다. */
+.tlmeet{position:absolute;top:-1px;bottom:-1px;right:-1px;min-width:7px;border-radius:0 5px 5px 0;
+  box-shadow:inset 1px 0 0 var(--card)}
 .tlbar.ai .tlmeet{background:var(--ai)} .tlbar.neuro .tlmeet{background:var(--neuro)}
-.tlcap{position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;border-radius:5px 0 0 5px}
-.tlbar.ai .tlcap{background:var(--ai)} .tlbar.neuro .tlcap{background:var(--neuro)}
+.tlcap{position:absolute;left:-1px;top:-1px;bottom:-1px;width:8px;border-radius:5px 0 0 5px;
+  box-shadow:inset -1px 0 0 var(--card)}
+.tlcap::after{content:"";position:absolute;left:1px;top:-5px;border:4px solid transparent;
+  border-top-color:currentColor}
+.tlbar.ai .tlcap{background:var(--ai);color:var(--ai)}
+.tlbar.neuro .tlcap{background:var(--neuro);color:var(--neuro)}
 
 /* ── 연간 사이클 ── */
 .tl[hidden],.cyc[hidden]{display:none}
@@ -319,8 +328,8 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-g="neuro">뇌과학</button>
     <button data-g="ai">AI</button>
     <span class="sep"></span>
-    <button data-t="major" title="CORE A* · 매년 개최 · h5 236+ 를 모두 만족하는 5곳">메이저</button>
-    <button data-t="2" aria-pressed="true">T1·2</button>
+    <button data-t="major" aria-pressed="true" title="CORE A* · 매년 개최 · h5 236+ 를 모두 만족하는 5곳">메이저</button>
+    <button data-t="2">T1·2</button>
     <button data-t="1">T1만</button>
     <button data-t="3">전체 티어</button>
   </div>
@@ -424,7 +433,7 @@ const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s]
 
 // rank = 등급 필터 하나. "major" 또는 티어 상한(1·2·3). 메이저를 별도 토글로 두면 티어와
 // AND 로 걸려서, T1·2 를 눌러도 메이저 5곳만 남는 화면이 된다(260910 사용자 신고).
-const state = {view:"cyc", group:"all", rank:2, sort:"deadline", q:"", subOnly:true,
+const state = {view:"cyc", group:"all", rank:"major", sort:"deadline", q:"", subOnly:true,
                favOnly:false, withWs:true, openRev:false,
                mapMode:"next", cycMode:"actual", months:12, tlMode:"both", fav:loadFav()};
 
@@ -733,9 +742,9 @@ function renderCycle(){
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
   const missing = visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
-    ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
+    ? `<span>▮ 왼쪽 굵은 블록(▼) = <b>제출 마감</b></span><span>▮ 오른쪽 진한 블록 = <b>실제 개최 기간</b></span>
+       <span>그 사이 옅은 부분 = 심사 기간</span><span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
-       <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
        <span style="color:var(--urgent)">▏빨간 세로선 = 오늘</span>
        <span style="opacity:.7">흐린 막대 = 이미 지난 회차</span>
@@ -905,13 +914,19 @@ function cycActual(){
   return rows.map(r => r.c.id);
 }
 
-// 오늘선을 왼쪽 1/4 지점에 둔다. 「오늘」 버튼도 이걸 부른다.
-function scrollToToday(now){
+// 오늘선을 왼쪽 1/4 지점에 둔다. 마지막으로 그린 위치를 기억해 「오늘로」 버튼이 다시 쓴다 —
+// 버튼이 render() 를 부르면 화면 전체를 다시 만들면서도 스크롤은 그대로일 수 있다.
+let tlNowPct = 0;
+function scrollToToday(now, smooth){
+  tlNowPct = now;
   const tl = document.querySelector("#v-cyc .tl");
-  requestAnimationFrame(() => {
+  const go = () => {
     const over = tl.scrollWidth - tl.clientWidth;
-    if (over > 0) tl.scrollLeft = Math.max(0, Math.min(over, tl.scrollWidth * now / 100 - tl.clientWidth * 0.25));
-  });
+    if (over <= 0) return;
+    const left = Math.max(0, Math.min(over, tl.scrollWidth * now / 100 - tl.clientWidth * 0.25));
+    tl.scrollTo({left, behavior: smooth ? "smooth" : "auto"});
+  };
+  smooth ? go() : requestAnimationFrame(go);
 }
 
 // 기준·근거 설명은 전부 여기 모은다. 목록 화면에 두면 매번 읽어야 하는 벽이 된다.
@@ -1141,7 +1156,7 @@ document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
   e.target.setAttribute("aria-pressed", state.subOnly); render();
 };
-document.getElementById("tl-now").onclick = () => render();   // 렌더 끝에서 오늘 위치로 되돌린다
+document.getElementById("tl-now").onclick = () => scrollToToday(tlNowPct, true);
 document.getElementById("openrev").onclick = e => {
   state.openRev = !state.openRev;
   e.currentTarget.setAttribute("aria-pressed", state.openRev); render();

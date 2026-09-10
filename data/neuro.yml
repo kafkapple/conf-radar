@@ -34,7 +34,7 @@
       label: Abstract submission deadline
       date: '2026-10-16 23:59:59'
       timezone: AoE
-      status: estimated   # 2026판 10/16, 2025판 10/23 → 10월 중순 패턴
+      status: estimated   # 2026판 10/16, 2025판 10/23 → 10월 중순 패턴 · 260910 재확인: 공식 미공지
     - type: notification
       label: Author notification
       date: '2026-12-15 23:59:59'
@@ -71,7 +71,7 @@
       label: Submission deadline
       date: '2027-04-15 23:59:59'
       timezone: AoE
-      status: estimated   # CCN 은 통상 4월 마감 / 7월 개최
+      status: estimated   # CCN 은 통상 4월 마감 / 7월 개최 · 260910 재확인: 공식 미공지
   city: Edinburgh
   country: UK
   venue: Edinburgh, UK
@@ -161,7 +161,7 @@
       label: Abstract submission deadline
       date: '2027-02-15 23:59:59'
       timezone: AoE
-      status: estimated   # OCNS 통상 2월 마감 / 7월 개최
+      status: estimated   # OCNS 통상 2월 마감 / 7월 개최 · 260910 재확인: 공식 미공지
   city: Gran Canaria
   country: Spain
   venue: Gran Canaria, Spain
@@ -189,7 +189,7 @@
       label: Abstract submission deadline
       date: '2026-12-10 23:59:59'
       timezone: AoE
-      status: estimated   # 통보가 2027-02 → 마감은 그 전. OHBM 통상 12월 마감
+      status: estimated   # 통보가 2027-02 → 마감은 그 전. OHBM 통상 12월 마감 · 260910 재확인: 공식 미공지
     - type: notification
       label: Poster accept/reject notification
       date: '2027-02-15 23:59:59'
@@ -246,7 +246,7 @@
       label: Abstract submission deadline
       date: '2026-12-04 23:59:59'
       timezone: UTC-5
-      status: estimated   # VSS 통상 12월 초 마감
+      status: estimated   # VSS 통상 12월 초 마감 · 260910 재확인: 공식 미공지
   city: Seattle
   country: USA
   venue: Seattle, Washington
@@ -270,7 +270,7 @@
       label: Paper submission deadline
       date: '2027-02-01 23:59:59'
       timezone: AoE
-      status: estimated   # CogSci 통상 2월 초 마감 / 7-8월 개최
+      status: estimated   # CogSci 통상 2월 초 마감 / 7-8월 개최 · 260910 재확인: 공식 미공지
   city: San Francisco
   country: USA
   venue: San Francisco, USA
