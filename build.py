@@ -254,6 +254,16 @@ def build(offline: bool = False) -> dict:
         s["tracks"] = v.get("tracks", [])
         # 리뷰 공개 수준 = open / partial / closed. 투고처를 고를 때 트랙만큼 갈리는 축이다.
         s["review"] = v.get("review")
+        # 업스트림이 아직 안 실어 온 회차 일정을 공식 페이지 직독분으로 채운다.
+        for extra_dl in v.get("deadlines", []):
+            ed = next((e for e in s["editions"] if e["year"] == extra_dl["year"]), None)
+            if ed is None:
+                continue
+            row = {"type": extra_dl["type"], "label": extra_dl.get("label", extra_dl["type"]),
+                   "date": str(extra_dl["date"])[:10], "tz": extra_dl.get("timezone", ""),
+                   "status": "confirmed"}
+            if not any(d["type"] == row["type"] and d["date"] == row["date"] for d in ed["deadlines"]):
+                ed["deadlines"] = sorted(ed["deadlines"] + [row], key=lambda d: d["date"])
         # 손으로 확인한 수치(근거 URL 동반)가 집계기보다 우선한다. 같은 해가 둘 다 있으면 덮는다.
         for tc in s["tier_counts"]:
             if not (tc.get("submitted") and tc.get("accepted")):

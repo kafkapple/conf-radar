@@ -19,6 +19,10 @@
 # ⚠️ ACL 은 "본 학회 채택"과 "전체 게재"가 크게 다르다. 2025 = 본 학회 1,699(20.3%) 인데
 #    Findings·Industry·Demo 를 합친 전체 게재는 3,091(37.0%) 이다. 다른 넷과 비교할 때는 본 학회 쪽.
 #
+# deadlines = 업스트림이 아직 안 실어 온 회차 일정. 학회 공식 페이지에서 읽은 것만 넣는다.
+#   빌드가 해당 연도 회차에 합쳐 넣고, 같은 (종류, 날짜) 가 이미 있으면 건드리지 않는다.
+#   심사 구간 막대는 "제출 마감 → 통보" 로 그리므로 notification 이 없으면 막대가 안 생긴다.
+#
 # review = 리뷰 공개 수준. 세 단계로만 적는다.
 #   open    심사 중부터 논문·리뷰·토론이 공개되고 탈락분도 영구 공개 (ICLR)
 #   partial 결정 후 채택분만 공개. 심사 중에는 비공개 (NeurIPS · ICML)
@@ -28,6 +32,29 @@ meta:
   verified: '2026-09-10'
 
 CVPR:
+  # 업스트림(ai-deadlines·ccf)은 CVPR 2027 의 마감 두 개만 실어 왔다. 나머지는 공식 페이지 직독.
+  deadlines:
+    - year: 2027
+      type: supplementary
+      label: Supplementary Materials Deadline
+      date: '2026-11-23'
+      timezone: AoE
+      source: https://cvpr.thecvf.com/Conferences/2027/Dates
+      verified: '2026-09-10'
+    - year: 2027
+      type: review_release
+      label: Reviews Released
+      date: '2027-01-25'
+      timezone: AoE
+      source: https://cvpr.thecvf.com/Conferences/2027/Dates
+      verified: '2026-09-10'
+    - year: 2027
+      type: notification
+      label: Final Decisions
+      date: '2027-02-25'
+      timezone: AoE
+      source: https://cvpr.thecvf.com/Conferences/2027/Dates
+      verified: '2026-09-10'
   review:
     level: closed
     platform: OpenReview

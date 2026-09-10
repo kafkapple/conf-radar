@@ -81,6 +81,9 @@ h2.grp{font-size:11.5px;color:var(--dim);font-weight:600;margin:19px 0 7px;lette
 .sw.h3{background:color-mix(in srgb,var(--ai) 64%,var(--card))}
 .sw.h4{background:color-mix(in srgb,var(--urgent) 62%,var(--ai))}
 .sw.h5{background:var(--urgent)}
+.sw2{display:inline-block;width:16px;height:9px;border-radius:3px;vertical-align:0}
+.sw2.rev{background:color-mix(in srgb,var(--fg) 9%,transparent);border:1px solid color-mix(in srgb,var(--fg) 26%,transparent)}
+.sw2.meet{background:var(--ai)}
 .ext{margin-left:7px;font-size:11px;color:var(--ai);text-decoration:none;white-space:nowrap}
 .ext:hover{text-decoration:underline}
 .meta{color:var(--dim);font-size:12.5px;margin-top:2px}
@@ -189,6 +192,14 @@ table.dense td.w{white-space:normal;min-width:150px}
 .tlbar.est{border-style:dashed}
 .tlbar.ghost{background:transparent;border-style:dashed;opacity:.75}
 .tlbar.past{opacity:.42}                       /* 지난 회차 — 지우지 않고 뒤로 물린다 */
+/* 심사·리비전 구간과 개최 기간은 성격이 달라 색을 나눈다.
+   심사 = 저채도 회색(그 사이에 내가 할 일은 리버틀뿐) · 개최 = 진한 그룹색(가야 하는 날) */
+.tlbar.k-rev{background:color-mix(in srgb,var(--fg) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);color:var(--dim)}
+.tlbar.k-dlonly{background:transparent;border-width:0}
+.tlbar.k-meet{color:#fff;font-weight:700}
+.tlbar.ai.k-meet{background:var(--ai);border-color:var(--ai)}
+.tlbar.neuro.k-meet{background:var(--neuro);border-color:var(--neuro)}
 .tlbar.ghost .lab,.tlbar.ghost .out{color:var(--dim);font-weight:500}
 /* 화면 왼쪽 밖에서 시작한 막대 — 왼쪽 모서리를 각지게 해 "이어짐"을 표시 */
 .tlbar.trunc{border-left:0;border-radius:0 5px 5px 0}
@@ -742,8 +753,11 @@ function renderCycle(){
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
   const missing = visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
-    ? `<span>▮ 왼쪽 굵은 블록(▼) = <b>제출 마감</b></span><span>▮ 오른쪽 진한 블록 = <b>실제 개최 기간</b></span>
-       <span>그 사이 옅은 부분 = 심사 기간</span><span style="opacity:.5">흐림 = 추정/미공지</span>
+    ? `<span><span class="sw2 rev"></span> 회색 = <b>심사·리비전</b> (제출 마감 → 통보)</span>
+       <span><span class="sw2 meet"></span> 진한 색 = <b>개최 기간</b></span>
+       <span>▼ = 제출 마감일</span>
+       <span style="opacity:.7">통보일이 안 나온 회차는 마감 표식만 찍는다 — 없는 기간을 길게 그리지 않는다</span>
+       <span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
        <span style="color:var(--urgent)">▏빨간 세로선 = 오늘</span>
@@ -821,16 +835,26 @@ function cycActual(){
                  ms, me, past: me < now, trunc: ms < 0});
       continue;
     }
+    // 마감→개최를 한 막대로 이으면 7개월짜리 띠가 되어 "그동안 뭔가 진행된다" 로 읽힌다.
+    // 실제로 진행되는 것은 심사·리비전(제출 마감 → 통보)뿐이고, 통보 뒤 개최까지는 빈 구간이다.
+    // 그래서 둘을 **다른 색 막대 두 개**로 나눈다 (260910 사용자 요청).
     const dl = subs.map(d => ({...d, p: pct(d.date)})).find(d => d.p < 100);
-    const ms = e.start ? pct(e.start) : null, me = e.end ? pct(e.end) : null;
-    if ((ms === null || ms >= 100) && !dl) continue;
-    if (ms !== null && me < 0 && (!dl || dl.p < 0)) continue;
-    const from = Math.max(0, dl ? dl.p : ms);
-    const to   = Math.min(100, me !== null ? me : (dl ? dl.p : 0));
-    if (to <= 0 || from >= 100) continue;
-    bars.push({c, e, dl, from, to: Math.max(to, from + 0.15), ms, me,
-               past: (me !== null ? me : (dl ? dl.p : 0)) < now,
-               trunc: from === 0 && (dl ? dl.p : ms) < 0});
+    const notif = (e.deadlines || []).find(d => d.type === "notification");
+    const push = (o) => { if (o.to > 0 && o.from < 100) bars.push(o); };
+
+    if (dl){
+      // 통보일이 있으면 심사 구간, 없으면 마감 표식만. 없는 것을 길게 그리지 않는다.
+      const end = notif ? pct(notif.date) : dl.p + 5 / (SPAN * 30.4) * 100;
+      push({c, e, dl, kind: notif ? "rev" : "dlonly", notif,
+            from: Math.max(0, dl.p), to: Math.min(100, Math.max(end, dl.p + 0.15)),
+            past: end < now, trunc: dl.p < 0});
+    }
+    if (e.start){
+      const ms = pct(e.start), me = pct(e.end || e.start);
+      push({c, e, dl: null, kind: "meet", ms, me,
+            from: Math.max(0, ms), to: Math.min(100, Math.max(me, ms + 0.15)),
+            past: me < now, trunc: ms < 0});
+    }
   }
 
   // 확정 일정이 없는 앞쪽은 과거 주기로 투영한다. 공지된 날이 아니므로 점선 + 표본 수.
@@ -880,7 +904,7 @@ function cycActual(){
 
   document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(r => {
     const inner = r.bars.map((b, i) => {
-      const {c, e, dl, from, to, ms, me, trunc, ghost, past} = b;
+      const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, notif} = b;
       const w = to - from;
       // 같은 줄에서 학회 이름을 매번 되풀이하지 않는다. 두 번째부터는 연도만.
       const head = i === r.nameOn
@@ -890,18 +914,24 @@ function cycActual(){
       const label = ghost
         ? `${head}예상 ${state.tlMode === "meet" ? "개최" : "마감"} (n=${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline})`
         : b.dlOnly ? `${head}${e.year} ${DLNAME[dl.type] || dl.type}`
-                   : `${head}${e ? e.year : ""}`;
+        : kind === "rev"    ? `${head}${e.year} 심사`
+        : kind === "dlonly" ? `${head}${e.year} 마감`
+        : kind === "meet"   ? `${head}${e.year} 개최`
+                            : `${head}${e ? e.year : ""}`;
       const inside = w / 100 * totalPx > label.length * 8 + 10;
       const meetW = (ms !== null && me !== null)
         ? Math.max(0.3, Math.min(100, me) - Math.max(from, ms)) : 0;
       const tip = ghost
         ? `${c.title} — 과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월. 공지된 날짜가 아니다`
-        : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
-      return `<div class="tlbar ${c.group} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
+        : kind === "rev"    ? `${c.title} ${e.year} 심사·리비전 — ${dl.date} 마감 → ${notif.date} 통보`
+        : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} 마감 (통보일 미공지)`
+        : kind === "meet"   ? `${c.title} ${e.year} 개최 — ${e.date_text}`
+                            : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
+      return `<div class="tlbar ${c.group} ${kind ? "k-" + kind : ""} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
         data-id="${c.id}" title="${esc(tip)}"
         style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
         ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
-        ${meetW ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
+        ${meetW && !kind ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
         ${inside ? `<span class="lab">${esc(label)}</span>`
                  : `<span class="out ${to > 88 ? "l" : ""}">${esc(label)}</span>`}
       </div>`;
