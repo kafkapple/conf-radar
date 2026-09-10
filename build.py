@@ -81,6 +81,26 @@ def parse_range(text: str, year: int) -> tuple[str, str]:
     return "", ""
 
 
+# 같은 마감이 시간대 표기만 달라 두 번 들어온다. ccf 는 AoE 마감을 UTC+0 으로 환산해 싣기
+# 때문에 하루 뒤 날짜가 같이 오고, 뷰어에는 "초록 05-04"와 "초록 05-05"가 나란히 뜬다
+# (260910 사용자 신고: "마감이 이상한데"). 종류가 같고 이틀 안쪽이면 이른 쪽 하나만 남긴다 —
+# AoE 표기가 곧 그 이른 날짜다.
+KIND = {"paper": "paper", "submission": "paper"}
+
+
+def dedupe_deadlines(dls: list[dict]) -> list[dict]:
+    out: list[dict] = []
+    seen: dict[str, str] = {}
+    for d in sorted(dls, key=lambda x: x["date"]):
+        k = KIND.get(d["type"], d["type"])
+        prev = seen.get(k)
+        if prev and (date.fromisoformat(d["date"]) - date.fromisoformat(prev)).days <= 2:
+            continue
+        seen[k] = d["date"]
+        out.append(d)
+    return out
+
+
 def merge_editions(a: list[dict], b: list[dict]) -> list[dict]:
     """연도별로 합치되 hf(차기·상세) 가 ccf(이력) 를 이긴다. 마감은 합집합."""
     by_year: dict[int, dict] = {}
@@ -94,7 +114,7 @@ def merge_editions(a: list[dict], b: list[dict]) -> list[dict]:
             keep, drop = drop, keep
         seen = {(d["type"], d["date"]) for d in keep["deadlines"]}
         keep["deadlines"] += [d for d in drop["deadlines"] if (d["type"], d["date"]) not in seen]
-        keep["deadlines"].sort(key=lambda d: d["date"])
+        keep["deadlines"] = dedupe_deadlines(keep["deadlines"])
         for k in ("date_text", "city", "venue", "link", "start", "end"):
             keep[k] = keep.get(k) or drop.get(k, "")
         by_year[y] = keep

@@ -379,16 +379,18 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-c="actual" aria-pressed="true">타임라인</button>
     <button data-c="typical">전형 주기</button>
     <span class="sep"></span>
-    <span class="lbl">기간</span>
-    <button data-mo="3">분기</button>
-    <button data-mo="6">6개월</button>
-    <button data-mo="12" aria-pressed="true">1년</button>
-    <button data-mo="24">2년</button>
+    <span class="lbl">확대</span>
+    <button data-mo="3" title="한 화면에 약 3개월">분기</button>
+    <button data-mo="6" title="한 화면에 약 6개월">6개월</button>
+    <button data-mo="12" aria-pressed="true" title="한 화면에 약 1년">1년</button>
+    <button data-mo="24" title="한 화면에 약 2년">2년</button>
     <span class="sep"></span>
-    <span class="lbl">창 이동</span>
-    <button id="tl-prev" title="창을 과거로 반 칸">◀ 이전</button>
-    <button id="tl-now" title="오늘이 포함된 기본 위치로">오늘</button>
-    <button id="tl-next" title="창을 미래로 반 칸">다음 ▶</button>
+    <span class="lbl">표시</span>
+    <button data-tm="both" aria-pressed="true" title="마감에서 개최까지 한 막대">마감→개최</button>
+    <button data-tm="dl" title="제출 마감만">마감만</button>
+    <button data-tm="meet" title="개최 기간만">개최만</button>
+    <span class="sep"></span>
+    <button id="tl-now" title="오늘 위치로 스크롤">오늘로</button>
   </div>
   <div class="tl"><div class="tlin"><div class="tlhead"></div><div class="tlbody"></div></div></div>
   <div class="cyc"><table><thead><tr><th class="nm">학회</th></tr></thead><tbody></tbody></table></div>
@@ -424,7 +426,7 @@ const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s]
 // AND 로 걸려서, T1·2 를 눌러도 메이저 5곳만 남는 화면이 된다(260910 사용자 신고).
 const state = {view:"cyc", group:"all", rank:2, sort:"deadline", q:"", subOnly:true,
                favOnly:false, withWs:true, openRev:false,
-               mapMode:"next", cycMode:"actual", months:12, tlShift:0, fav:loadFav()};
+               mapMode:"next", cycMode:"actual", months:12, tlMode:"both", fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -730,18 +732,14 @@ function renderCycle(){
   // 실제 축에서 빠진 학회를 조용히 사라지게 두면 "목록에 없다" 로 오해한다.
   // 몇 건인지만 적으면 어느 학회인지 확인하러 다른 축으로 가야 하므로 이름과 전형 시기까지 적는다.
   const missing = visible().filter(c => !drawn.has(c.id));
-  const nowBtn = document.getElementById("tl-now");
-  nowBtn.textContent = state.tlShift === 0 ? "오늘"
-    : (state.tlShift < 0 ? `오늘 ← ${-state.tlShift}개월 전` : `오늘 → ${state.tlShift}개월 뒤`);
-  nowBtn.setAttribute("aria-pressed", state.tlShift !== 0);
   document.getElementById("cyc-legend").innerHTML = state.cycMode === "actual"
     ? `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
        <span style="opacity:.7">막대 = 마감→개최. 왼쪽 세로선 = 마감, 오른쪽 진한 조각 = 개최 기간</span>
        <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
        <span style="color:var(--urgent)">▏빨간 세로선 = 오늘</span>
-       <span style="opacity:.7">가로로 밀어 볼 수 있다 (트랙패드 두 손가락 · shift+휠). 창 밖은 「창 이동」</span>
-       <span style="opacity:.7">흐린 막대 = 이미 지난 회차. 창은 오늘 앞쪽 ${Math.max(1, Math.round(state.months / 4))}개월부터 시작한다</span>
+       <span style="opacity:.7">흐린 막대 = 이미 지난 회차</span>
+       <span style="opacity:.7"><b>과거 1년 + 앞으로 2년</b>을 다 그려 둔다. 트랙패드 두 손가락으로 좌우로 밀면 된다</span>
        ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
          ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
     : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
@@ -774,98 +772,146 @@ function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이
 function cycActual(){
   // 구글 캘린더 일정 보기식 막대. 막대 하나 = 제출 마감 → 개최 종료.
   // 왼쪽 끝 세로선 = 마감, 오른쪽 진한 조각 = 실제 개최 기간, 그 사이 = 심사·준비 구간.
-  // 창은 오늘 앞뒤로 걸친다. 앞쪽 1/4 이 과거 — 방금 지난 마감과 직전 회차를 보려면 그게 필요하다.
-  // 전부 미래로 두면 "지난달에 뭐가 있었나" 를 이 뷰에서 못 본다(260910 사용자 요청).
-  const back = Math.max(1, Math.round(state.months / 4));
-  // tlShift = 「창 이동」 버튼이 밀어 놓은 개월 수. 고정된 앞 1/4 만으로는 더 먼 과거에 못 간다.
-  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - back + state.tlShift, 1);
-  const t1 = new Date(t0.getFullYear(), t0.getMonth() + state.months, 1);
+  //
+  // 260910 재설계 — 데이터 범위는 36개월(과거 12 + 앞 24)로 **고정**하고, 「기간」 버튼은
+  // 자르는 범위가 아니라 **확대 배율**(월당 px)을 바꾼다. 그 전에는 범위를 잘라 화면 폭에
+  // 맞췄기 때문에 내용이 컨테이너보다 좁아 가로 스크롤이 아예 안 생겼고, 그래서 범위를
+  // 옮기는 버튼을 따로 둬야 했다. 이제 이동 수단은 가로 스크롤 하나다.
+  const BACK = 12, FWD = 24, SPAN = BACK + FWD;
+  const PX = {3: 240, 6: 130, 12: 86, 24: 46}[state.months] || 86;
+  const totalPx = SPAN * PX;
+  const t0 = new Date(TODAY.getFullYear(), TODAY.getMonth() - BACK, 1);
+  const t1 = new Date(t0.getFullYear(), t0.getMonth() + SPAN, 1);
   const span = t1 - t0;
   const pct = iso => ((new Date(iso + "T00:00:00") - t0) / span) * 100;
-  const cols = Array.from({length: state.months}, (_, i) =>
+  const cols = Array.from({length: SPAN}, (_, i) =>
     new Date(t0.getFullYear(), t0.getMonth() + i, 1));
+  const now = pct(TODAY.toISOString().slice(0, 10));
 
-  // 회차 단위로 그린다. 시리즈에 붙어 있는 start/deadlines 는 차기 회차 것뿐이라,
-  // 그것만 쓰면 창을 과거로 넓혀도 지난 회차가 안 나온다.
-  const rows = [];
+  // 회차 단위로 막대를 만든다. 시리즈에 붙어 있는 start/deadlines 는 차기 회차 것뿐이라,
+  // 그것만 쓰면 과거 구간이 비어 버린다.
+  const bars = [];
   for (const c of visible()) for (const e of c.editions){
-    const dl = (e.deadlines || []).filter(d => SUBMIT.has(d.type))
-      .map(d => ({...d, p: pct(d.date)})).sort((x, y) => x.p - y.p)
-      .find(d => d.p < 100);                       // 창 안에서 가장 이른 마감
+    const subs = (e.deadlines || []).filter(d => SUBMIT.has(d.type)).sort((x, y) => x.date < y.date ? -1 : 1);
+
+    if (state.tlMode === "dl"){                    // 마감만 — 마감 하나가 막대 하나
+      for (const d of subs){
+        const at = pct(d.date), wk = pct(d.date) + 5 / (SPAN * 30.4) * 100;
+        if (wk <= 0 || at >= 100) continue;
+        bars.push({c, e, dl: {...d, p: at}, from: Math.max(0, at), to: Math.min(100, wk),
+                   ms: null, me: null, past: at < now, dlOnly: true,
+                   trunc: at < 0});
+      }
+      continue;
+    }
+    if (state.tlMode === "meet"){                  // 개최만 — 회의 기간만
+      if (!e.start) continue;
+      const ms = pct(e.start), me = pct(e.end || e.start);
+      if (me <= 0 || ms >= 100) continue;
+      bars.push({c, e, dl: null, from: Math.max(0, ms), to: Math.min(100, Math.max(me, ms + 0.15)),
+                 ms, me, past: me < now, trunc: ms < 0});
+      continue;
+    }
+    const dl = subs.map(d => ({...d, p: pct(d.date)})).find(d => d.p < 100);
     const ms = e.start ? pct(e.start) : null, me = e.end ? pct(e.end) : null;
     if ((ms === null || ms >= 100) && !dl) continue;
-    if (ms !== null && me < 0 && (!dl || dl.p < 0)) continue;      // 통째로 창 이전
+    if (ms !== null && me < 0 && (!dl || dl.p < 0)) continue;
     const from = Math.max(0, dl ? dl.p : ms);
     const to   = Math.min(100, me !== null ? me : (dl ? dl.p : 0));
     if (to <= 0 || from >= 100) continue;
-    rows.push({c, e, dl, from, to: Math.max(to, from + 0.4), ms, me,
-               past: (me !== null ? me : (dl ? dl.p : 0)) < pct(TODAY.toISOString().slice(0, 10)),
-               anchor: ms !== null ? ms : (dl ? dl.p : 999),
-               trunc: from === 0 && (dl ? dl.p : ms) < 0});        // 창 이전에 시작한 막대
+    bars.push({c, e, dl, from, to: Math.max(to, from + 0.15), ms, me,
+               past: (me !== null ? me : (dl ? dl.p : 0)) < now,
+               trunc: from === 0 && (dl ? dl.p : ms) < 0});
   }
 
-  // 확정 일정이 없는 구간은 과거 주기로 투영해 점선 막대를 둔다 — 옆으로 스크롤하면 내년 대략을 본다.
-  // 학회가 공지한 날이 아니므로 실선과 구별하고 표본 수를 라벨에 붙인다.
-  // 확정 마감과 45일 안쪽이면 같은 회차를 두 번 그리는 것이라 버린다.
+  // 확정 일정이 없는 앞쪽은 과거 주기로 투영한다. 공지된 날이 아니므로 점선 + 표본 수.
+  // 확정 마감과 45일 안쪽이면 같은 회차를 두 번 그리는 것이라 버린다. 과거는 투영하지 않는다.
   const pad = n => String(n).padStart(2, "0");
-  const ghosts = [];
   for (const c of visible()){
-    const dm = c.typical.deadline_month;
+    // 마감만·마감→개최 모드는 전형 마감월을, 개최만 모드는 전형 개최월을 투영한다
+    const dm = state.tlMode === "meet" ? c.typical.meeting_month : c.typical.deadline_month;
     if (!dm) continue;
-    const real = c.deadlines.filter(x => SUBMIT.has(x.type))
-      .map(x => +new Date(x.date + "T00:00:00"));
-    for (let y = t0.getFullYear(); y <= t1.getFullYear() + 1; y++){
+    // 이미 확정된 것과 겹치는 투영은 버린다. c.deadlines 는 차기 회차 것뿐이라 회차 전체를 본다.
+    const real = state.tlMode === "meet"
+      ? c.editions.filter(e => e.start).map(e => +new Date(e.start + "T00:00:00"))
+      : c.editions.flatMap(e => (e.deadlines || []).filter(d => SUBMIT.has(d.type))
+                                 .map(d => +new Date(d.date + "T00:00:00")));
+    for (let y = t0.getFullYear(); y <= t1.getFullYear(); y++){
       const a = `${y}-${pad(dm)}-01`, b = `${y}-${pad(dm)}-28`;
       if (real.some(r => Math.abs(r - new Date(a + "T00:00:00")) < 45 * 864e5)) continue;
       const gf = pct(a), gt = pct(b);
-      if (gt <= pct(TODAY.toISOString().slice(0, 10)) || gf >= 100) continue;   // 과거는 투영하지 않는다
-      ghosts.push({c, ghost: true, from: Math.max(0, gf), to: Math.min(100, gt), anchor: gf});
+      if (gt <= now || gf >= 100) continue;
+      bars.push({c, ghost: true, from: Math.max(0, gf), to: Math.min(100, gt)});
     }
   }
-  rows.push(...ghosts);
+
+  // 한 학회 = 한 줄. 막대마다 줄을 하나씩 주면 같은 학회가 여러 줄로 흩어지고 화면이 세 배로 길어진다.
+  const byId = new Map();
+  for (const b of bars){
+    const r = byId.get(b.c.id) ?? byId.set(b.c.id, {c: b.c, bars: []}).get(b.c.id);
+    r.bars.push(b);
+  }
+  const rows = [...byId.values()];
+  for (const r of rows){
+    r.bars.sort((a, b) => a.from - b.from);
+    // 정렬 기준 = 앞으로 다가올 것 중 가장 이른 것. 지난 것만 있으면 맨 아래로 보낸다.
+    const next = r.bars.find(b => b.to >= now);
+    r.anchor = next ? next.from : 1e3;
+    r.nameOn = r.bars.indexOf(next ?? r.bars[r.bars.length - 1]);   // 이름을 달 막대
+  }
   rows.sort((a, b) => a.anchor - b.anchor || a.c.title.localeCompare(b.c.title));
 
-  // 월당 86px. 분기·6개월은 760px 하한에 걸려 그대로 꽉 차고, 1년부터 가로 스크롤이 생긴다.
-  document.querySelector("#v-cyc .tlin").style.setProperty("--tlw",
-    Math.max(760, state.months * 86) + "px");
+  document.querySelector("#v-cyc .tlin").style.setProperty("--tlw", totalPx + "px");
   document.querySelector("#v-cyc .tlhead").innerHTML = cols.map(d =>
     `<div>${d.getMonth() === 0 || d === cols[0]
       ? `${String(d.getFullYear()).slice(2)}년 ${d.getMonth()+1}월` : (d.getMonth()+1)+"월"}</div>`).join("");
 
-  const now = pct(TODAY.toISOString().slice(0, 10));
   const grid = `<div class="tlgrid">${cols.map(() => "<span></span>").join("")}</div>` +
-    (now >= 0 && now <= 100 ? `<div class="tlnow" style="left:${now.toFixed(2)}%"></div>` : "");
+    `<div class="tlnow" style="left:${now.toFixed(2)}%"></div>`;
 
-  document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(({c, e, dl, from, to, ms, me, trunc, ghost, past}) => {
-    const w = to - from;
-    const label = ghost
-      ? `${c.title} 예상 마감 (n=${c.typical.n_deadline})`
-      : `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title}${e ? " " + e.year : ""}`;
-    // 막대가 좁으면 글자가 잘린다 — 그럴 때만 이름을 막대 밖 오른쪽에 둔다
-    const inside = w * (state.months <= 6 ? 12 : 7) > label.length * 8;   // 좁은 창일수록 글자가 들어간다
-    const meetW = (ms !== null && me !== null)
-      ? Math.max(0.5, Math.min(100, me) - Math.max(from, ms)) : 0;
-    const tip = ghost
-      ? `과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월 — 공지된 날짜가 아니다`
-      : `${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
-    return `<div class="tlrow"><div class="tlbar ${c.group} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
-      data-id="${c.id}" title="${esc(tip)}"
-      style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
-      ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
-      ${meetW ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
-      ${inside ? `<span class="lab">${esc(label)}</span>`
-               : `<span class="out ${to > 78 ? "l" : ""}">${esc(label)}</span>`}
-    </div></div>`;
+  document.querySelector("#v-cyc .tlbody").innerHTML = grid + rows.map(r => {
+    const inner = r.bars.map((b, i) => {
+      const {c, e, dl, from, to, ms, me, trunc, ghost, past} = b;
+      const w = to - from;
+      // 같은 줄에서 학회 이름을 매번 되풀이하지 않는다. 두 번째부터는 연도만.
+      const head = i === r.nameOn
+        ? `${c.kind === "workshop" ? "W " : c.kind === "track" ? "T " : ""}${c.title} ` : "";
+      const DLNAME = {abstract:"초록", abstract_late:"초록(연장)", paper:"본문",
+                      submission:"본문", supplementary:"보충"};
+      const label = ghost
+        ? `${head}예상 ${state.tlMode === "meet" ? "개최" : "마감"} (n=${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline})`
+        : b.dlOnly ? `${head}${e.year} ${DLNAME[dl.type] || dl.type}`
+                   : `${head}${e ? e.year : ""}`;
+      const inside = w / 100 * totalPx > label.length * 8 + 10;
+      const meetW = (ms !== null && me !== null)
+        ? Math.max(0.3, Math.min(100, me) - Math.max(from, ms)) : 0;
+      const tip = ghost
+        ? `${c.title} — 과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월. 공지된 날짜가 아니다`
+        : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
+      return `<div class="tlbar ${c.group} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${dl && dl.status !== "confirmed" ? "est" : ""} ${trunc ? "trunc" : ""}"
+        data-id="${c.id}" title="${esc(tip)}"
+        style="left:${from.toFixed(2)}%;width:${w.toFixed(2)}%">
+        ${dl && !trunc ? `<span class="tlcap"></span>` : ""}
+        ${meetW ? `<span class="tlmeet" style="width:${(meetW / w * 100).toFixed(1)}%"></span>` : ""}
+        ${inside ? `<span class="lab">${esc(label)}</span>`
+                 : `<span class="out ${to > 88 ? "l" : ""}">${esc(label)}</span>`}
+      </div>`;
+    }).join("");
+    return `<div class="tlrow">${inner}</div>`;
   }).join("") || `<div class="tlrow"><div style="padding:7px 10px;color:var(--dim)">해당 기간에 일정 없음</div></div>`;
 
-  // 열자마자 오늘이 보여야 한다. 스크롤이 생기는 폭이면 오늘선을 왼쪽 1/4 쯤에 둔다.
+  // 열자마자 오늘이 보여야 한다. 36개월을 다 그려 두므로 스크롤 위치를 안 맞추면 작년이 먼저 보인다.
+  scrollToToday(now);
+  return rows.map(r => r.c.id);
+}
+
+// 오늘선을 왼쪽 1/4 지점에 둔다. 「오늘」 버튼도 이걸 부른다.
+function scrollToToday(now){
   const tl = document.querySelector("#v-cyc .tl");
   requestAnimationFrame(() => {
     const over = tl.scrollWidth - tl.clientWidth;
-    if (over > 0 && now >= 0 && now <= 100)
-      tl.scrollLeft = Math.max(0, Math.min(over, tl.scrollWidth * now / 100 - tl.clientWidth * 0.25));
+    if (over > 0) tl.scrollLeft = Math.max(0, Math.min(over, tl.scrollWidth * now / 100 - tl.clientWidth * 0.25));
   });
-  return rows.map(r => r.c.id);
 }
 
 // 기준·근거 설명은 전부 여기 모은다. 목록 화면에 두면 매번 읽어야 하는 벽이 된다.
@@ -1082,6 +1128,7 @@ bindGroup("[data-s]", b => state.sort  = b.dataset.s);
 bindGroup("[data-m]", b => state.mapMode = b.dataset.m);
 bindGroup("[data-c]", b => state.cycMode = b.dataset.c);
 bindGroup("[data-mo]", b => state.months = +b.dataset.mo);
+bindGroup("[data-tm]", b => state.tlMode = b.dataset.tm);
 document.getElementById("fav").onclick = e => {
   state.favOnly = !state.favOnly;
   e.target.setAttribute("aria-pressed", state.favOnly); render();
@@ -1094,12 +1141,7 @@ document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
   e.target.setAttribute("aria-pressed", state.subOnly); render();
 };
-// 창 이동 = 반 칸씩. 한 칸씩 밀면 앞뒤 문맥이 끊겨 같은 회차를 다시 못 찾는다.
-for (const [id, d] of [["tl-prev", -1], ["tl-next", 1], ["tl-now", 0]])
-  document.getElementById(id).onclick = () => {
-    state.tlShift = d === 0 ? 0 : state.tlShift + d * Math.max(1, Math.round(state.months / 2));
-    render();
-  };
+document.getElementById("tl-now").onclick = () => render();   // 렌더 끝에서 오늘 위치로 되돌린다
 document.getElementById("openrev").onclick = e => {
   state.openRev = !state.openRev;
   e.currentTarget.setAttribute("aria-pressed", state.openRev); render();
@@ -1234,6 +1276,12 @@ if (hv){
   state.view = hv;
   for (const b of document.querySelectorAll("[data-v]"))
     b.setAttribute("aria-pressed", b.dataset.v === hv);
+}
+const htm = ["both", "dl", "meet"].find(m => HASH.has(m));
+if (htm){
+  state.tlMode = htm;
+  for (const b of document.querySelectorAll("[data-tm]"))
+    b.setAttribute("aria-pressed", b.dataset.tm === htm);
 }
 const hm = [3, 6, 12, 24].find(m => HASH.has(m + "m"));
 if (hm){
