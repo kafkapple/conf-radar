@@ -1,0 +1,51 @@
+# 인용 영향력 — Google Scholar Metrics h5-index. 수동 큐레이션(연 1회, Scholar 판이 바뀔 때).
+#
+# 왜 이 파일이 있나 — CORE 등급 하나로는 "메이저"가 너무 헐겁다. CORE A* 안에
+# COLT(h5 74)·RSS(83)·IJCAI(136)가 NeurIPS(371)와 같은 칸에 들어간다. 등급은 4단계뿐이라
+# A* 안의 격차를 표현하지 못한다. 그래서 독립된 두 번째 외부 정본을 붙인다.
+#
+# h5-index = 최근 5년(2020-2024) 게재분 중 h편이 각각 h회 이상 인용된 최대 h.
+# 판(edition)은 Google Scholar 가 정하고 우리가 계산하지 않는다.
+#
+# ⚠️ 이 수치의 알려진 한계 — 숨기지 말 것.
+#   1. 규모 편향. 연 1회 대형 학회가 유리하고 격년제·소규모 전문 학회는 불리하다.
+#      RSS·COLT 의 낮은 값은 선택성이 낮아서가 아니라 편수가 적어서다.
+#   2. SIGGRAPH 는 Scholar 에 학회로 안 잡힌다. 본회의 논문이 ACM TOG 로 집계되기 때문에
+#      아래 값은 TOG 의 것이다. 학회 자체는 이 수치보다 위로 봐야 한다.
+#   3. 신생 학회는 5년 창이 안 차서 값이 없다(COLM 2024 창설). 값 없음 = 낮음이 아니다.
+#
+# 값이 없는 학회는 항목을 만들지 않는다. "미상"과 "낮음"은 다른 말이다.
+
+meta:
+  edition: Google Scholar Metrics 2025 판 (2020-2024 게재분)
+  verified: '2026-09-10'
+  sources:
+    ai: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_artificialintelligence
+    vision: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_computervisionpatternrecognition
+    nlp: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_computationallinguistics
+    robotics: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_robotics
+    graphics: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_computergraphics
+
+h5:
+  CVPR: 450
+  NeurIPS: 371
+  ICLR: 362
+  ICML: 272
+  ECCV: 262
+  ICCV: 256
+  ACL: 236
+  AAAI: 232
+  EMNLP: 218
+  IJCAI: 136
+  WACV: 131
+  ICRA: 129
+  NAACL: 126
+  SIGGRAPH: 114     # 실제로는 ACM TOG 값. 위 한계 2 참조
+  CoRL: 107
+  AISTATS: 101
+  IROS: 92
+  RSS: 83
+  3DV: 56
+
+# Scholar 상위 20 밖이라 위 출처 페이지에서 직접 못 읽은 학회는 넣지 않았다.
+# COLT · COLM · KDD · UAI · Interspeech · ICASSP · MICCAI 가 그렇다.

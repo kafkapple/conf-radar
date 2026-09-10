@@ -296,6 +296,8 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-t="2" aria-pressed="true">T1·2</button>
     <button data-t="1">T1만</button>
     <button data-t="3">전체 티어</button>
+    <span class="sep"></span>
+    <button id="major" title="CORE A* 등급만 — 분야를 막론하고 통용되는 최상위">메이저</button>
   </div>
   </div>
   <div class="bar" id="bar2">
@@ -314,6 +316,17 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <input type="search" id="q" placeholder="학회 검색">
   </div>
 </div>
+
+<p class="note" id="majornote" hidden>
+  <b>메이저 = 독립된 두 외부 정본이 동의하는 9개</b> — CORE A* 등급 <b>이면서</b> Google Scholar h5-index 200 이상.
+  CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ECCV 262 · ICCV 256 · ACL 236 · AAAI 232 · EMNLP 218.
+  손으로 학회를 더하지 않는다.<br>
+  등급 하나만 쓰면 헐거워진다 — CORE A* 안에 COLT(h5 74) · RSS(83) · IJCAI(136) · ICRA(129) 가 NeurIPS 와 같은 칸에 있다.
+  이 넷이 h5 조건에서 빠진다. SIGGRAPH 는 본회의 논문이 ACM TOG 로 집계돼(h5 114) 이 수치가 학회를 과소평가한다.<br>
+  뇌과학 학회에는 CORE 등급이 부여되지 않아 이 필터에 잡히지 않는다 — 뇌과학은 <b>뇌과학</b> 탭에서 볼 것.<br>
+  각 카드의 <b>준비 착수</b> 줄 = 마감 8주 전. 학회가 정한 날이 아니라 고정된 경험칙이다.<br>
+  차기 마감이 아직 없는 학회는 <b>전형 착수 N월</b> — 과거 회차의 전형 마감월에서 2개월 당긴 값이고, 표본 수를 함께 적는다.
+</p>
 
 <section id="v-list"></section>
 
@@ -378,7 +391,8 @@ const loadFav = () => { try { return new Set(JSON.parse(localStorage.getItem(FAV
 const saveFav = s => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...s])); } catch {} };
 
 const state = {view:"list", group:"all", tier:2, sort:"deadline", q:"", subOnly:true,
-               favOnly:false, withWs:true, mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
+               favOnly:false, withWs:true, major:false,
+               mapMode:"next", cycMode:"actual", months:12, fav:loadFav()};
 
 const days  = iso => Math.floor((new Date(iso+"T23:59:59") - TODAY)/864e5);  // 마감 = 그날 끝, 오늘 = 0
 const until = iso => Math.floor((new Date(iso+"T00:00:00") - TODAY)/864e5);  // 개최 = 그날 시작
@@ -405,7 +419,29 @@ function scalePct(sc){
   const p = (Math.log10(sc.value) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo));
   return Math.max(6, Math.min(100, Math.round(p*100)));
 }
+// 준비 착수선 = 마감 8주 전. 학회가 공지하는 값이 아니라 고정 경험칙이므로 화면에 그대로 적는다.
+// 마감순 정렬이 곧 준비 착수순이다(상수를 뺀 것이라 순서가 같다) — 정렬을 따로 만들지 않는다.
+const PREP_DAYS = 56;
+function prepLine(c, d){
+  if (d){
+    const left = days(d.date) - PREP_DAYS;
+    if (left > 0){
+      // UTC 로 계산한다. 로컬 자정에서 빼면 toISOString 이 하루 앞 날짜를 돌려준다(KST 에서 실측).
+      const iso = new Date(new Date(d.date + "T00:00:00Z") - PREP_DAYS*864e5).toISOString().slice(0,10);
+      return `🛠 준비 착수 ${fmt(iso)} (${dday(left)})`;
+    }
+    return `🛠 <b>지금이 준비 기간</b> — 마감까지 ${days(d.date)}일`;
+  }
+  // 차기 마감이 없는 학회(메이저 14곳 중 11곳이 그렇다)는 전형 마감월에서 착수월만 준다.
+  // 추정 위의 추정이므로 표본 수를 붙이고 '전형' 이라고 못박는다.
+  const m = c.typical.deadline_month;
+  if (!m) return "";
+  return `🛠 전형 착수 ${((m + 9) % 12) + 1}월 (전형 ${m}월 마감, 표본 ${c.typical.n_deadline}회)`;
+}
+
 const rankChip = c => c.rank.core ? `<span class="chip r">CORE ${esc(c.rank.core)}</span>` : "";
+// 등급은 4단계뿐이라 A* 안의 격차를 못 보여준다. 메이저 경계가 어디서 그어졌는지 보이도록 수치를 같이 낸다.
+const h5Chip = c => c.h5 ? `<span class="chip r" title="Google Scholar h5-index (2020-2024)">h5 ${c.h5}</span>` : "";
 // 워크샵은 본 학회와 마감이 완전히 다르다. 어느 학회 부설인지 같이 안 보이면 오해한다.
 const wsChip = c => c.kind === "workshop" ? `<span class="chip w">W · ${esc(c.parent)} 부설</span>`
   : c.kind === "track" ? `<span class="chip w">T · ${esc(c.parent)} 트랙</span>` : "";
@@ -417,6 +453,7 @@ function visible(){
   return DATA.series.filter(c =>
     (state.group === "all" || c.group === state.group) &&
     c.tier <= state.tier &&
+    (!state.major || c.major) &&
     (!state.favOnly || state.fav.has(c.id)) &&
     (state.withWs || c.kind === "conference") &&
     (!q || c.search.includes(q) || (FIELD[c.field]||"").includes(q)));
@@ -436,11 +473,12 @@ function cardHTML(c){
           aria-label="즐겨찾기">${state.fav.has(c.id)?"★":"☆"}</button>
         ${esc(c.title)}${c.next?" "+c.next:""}
         <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
-        <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${progChip(c)}
+        <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}${progChip(c)}
         ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}
       </div>
       <div class="meta">${d ? `<b>${fmt(d.date)}</b> ${esc(d.label)}`
                             : (c.next ? "제출 마감 종료" : "차기 회차 미공지")}</div>
+      ${prepLine(c, d) ? `<div class="meta">${prepLine(c, d)}</div>` : ""}
       <div class="meta">${c.next ? `📍 ${esc(c.date_text)} · ${esc([c.city,c.country].filter(Boolean).join(", "))}`
                                  : `🔁 ${esc(typicalText(c))}`}</div>
       ${sc?`<div class="scale"><span class="track"><span class="fill ${sc.metric}"
@@ -520,9 +558,10 @@ function renderKanban(){
           <div class="top"><span class="dd ${d && n<=14?"hot":""}">${d?dday(n):(meetState(c)||"미공지")}</span>
             <span class="nm2">${esc(c.title)}${c.next?" "+c.next:""}</span>
             <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
-            <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}
+            <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}
             ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
           <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:(c.next?"제출 마감 종료":"차기 회차 미공지")}</div>
+          ${prepLine(c, d)?`<div class="sm">${prepLine(c, d)}</div>`:""}
           <div class="sm">${c.next?`📍 ${esc(c.date_text)} · ${esc(c.city)}`:`🔁 ${esc(typicalText(c))}`}</div>
         </div>`;
       }).join("") || `<div class="sm" style="color:var(--faint);padding:2px">없음</div>`}
@@ -818,6 +857,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(
 function render(){
   for (const v of ["list","kb","tbl","map","cyc","src"])
     document.getElementById("v-"+v).hidden = state.view !== v;
+  document.getElementById("majornote").hidden = !state.major;
   document.getElementById("bar2").style.display =
     (state.view === "src" || state.view === "map") ? "none" : "";
   ({list:renderList, kb:renderKanban, tbl:renderTable, map:renderMap,
@@ -845,6 +885,10 @@ document.getElementById("fav").onclick = e => {
 document.getElementById("ws").onclick = e => {
   state.withWs = !state.withWs;
   e.target.setAttribute("aria-pressed", state.withWs); render();
+};
+document.getElementById("major").onclick = e => {
+  state.major = !state.major;
+  e.target.setAttribute("aria-pressed", state.major); render();
 };
 document.getElementById("sub-only").onclick = e => {
   state.subOnly = !state.subOnly;
@@ -950,11 +994,22 @@ document.getElementById("foot").innerHTML =
    · 객관 축 = CORE 등급(외부 정본, 배지로 표시). 신경과학 학회에는 등급이 부여되지 않아 분야 대표성으로 대신한다.<br>
    · 개인 축 = 이 연구(3D 비전 · 행동/뇌 계측 · NeuroAI)와의 거리.<br>
    · <b>T1</b> = 둘 다 충족(분야 최상위 <b>이면서</b> 투고·필독 대상). 분야마다 최소 1개는 T1 이 있다.
-     <b>T2</b> = 한 축만 충족. <b>T3</b> = 마감 캘린더용.<br><br>
+     <b>T2</b> = 한 축만 충족. <b>T3</b> = 마감 캘린더용.<br>
+   · <b>메이저</b> 필터는 티어와 별개다. CORE A* 등급 ∩ Google Scholar h5-index 200 이상 — 두 외부 정본의 교집합이라
+     개인 축이 섞이지 않는다. 임계 200 은 넓은 구간에서 같은 답을 준다(A* 중 h5 137~218 인 학회가 없다).
+     h5 는 규모 편향이 있고 격년제·소규모 학회에 불리하다. 뇌과학 학회는 CORE 등급이 없어 잡히지 않는다.<br>
+   · <b>준비 착수</b> = 마감 8주 전. 고정 경험칙이고 학회가 공지한 날이 아니다.
+     차기 마감이 없으면 <b>전형 착수 N월</b>(전형 마감월 − 2개월, 표본 수 병기)로 대신한다.<br><br>
    <b>출처</b> — 차기 마감 = <a href="https://github.com/huggingface/ai-deadlines" target="_blank" rel="noopener">huggingface/ai-deadlines</a>,
-   회차 이력·CORE 등급·투고수 = <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccfddl/ccf-deadlines</a>.
+   회차 이력·CORE 등급·투고수 = <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccfddl/ccf-deadlines</a>,
+   h5-index = <a href="https://scholar.google.com/citations?view_op=top_venues&amp;hl=en&amp;vq=eng_artificialintelligence" target="_blank" rel="noopener">Google Scholar Metrics</a> 2025 판(<code>data/impact.yml</code>).
    뇌과학 학회와 연계 제도는 수동 큐레이션(<code>data/neuro.yml</code> · <code>data/programs.yml</code>).<br>
    <b>추정</b>·<b>미공지</b> 배지가 붙은 마감은 공식 확정값이 아니다. 전형 주기는 과거 회차 평균이지 예고가 아니다.`;
+// #major 로 열면 메이저 모드로 시작한다. 셸 알리아스와 Alfred 가 이 주소를 쓴다.
+if (/major/i.test(location.hash)){
+  state.major = true;
+  document.getElementById("major").setAttribute("aria-pressed", true);
+}
 render();
 </script>
 </body>

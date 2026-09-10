@@ -28,6 +28,13 @@ DATA = ROOT / "data"
 
 SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
 
+# 메이저 = 독립된 두 외부 정본의 교집합 — CORE A* 등급 ∩ Google Scholar h5-index >= 200.
+# CORE 만 쓰면 너무 헐겁다(A* 안에 COLT 74 와 NeurIPS 371 이 같이 있다). h5 만 쓰면 규모
+# 편향이 등급 자리를 차지한다(data/impact.yml 의 한계 3가지). 둘이 동의할 때만 메이저다.
+# 임계값 200 은 넓은 구간에서 같은 답을 준다 — A* 중 h5 가 137~218 사이인 학회가 없어
+# 임계를 140 으로 낮추든 218 로 올리든 결과 집합이 바뀌지 않는다(260910 실측).
+MAJOR_H5 = 200
+
 
 MON = {m[:3]: i for i, m in enumerate(
     "january february march april may june july august september october november december".split(), 1)}
@@ -119,10 +126,11 @@ def build_series(title, eds, group, tier, field, rank, rates, programs, extra, t
     scale = extra.get("scale") or (
         {"metric": "submitted", "value": hist[-1]["submitted"], "year": hist[-1]["year"],
          "source": hist[-1]["source"]} if hist else None)
+    r = rank.get(title, {})
     return {
         "id": slug if group == "ai" else extra.get("id", slug),
         "title": DISPLAY.get(title, title), "full_name": extra.get("full_name", ""), "group": group,
-        "tier": tier, "field": field, "rank": rank.get(title, {}),
+        "tier": tier, "field": field, "rank": r,
         "link": (nxt or eds[-1])["link"] if eds else extra.get("link", ""),
         "editions": eds, "next": nxt["year"] if nxt else None,
         "typical": typical(eds), "scale": scale, "history": hist,
@@ -193,6 +201,12 @@ def build(offline: bool = False) -> dict:
             hit = geo.get(place.strip())
             e["place"] = place.strip()
             e["lat"], e["lon"] = (hit["lat"], hit["lon"]) if hit else (None, None)
+
+    impact = yaml.safe_load((DATA / "impact.yml").read_text())
+    for s in series:
+        # 손으로 학회를 더하지 않는다. 두 외부 정본이 동의하는 것만 메이저다.
+        s["h5"] = impact["h5"].get(s["title"])
+        s["major"] = s["rank"].get("core") == "A*" and (s["h5"] or 0) >= MAJOR_H5
 
     for s in series:                                     # 도시/국가는 차기 회차 것을 대표로
         nx = next((x for x in s["editions"] if x["year"] == s["next"]), None) or (s["editions"][-1] if s["editions"] else {})
@@ -294,6 +308,14 @@ def check(d: dict) -> None:
         assert x["editions"], f"{x['title']}: 회차 0건"
         assert x["typical"]["meeting_month"], f"{x['title']}: 전형 개최월 유도 실패"
         assert x["tier"] in (1, 2, 3) and x["field"], f"{x['title']}: tier/field 누락"
+    # 메이저는 업스트림 CORE 등급과 수동 h5 표에 함께 의존한다. 어느 쪽이 깨져도 조용히 틀린다.
+    major = {x["title"] for x in s if x["major"]}
+    for t in ("NeurIPS", "ICML", "ICLR", "CVPR", "ICCV", "ECCV", "ACL", "AAAI", "EMNLP"):
+        assert t in major, f"{t} 이 메이저에서 빠졌다 — CORE 등급 또는 data/impact.yml 확인"
+    # 이 넷은 CORE A* 지만 h5 가 임계 아래다. 여기 끼어들면 교집합 규칙이 깨진 것이다.
+    for t in ("COLT", "RSS", "IJCAI", "ICRA"):
+        assert t not in major, f"{t} 이 메이저에 들어왔다 — MAJOR_H5 또는 impact.yml 확인"
+    assert len(major) == 9, f"메이저 {len(major)}건 (기대 9) — {sorted(major)}"
     for f in {"ml", "vision", "nlp", "robotics", "medical", "neuro", "neuroimaging", "cognitive"}:
         assert any(x["field"] == f and x["tier"] == 1 for x in s), f"분야 {f} 에 T1 학회가 없다"
     eds = [e for x in s for e in x["editions"]]

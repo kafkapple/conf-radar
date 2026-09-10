@@ -18,6 +18,13 @@ jobs:
         run: |
           git config user.name  github-actions
           git config user.email github-actions@github.com
-          git add docs/index.html docs/artifact.html
+          git add docs/index.html docs/artifact.html docs/deadlines.ics docs/data.json
           git diff --staged --quiet || git commit -m "chore: rebuild $(date -u +%F)"
           git push
+      - name: publish docs to gh-pages
+        run: |
+          # Pages 소스가 gh-pages 브랜치라 main 커밋만으로는 공개 사이트가 안 바뀐다.
+          # 260910: 이 단계가 없어서 재빌드 결과가 공개본에 도달하지 못했다.
+          TREE=$(git rev-parse HEAD:docs)
+          COMMIT=$(git commit-tree "$TREE" -m "publish: $(git rev-parse --short HEAD)")
+          git push --force origin "$COMMIT:refs/heads/gh-pages"

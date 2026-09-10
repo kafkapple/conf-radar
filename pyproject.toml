@@ -1,0 +1,10 @@
+# 실행은 `uv run python build.py --check`. 의존성은 pyyaml 하나뿐이고
+# ModuleNotFoundError 가 나면 설치할 일이 아니라 이 파일을 고칠 일이다.
+[project]
+name = "conf-radar"
+version = "0"
+requires-python = ">=3.11"
+dependencies = ["pyyaml>=6"]
+
+[tool.uv]
+package = false
