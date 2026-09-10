@@ -33,6 +33,9 @@
     - name: CORE Conference Ranking
       url: https://portal.core.edu.au/conf-ranks/
       note: A*/A/B/C 등급. 학회 위상 판단 기준
+    - name: Google Scholar Metrics
+      url: https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_artificialintelligence
+      note: h5-index. 메이저 필터의 두 번째 축. 분야 페이지를 바꿔가며 본다(비전·NLP·로보틱스·그래픽스)
 
 - group: 논문 · 리뷰 열람
   items:
