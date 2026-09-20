@@ -312,3 +312,359 @@ ACL:
       note: 자원·평가(Resources and Evaluation)는 본 학회의 주제 영역이지 별도 트랙이 아니다.
       source: https://2026.aclweb.org/calls/main_conference_papers/
       verified: '2026-09-10'
+
+# 260920 — 메이저 5곳 밖 리뷰 공개 수준 조사(핸드오프 260910 항목 5). 판정 기준은 파일 머리말과 같다.
+# open = 탈락분도 영구 공개 · partial = 채택분만 결정 후 공개 · closed = 플랫폼 무관 리뷰 비공개.
+# 🟡 미확인(보수적 closed 추정) — aaai · aistats · icra · iros · babyvlm26. 재확인 전까지 잠정.
+
+3DV:
+  review:
+    level: closed
+    platform: OpenReview
+    note: OpenReview 로 제출·심사하지만 Author Guidelines 에 리뷰·저자응답 영구 비공개 명시.
+    url: https://3dvconf.github.io/2025/author-guidelines/
+    verified: '2026-09-20'
+
+AAAI:
+  review:
+    level: closed
+    platform: CMT
+    note: 🟡 미확인 — CMT 기반 이중맹검 심사, 공개 리뷰 메커니즘 자체가 없어 보수적으로 closed.
+    url: https://aaai.org/conference/aaai/aaai-26/review-process/
+    verified: '2026-09-20'
+
+AISTATS:
+  review:
+    level: closed
+    platform: OpenReview
+    note: 🟡 미확인 — OpenReview 로 심사하나 리뷰 공개 정책 문서를 못 찾아 보수적으로 closed.
+    url: https://virtual.aistats.org/Conferences/2026/ReviewerGuidelines
+    verified: '2026-09-20'
+
+COLM:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 탈락·철회 논문의 리뷰·토론은 비공개, 채택 논문만 결정 후 리뷰 공개.
+    url: https://openreview.net/group?id=colmweb.org%2FCOLM%2F2025%2FConference
+    verified: '2026-09-20'
+
+COLT:
+  review:
+    level: closed
+    platform: CMT
+    note: CMT(Microsoft) 기반 제출·심사, 공개 리뷰 메커니즘 없음(전통적 이론 학회).
+    url: https://learningtheory.org/colt2025/cfp.html
+    verified: '2026-09-20'
+
+CoRL:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 결정 후 채택분 리뷰만 공개·비식별 해제, reject 논문은 비공개 유지.
+    url: https://2025.corl.org/contributions/instruction-for-authors
+    verified: '2026-09-20'
+
+ECCV:
+  review:
+    level: closed
+    platform: CMT
+    note: 심사 중 논문·리뷰는 PC(체어·AC·리뷰어)에게만 공개, 결정 후 공개 전환 규정 없음.
+    url: https://eccv.ecva.net/Conferences/2024/SubmissionPolicies
+    verified: '2026-09-20'
+
+EMNLP:
+  review:
+    level: closed
+    platform: ARR (OpenReview 위)
+    note: ACL/NAACL 과 동일하게 ARR 사용, 리뷰는 저자·리뷰어 한정 공개.
+    url: https://aclrollingreview.org/reviewerguidelines
+    verified: '2026-09-20'
+
+ICASSP:
+  review:
+    level: closed
+    platform: CMT
+    note: IEEE CMT 기반, 공개 리뷰 플랫폼 자체가 없음 — 리뷰는 저자·PC 한정.
+    url: https://2026.ieeeicassp.org/author-guidelines/
+    verified: '2026-09-20'
+
+ICCV:
+  review:
+    level: closed
+    platform: OpenReview
+    note: OpenReview 로 제출받지만 "리뷰·저자응답은 절대 공개되지 않는다"고 명시.
+    url: https://iccv.thecvf.com/Conferences/2025/AuthorGuidelines
+    verified: '2026-09-20'
+
+ICRA:
+  review:
+    level: closed
+    platform: OpenReview
+    note: 🟡 미확인 — 2026부터 OpenReview 이관됐지만 공개 여부 명시 문구 못 찾음, IEEE RAS 관행상 보수적 closed 추정.
+    url: https://openreview.net/group?id=IEEE.org%2FICRA%2F2026
+    verified: '2026-09-20'
+
+IJCAI:
+  review:
+    level: closed
+    platform: CMT
+    note: CMT 기반, author rebuttal 도 AC 한정 — 리뷰·토론 비공개.
+    url: https://2026.ijcai.org/submissions-faq/
+    verified: '2026-09-20'
+
+Interspeech:
+  review:
+    level: closed
+    platform: CMT
+    note: ISCA 공식 정책이 "reviewing process is confidential" 로 명시.
+    url: https://isca-speech.org/Interspeech-Policy
+    verified: '2026-09-20'
+
+IROS:
+  review:
+    level: closed
+    platform: OpenReview
+    note: 🟡 미확인 — ICRA 와 동일하게 OpenReview 이관됐지만 공개 여부 명시 문구 못 찾음, 보수적 closed 추정.
+    url: https://openreview.net/group?id=IEEE.org%2FIROS%2F2026
+    verified: '2026-09-20'
+
+KDD:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 공식 CFP 명시 — 채택 논문의 리뷰·메타리뷰·토론을 OpenReview 에 공개, 심사 중·탈락분은 비공개.
+    url: https://kdd2026.kdd.org/research-track-call-for-papers/
+    verified: '2026-09-20'
+
+MICCAI:
+  review:
+    level: partial
+    platform: CMT
+    note: 결정 후 채택분 리뷰·리버틀·메타리뷰만 웹사이트 공개(2021년부터). 탈락분은 비공개.
+    url: https://miccai.org/publications/miccai-open-access-reviews/
+    verified: '2026-09-20'
+
+NAACL:
+  review:
+    level: closed
+    platform: ARR (OpenReview 위)
+    note: NAACL 도 ACL 처럼 ARR 사용, 리뷰는 저자·심사진 한정 공개.
+    url: https://aclrollingreview.org/reviewerguidelines
+    verified: '2026-09-20'
+
+RSS:
+  review:
+    level: closed
+    platform: OpenReview
+    note: OpenReview 쓰지만 리뷰는 기본 비공개, 채택돼도 자동 공개 안 됨(저자 개별 동의 시만 예외).
+    url: https://roboticsconference.org/reviewps/
+    verified: '2026-09-20'
+
+SIGGRAPH:
+  review:
+    level: closed
+    platform: 기타 (ACM 자체 제출 시스템)
+    note: 리뷰는 저자에게만 반환, 공개 메커니즘 없음. TOG 저널 트랙도 동일.
+    url: https://s2026.siggraph.org/technical-papers-reviewer-instructions-ethics/
+    verified: '2026-09-20'
+
+UAI:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 결정 후 채택분은 리뷰·메타리뷰·저자응답 공개. 탈락분은 저자가 opt-in 해야만 공개.
+    url: https://www.auai.org/uai2026/submission_instructions
+    verified: '2026-09-20'
+
+WACV:
+  review:
+    level: closed
+    platform: OpenReview
+    note: OpenReview 로 투고 이관했지만 "reviews and author responses will never be made public" 명시.
+    url: https://wacv.thecvf.com/Conferences/2026/AuthorReviewerGuides
+    verified: '2026-09-20'
+
+BabyVLM:
+  review:
+    level: closed
+    platform: OpenReview
+    note: 🟡 미확인 — NeurIPS 2026 워크숍, OpenReview 이중맹검만 확인. 공개 여부 정책 문서 없음.
+    url: https://babyvlm.github.io/
+    verified: '2026-09-20'
+
+NeurIPS Position:
+  review:
+    level: partial
+    platform: OpenReview
+    note: NeurIPS 본트랙과 같은 venue 하위 트랙 — 본트랙과 동일 정책(채택분만 결정 후 공개).
+    url: https://neurips.cc/Conferences/2026/CallForPapers
+    verified: '2026-09-20'
+
+COSYNE:
+  review:
+    level: closed
+    platform: 기타
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, double-blind 심사 결과만 통보.
+    url: https://www.cosyne.org/abstracts-submission
+    verified: '2026-09-20'
+
+CCN:
+  review:
+    level: partial
+    platform: OpenReview
+    note: Proceedings(8p) 트랙은 accept 시 리뷰 공개·reject 비공개, Extended Abstract(2p) 는 accept·reject 무관 항상 비공개(27년판 미개설이라 26년판 기준).
+    url: https://cogcompneuro.github.io/docs/2026/Proceedings/Submission%20guidelines/
+    verified: '2026-09-20'
+
+SfN:
+  review:
+    level: closed
+    platform: 기타
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, Program Committee 내부 심사 후 세션 배정만 통보.
+    url: https://www.sfn.org/meetings/neuroscience-2026/call-for-abstracts/sessioning-process
+    verified: '2026-09-20'
+
+Bernstein:
+  review:
+    level: closed
+    platform: 기타
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, G-Node 포털 double-blind 심사, 리뷰·결과 비공개.
+    url: https://abstracts.g-node.org/conference/BC26
+    verified: '2026-09-20'
+
+CNS*:
+  review:
+    level: closed
+    platform: 기타
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, ConfMaster 최소 2인 심사하지만 비공개(27년판 미개설이라 26년판 기준).
+    url: https://ocns.memberclicks.net/cns-2026-abstract-submission
+    verified: '2026-09-20'
+
+OHBM:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 심사평·순위 비공개.
+    url: https://humanbrainmapping.org/i4a/pages/index.cfm?pageID=4235
+    verified: '2026-09-20'
+
+KSBNS:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 별도 논문투고 심사시스템은 학회지용이고 학술대회 초록과 무관.
+    url: https://www.ksbns.org/
+    verified: '2026-09-20'
+
+VSS:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, blind rating 집계값만 저자 통보.
+    url: https://www.visionsciences.org/abstract-submissions/
+    verified: '2026-09-20'
+
+CogSci:
+  review:
+    level: closed
+    platform: 없음
+    note: double-blind 심사 거치지만 OpenReview 등 공개 플랫폼 안 씀, 리뷰·낙방 논문 공개 안 됨.
+    url: https://cognitivesciencesociety.org/submissions/
+    verified: '2026-09-20'
+
+CNS:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 채택 초록만 Proceedings 게재.
+    url: https://www.cogneurosociety.org/submissions/
+    verified: '2026-09-20'
+
+FENS Forum:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 초록만 프로그램에 그대로 게재.
+    url: https://fensforum.org/abstract-submission/
+    verified: '2026-09-20'
+
+KHBM 춘계:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 학술위원회 검토 후 구연/포스터 선정.
+    url: https://www.khbm.org/
+    verified: '2026-09-20'
+
+KHBM 추계:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 학술위원회 검토 후 구연/포스터 선정.
+    url: https://khbm.org/html/?pmode=BBBS0029100001&seq=1821&smode=view
+    verified: '2026-09-20'
+
+KCogSci:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음, 이메일 투고 방식.
+    url: https://cogsci.or.kr/?page_id=107
+    verified: '2026-09-20'
+
+NICE:
+  review:
+    level: closed
+    platform: 기타
+    note: EasyChair 제출 + program committee 리뷰, 리뷰 내용 외부 비공개. IEEE 프로시딩스 게재.
+    url: https://easychair.org/cfp/NICE-2026
+    verified: '2026-09-20'
+
+ICONS:
+  review:
+    level: closed
+    platform: 기타
+    note: EasyChair 로 제출·리뷰, CFP 어디에도 리뷰 공개 언급 없음.
+    url: https://iconsneuromorphic.cc/calls-2026/
+    verified: '2026-09-20'
+
+SNUFA:
+  review:
+    level: open
+    platform: 기타
+    note: 초록을 선정 전에 먼저 공개해 블라인드 공개 코멘트·평점 받음, 토크 미선정작도 포스터로 남아 공개 유지.
+    url: http://snufa.net/2026/
+    verified: '2026-09-20'
+
+NAISys:
+  review:
+    level: closed
+    platform: 없음
+    note: 초록 심사 방식이라 공개 리뷰 개념 자체가 없음.
+    url: https://meetings.cshl.edu/meetings.aspx?meet=NAISYS
+    verified: '2026-09-20'
+
+BrainBodyFM:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 🟡 저신뢰 — OpenReview double-blind 제출, CFP 는 accept 공개만 명시하고 reject 공개 여부는 불명(NeurIPS 기본값 준용 추정).
+    url: https://brainbodyfm-workshop.github.io/call-for-papers
+    verified: '2026-09-20'
+
+NeurReps:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 🟡 저신뢰 — OpenReview double-blind 제출, CFP 는 accept 공개만 확인되고 reject 공개 여부 불명(추정).
+    url: https://sites.google.com/view/neur-reps/call-for-papers
+    verified: '2026-09-20'
+
+DevAI:
+  review:
+    level: partial
+    platform: OpenReview
+    note: 🟡 저신뢰 — OpenReview double-blind 제출(3인+), CFP 는 accept 공개만 명시, reject 공개 여부 불명(추정).
+    url: https://sites.google.com/view/devai-workshop-2026/call-for-papers
+    verified: '2026-09-20'
