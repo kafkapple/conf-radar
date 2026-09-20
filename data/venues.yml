@@ -361,7 +361,7 @@ CoRL:
   review:
     level: partial
     platform: OpenReview
-    note: 결정 후 채택분 리뷰만 공개·비식별 해제, reject 논문은 비공개 유지.
+    note: 채택분은 결정 후 자동 공개. reject 논문도 저자가 opt-in 하면 리뷰와 함께 공개된다(NeurIPS·ICML·UAI 와 같은 패턴, corl 공식 통계 페이지의 opt-in 건수 표기로 확인).
     url: https://2025.corl.org/contributions/instruction-for-authors
     verified: '2026-09-20'
 
@@ -433,7 +433,7 @@ KDD:
   review:
     level: partial
     platform: OpenReview
-    note: 공식 CFP 명시 — 채택 논문의 리뷰·메타리뷰·토론을 OpenReview 에 공개, 심사 중·탈락분은 비공개.
+    note: 공식 CFP 는 채택 논문의 공개만 명시("for all accepted papers"). reject opt-in 조항은 CFP 에 없음 — 다른 곳처럼 있는데 안 적었는지, 정말 없는지는 🟡 미확인.
     url: https://kdd2026.kdd.org/research-track-call-for-papers/
     verified: '2026-09-20'
 
