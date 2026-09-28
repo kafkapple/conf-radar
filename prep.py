@@ -77,11 +77,11 @@ def build_geo() -> None:
     cache_path = DATA / "geo.yml"
     cache = yaml.safe_load(cache_path.read_text()) if cache_path.exists() else {}
     places = set()
-    for s in B.build(offline=True)["series"]:
+    for s in B.build(offline=False)["series"]:  # 260928: True 였으면 캐시된 tarball 만 스캔해 라이브에만 있는 신규 회차의 장소를 놓친다(checks.py 85% 문턱과 불일치의 근본원인)
         for e in s["editions"]:
-            p = ", ".join(x for x in [e.get("city", ""), e.get("country", "")] if x) or e.get("venue", "")
-            if p.strip():
-                places.add(p.strip())
+            p = B.place_of(e)
+            if p:
+                places.add(p)
     todo = sorted(places - set(cache))
     print(f"캐시 {len(cache)}건 · 신규 {len(todo)}건")
     for i, p in enumerate(todo, 1):

@@ -159,6 +159,13 @@ def typical(eds: list[dict]) -> dict:
             "years": [min(years), max(years)] if years else None}
 
 
+def place_of(e: dict) -> str:
+    """개최지 문자열, 지오코딩 키로도 쓴다. "(Hybrid)" 같은 형식 주석은 지명이 아니라서 떼어낸다
+    — 안 떼면 Nominatim 이 실물 도시가 있는데도 못 찾는다(260928 checks.py 85% 문턱 실패 원인)."""
+    place = ", ".join(x for x in [e.get("city", ""), e.get("country", "")] if x) or e.get("venue", "")
+    return re.sub(r"\s*\((?:hybrid|virtual|online)\)\s*$", "", place.strip(), flags=re.I).strip()
+
+
 def build_series(title, eds, group, tier, field, rank, rates, programs, extra, today) -> dict:
     eds = [e for e in eds if e["year"] >= today.year - 6]
     def ends(e: dict) -> str:
@@ -249,9 +256,9 @@ def build(offline: bool = False) -> dict:
 
     for s in series:                                     # 회차마다 좌표를 붙인다(지도 뷰)
         for e in s["editions"]:
-            place = ", ".join(x for x in [e.get("city", ""), e.get("country", "")] if x) or e.get("venue", "")
-            hit = geo.get(place.strip())
-            e["place"] = place.strip()
+            place = place_of(e)
+            hit = geo.get(place)
+            e["place"] = place
             e["lat"], e["lon"] = (hit["lat"], hit["lon"]) if hit else (None, None)
 
     impact = yaml.safe_load((DATA / "impact.yml").read_text())
