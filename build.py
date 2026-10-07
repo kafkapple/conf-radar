@@ -342,6 +342,7 @@ def build(offline: bool = False) -> dict:
     data = {"generated": today.isoformat(), "series": series,
             "world": json.loads((DATA / "world.json").read_text()),
             "fullhist": fullhist,
+            "submit": sorted(SUBMIT),
             "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
             "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
     # 날짜 단위로 찍는다. 초 단위면 데이터가 그대로여도 .ics 가 매 빌드 달라져서, Actions 가
@@ -350,7 +351,7 @@ def build(offline: bool = False) -> dict:
     (ROOT / "docs" / "deadlines.ics").write_text(build_ics(series, stamp), newline="")
     # 위젯·단축어가 읽을 기계가독 사본. 뷰어는 인라인 데이터를 쓰므로 이 파일에 의존하지 않는다.
     (ROOT / "docs" / "data.json").write_text(json.dumps(
-        {"generated": data["generated"],
+        {"generated": data["generated"], "submit": data["submit"],
          "series": [{k: s[k] for k in ("id","title","group","tier","field","link","city","country",
                                         "date_text","start","end","next","deadlines","typical")}
                     for s in series]}, ensure_ascii=False, separators=(",", ":")))

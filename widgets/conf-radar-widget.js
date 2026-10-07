@@ -14,7 +14,7 @@
 
 const DATA_URL = "https://kafkapple.github.io/conf-radar/data.json";
 const SITE_URL = "https://kafkapple.github.io/conf-radar/";
-const SUBMIT = ["abstract", "paper", "submission", "supplementary", "abstract_late"];
+let SUBMIT = ["abstract", "paper", "submission", "supplementary", "abstract_late", "registration"];   // load() 가 data.json 의 submit 으로 덮는다
 const TIER_MAX = 1;        // 1 = T1 만, 2 = T1+T2
 const CACHE = FileManager.local().joinPath(FileManager.local().cacheDirectory(), "conf-radar.json");
 
@@ -34,6 +34,7 @@ async function load() {
 }
 
 const data = await load();
+if (data.submit) SUBMIT = data.submit;
 const rows = data.series
   .filter(s => s.tier <= TIER_MAX)
   .map(s => {
