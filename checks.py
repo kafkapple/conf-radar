@@ -70,7 +70,7 @@ def check(d: dict) -> None:
     # 여기서 멈춰 사람이 어휘에 넣을지 판단하게 한다 (SUBMIT·PHASE = 파일 머리 참조).
     seen = {t for e in eds for t in (dl["type"] for dl in e["deadlines"])}
     assert not (seen - SUBMIT - PHASE - OTHER), \
-        f"모르는 일정 이름 {sorted(seen - SUBMIT - PHASE - OTHER)} — build.py 의 SUBMIT/PHASE 에 넣을지 판단"
+        f"모르는 일정 이름 {sorted(seen - SUBMIT - PHASE - OTHER)} — sources.py 의 SUBMIT 이나 build.py 의 PHASE 에 넣을지 판단"
     # 메이저의 차기 회차는 심사 구간을 그릴 수 있어야 한다. 마감만 있고 통보가 없으면 표식만 남는다.
     for x in s:
         if x["major"] and x["next"]:

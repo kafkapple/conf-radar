@@ -381,9 +381,6 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
   .bar.filters>*,#bar2>*{flex:0 0 auto}
   #q{min-width:120px}
 
-  .toprow{display:block}
-  .toprow>.bar{display:flex}
-  .toprow>.bar.views::after{display:none}
   .bar.views{position:fixed;left:0;right:0;bottom:0;z-index:12;margin:0;gap:0;
     background:var(--card);border-top:1px solid var(--line);
     padding:5px 4px calc(5px + env(safe-area-inset-bottom));
@@ -413,7 +410,6 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 /* 보기 구분: 보기마다 고유색(--vc). 버튼 활성 표시와 화면 맨 위 제목 띠가 같은 색이라 지금 어느 보기인지 한눈에 갈린다 */
 /* VIEW 줄: 필터 알약과 모양부터 다르게(탭 + 아래 굵은 색 줄). 보기마다 색이 항상 보이고, 선택된 보기는 칠해진다. */
 @media (min-width:601px){
-  .toprow{display:block}.toprow>.bar{display:flex}.toprow>.bar.views::after{display:none}
   .toprow>.bar.filters{margin-top:8px}
   .bar.views{gap:5px;align-items:flex-end;padding-bottom:0;border-bottom:1px solid var(--line)}
   .bar.views .vlbl{align-self:center;font-weight:700;letter-spacing:.08em;margin-right:2px}
@@ -602,7 +598,7 @@ const SUBMIT = new Set(["abstract","paper","submission","supplementary","abstrac
 
 // 심사 막대 안을 단계로 자른다. 투고 계획의 실제 질문은 "언제 내나"가 아니라
 // "언제 또 손이 가나"다 — 리버틀과 최종본은 저자가 일하는 때이고 나머지는 기다리는 때다.
-// 일정 이름은 업스트림(ccf-deadlines) 어휘 그대로 쓴다 (build.py 의 SUBMIT/PHASE 가 정본).
+// 일정 이름은 업스트림(ccf-deadlines) 어휘 그대로 쓴다 (sources.py 의 SUBMIT, build.py 의 PHASE 가 정본).
 // 없는 단계는 만들지 않는다. 모르는 구간을 추정해 그리면 화면이 없는 정보를 만든다.
 const ACT = ["rebuttal_start","rebuttal_end","author_response","rebuttal_and_revision"];
 function phases(e, firstSub){
@@ -1286,15 +1282,13 @@ function cycActual(){
       const {c, e, dl, from, to, ms, me, trunc, ghost, past, kind, ph} = b;
       const w = to - from;
       const head = "";   // 학회 이름은 왼쪽 고정 칸에 있다 — 막대에서 되풀이하지 않는다
-      const DLNAME = {abstract:"Abstract", abstract_late:"Abstract(ext.)", paper:"Paper",
-                      submission:"Paper", supplementary:"Supp."};
       // 라벨에 날짜를 같이 적는다. 하나하나 올려 봐야 아는 것은 "보인다"가 아니다 (260910 지적).
       const md = iso => `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
       const label = ghost
         ? `${head}Est. ${state.tlMode === "meet" ? "conference" : "deadline"} (n=${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline})`
         : kind === "wsp"    ? `🧩 Paper ${md(b.ws.paper[0])}${b.ws.paper[1] !== b.ws.paper[0] ? "~" + md(b.ws.paper[1]) : ""}${b.ws.est ? " est." : ""}`
         : kind === "wsd"    ? `🧩 ${md(b.ws.days[0])}~${md(b.ws.days[1])}`
-        : b.dlOnly ? `📮 ${e.year} ${b.subs.map(d => `${DLNAME[d.type] || d.type} ${md(d.date)}`).join(" · ")}`
+        : b.dlOnly ? `📮 ${e.year} ${b.subs.map(d => `${DLNAME2[d.type] || d.type} ${md(d.date)}`).join(" · ")}`
         : kind === "rev"    ? `⏳ ${e.year} Review ${md(dl.date)}→${md(ph[ph.length - 1].to)}`
         : kind === "dlonly" ? `📮 ${e.year} Deadline ${md(dl.date)}`
         : kind === "meet"   ? `🎤 ${e.year} Conference ${md(e.start)}${e.end && e.end !== e.start ? "~" + md(e.end) : ""}`
@@ -1654,7 +1648,7 @@ const closeDetail = () => { document.getElementById("veil").hidden = true; };
 document.getElementById("veil").onclick = e => { if (e.target.id === "veil") closeDetail(); };
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
 
-// ── 통계 탭: DATA.fullhist(메이저 5곳 첫 개최~현재). 값이 없는 연도는 선을 잇지 않고 끊는다 ──
+// ── 통계 탭: DATA.fullhist(메이저 5곳 첫 개최~현재). 값이 없는 연도가 2년 넘게 이어지면 선을 끊고, 데이터가 있는 해마다 점을 찍는다 ──
 const CONF_COLOR = {}, FHBASIS = {}, COUNTRY_ALIAS = {"United States": "USA", "United Kingdom": "UK", "England": "UK", "Scotland": "UK", "Korea": "South Korea", "Czechia": "Czech Republic", "UAE": "United Arab Emirates"};   // 출처마다 표기가 달라 같은 나라가 둘로 센다
 const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 // 보기별 고유색·제목·한 줄 설명. 버튼(--vc)과 제목 띠가 같은 색을 쓴다.
@@ -1694,10 +1688,11 @@ function lineChart(wrap, rows, years, key, fmt, title){
     const pts = years.filter(y => rows[c][y]?.[key] != null);
     let d = "", prev = null;
     for (const y of pts){ d += (prev !== null && y - prev <= 2 ? "L" : "M") + `${X(y).toFixed(1)},${Y(rows[c][y][key]).toFixed(1)} `; prev = y; }
-    g += `<path class="ln" d="${d}" style="stroke:var(${CONF_COLOR[c]})"/>`;
+    g += `<path class="ln" d="${d}" style="stroke:var(${CONF_COLOR[c]})"/>`
+      + pts.map(y => `<circle cx="${X(y)}" cy="${Y(rows[c][y][key])}" r="2" style="fill:var(${CONF_COLOR[c]})"/>`).join("");
     const last = pts[pts.length-1];                    // 끝점 직접 표기(색 단독 식별 금지)
     if (last !== undefined){
-      g += `<circle cx="${X(last)}" cy="${Y(rows[c][last][key])}" r="3" style="fill:var(${CONF_COLOR[c]})"/>`;
+      g += `<circle cx="${X(last)}" cy="${Y(rows[c][last][key])}" r="3.5" style="fill:var(${CONF_COLOR[c]})"/>`;
       ends.push({c, x: X(last), y: Y(rows[c][last][key])});
     }
   }
@@ -1756,7 +1751,7 @@ function trendCard(host, rows, years, confs){
   const TABS = [["abs", "Bars · count", "막대 전체 = Submitted, 진한 칸 = Accepted, 연한 칸 = Not accepted(같은 학회 색). Scale 차이까지 보인다."],
                 ["pct", "Bars · 100%", "막대 높이를 같게 맞춰 Accepted 비율만 비교한다. 숫자 = Acceptance rate(%)."],
                 ["acc", "Line · accepted", "연도별 Accepted 논문 수. 점선 = 집계 기준이 바뀐 해."],
-                ["rate", "Line · acceptance rate", "Accepted ÷ Submitted. Submitted 수가 공개된 해만 그린다."]];
+                ["rate", "Line · acceptance rate", "Accepted ÷ Submitted. Submitted 수가 공개된 해만 점으로 찍는다."]];
   const cur = TABS.find(t => t[0] === mode) || TABS[0];
   const wrap = document.createElement("div"); wrap.className = "ch";
   wrap.innerHTML = `<h3>Submitted vs Accepted</h3><div class="win">${TABS.map(([k, t]) =>
@@ -1957,7 +1952,7 @@ function buildICS(list){
         `DESCRIPTION:${icsEsc(d.label)} · ${icsEsc(c.date_text)} ${icsEsc(c.city)}`,
         `URL:${c.link}`, "TRANSP:TRANSPARENT",
         "BEGIN:VALARM","TRIGGER:-P7D","ACTION:DISPLAY",
-        `DESCRIPTION:${icsEsc(c.title)} Deadline 1주 전`,"END:VALARM","END:VEVENT");
+        `DESCRIPTION:${icsEsc(c.title)} Deadline in 1 week`,"END:VALARM","END:VEVENT");
     }
     if (c.start && c.end)
       L.push("BEGIN:VEVENT", `UID:${c.id}-meeting@conf-radar`, `DTSTAMP:${stamp}`,

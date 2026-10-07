@@ -31,7 +31,7 @@ DATA = ROOT / "data"
 # 회차 일정 어휘 — 이름은 ccf-deadlines 가 쓰는 것을 그대로 쓴다. 우리가 따로 지으면
 # 업스트림이 나중에 같은 사실을 실어 올 때 같은 뜻의 이름이 둘 공존한다.
 #
-# SUBMIT = 저자가 "내야 하는" 날. PHASE = 낸 뒤에 흐르는 심사 단계의 경계.
+# PHASE = 낸 뒤에 흐르는 심사 단계의 경계. ("내야 하는" 날 SUBMIT 은 sources.py 에 있다.)
 # 화면의 심사 막대는 이 경계들 사이를 구간으로 잘라 그린다 — 어느 구간이 저자가 일하는
 # 때(리버틀·최종본)이고 어느 구간이 기다리는 때인지가 투고 계획의 핵심이다.
 PHASE = {"review_release", "rebuttal_start", "rebuttal_end", "author_response",
@@ -40,7 +40,7 @@ PHASE = {"review_release", "rebuttal_start", "rebuttal_end", "author_response",
 # 저자와 무관한 날. 어휘에는 두되 화면에는 안 쓴다 — 빼면 assert 가 매번 걸린다.
 OTHER = {"reviewer_registration"}
 
-# 메이저 = 세 조건의 교집합 — CORE A* 등급 ∩ 매년 개최 ∩ Google Scholar h5-index >= 237.
+# 메이저 = 세 조건의 교집합 — CORE A* 등급 ∩ 매년 개최 ∩ Google Scholar h5-index >= 236.
 # 결과 5곳: CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ACL 236.
 #
 # 왜 셋인가 — 어느 하나만으로는 틀린다.
