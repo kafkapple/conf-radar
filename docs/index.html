@@ -388,7 +388,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     justify-content:space-around;flex-wrap:nowrap}
   .bar.views button{border:0;background:none;border-radius:9px;padding:5px 4px;flex:1;
     display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;min-width:0}
-  .bar.views button[aria-pressed="true"]{background:none;color:var(--ai)}
+  .bar.views button[aria-pressed="true"]{background:none;color:var(--vc,var(--ai))}
   .bar.views i{display:block;font-style:normal;font-size:17px;line-height:1}
   .bar.views b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
   .bar.views button:has(s) b{display:none}
@@ -408,6 +408,11 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 /* 통계 탭: 범주색은 dataviz 검증 팔레트(light/dark 각각 validate_palette 통과). 이름 직접 표기 + 표 보조 필수 */
 :root{--c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;--c5:#e87ba4;--c6:#008300;--c7:#4a3aa7;--c8:#e34948}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--c6:#008300;--c7:#9085e9;--c8:#e66767}}
+/* 보기 구분: 보기마다 고유색(--vc). 버튼 활성 표시와 화면 맨 위 제목 띠가 같은 색이라 지금 어느 보기인지 한눈에 갈린다 */
+.vhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:6px 0 10px;padding:7px 12px;
+  border-left:5px solid var(--vc);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--vc) 11%,var(--card))}
+.vhead b{font-size:15px;color:var(--fg)}.vhead span{color:var(--dim);font-size:12px}
+.bar.views button[aria-pressed="true"]{border-color:var(--vc);background:color-mix(in srgb,var(--vc) 20%,transparent);color:var(--fg);font-weight:600}
 .stat .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
 .stat .sc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .stat .sc b{display:block;font-size:20px}.stat .sc span{color:var(--dim);font-size:12px}
@@ -1628,15 +1633,31 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(
 
 // ── 통계 탭: DATA.fullhist(메이저 5곳 첫 개최~현재). 값이 없는 연도는 선을 잇지 않고 끊는다 ──
 const CONF_COLOR = {}, FHBASIS = {}, COUNTRY_ALIAS = {"United States": "USA", "United Kingdom": "UK", "England": "UK", "Scotland": "UK", "Korea": "South Korea", "Czechia": "Czech Republic", "UAE": "United Arab Emirates"};   // 출처마다 표기가 달라 같은 나라가 둘로 센다
-function lineChart(host, rows, years, key, fmt, title, note){
-  const has = years.filter(y => Object.values(rows).some(r => r[y]?.[key] != null));
-  if (has.length) years = years.filter(y => y >= has[0]);   // 값이 시작되는 해부터 그린다(채택률은 ACL 1963 부터 비어 있다)
+// 보기별 고유색·제목·한 줄 설명. 버튼(--vc)과 제목 띠가 같은 색을 쓴다.
+const VIEWS = {
+  list: ["▤", "목록",         "정렬 기준대로 학회를 카드로 훑는다",                         "--c1"],
+  kb:   ["▥", "칸반",         "마감까지 남은 기간별 열(2주 내 · 1-3개월 · 3개월 이후 · 미공지)로 나눠 본다", "--c2"],
+  tbl:  ["▦", "표",           "학회를 표에 놓고 항목별로 비교한다",                         "--c3"],
+  map:  ["◍", "지도",         "개최지를 세계 지도의 점으로 본다. 점 색 = 그 도시에서 열린 회차 수", "--c4"],
+  cyc:  ["◷", "일정 타임라인", "마감 → 심사 → 개최를 달력 위 막대로 본다",                   "--c5"],
+  st:   ["▁▃▇","통계",         "첫 개최부터의 투고·채택·개최 이력을 학회별로 비교한다",      "--c7"],
+  src:  ["⚑", "정보원",       "데이터 출처와 수록 기준·한계",                               "--c6"],
+};
+for (const b of document.querySelectorAll("[data-v]")) b.style.setProperty("--vc", `var(${VIEWS[b.dataset.v][3]})`);
+function addHead(v){
+  const sec = document.getElementById("v-" + v), [ic, name, desc, col] = VIEWS[v];
+  sec.querySelector(":scope > .vhead")?.remove();
+  sec.insertAdjacentHTML("afterbegin", `<div class="vhead" style="--vc:var(${col})"><b>${ic} ${name}</b><span>${desc}</span></div>`);
+}
+
+// 추이 카드 하나에 보기 넷: 막대(실제 수)·막대(100%)·선(채택 수)·선(채택률). 같은 데이터를 중복 카드로 두지 않는다.
+// 색은 학회를 따른다. 막대의 불채택 칸도 같은 학회 색을 연하게 쓴다(회색 금지: 어느 학회 막대인지 끊기지 않게).
+function lineChart(wrap, rows, years, key, fmt, title){
   const confs = Object.keys(rows), W = 720, H = 250, L = 46, R = 74, T = 10, B = 24;
+  const has = years.filter(y => Object.values(rows).some(r => r[y]?.[key] != null));
+  if (has.length) years = years.filter(y => y >= has[0]);   // 값이 시작되는 해부터 그린다
   const vals = confs.flatMap(c => years.map(y => rows[c][y]?.[key]).filter(v => v != null));
-  const wrap = document.createElement("div"); wrap.className = "ch";
-  wrap.innerHTML = `<h3>${esc(title)}</h3><p>${esc(note)}</p><div class="lg">${confs.map(c =>
-    `<span><i style="border-color:var(${CONF_COLOR[c]})"></i>${esc(c)}</span>`).join("")}</div><div class="tip"></div>`;
-  host.appendChild(wrap);
+  wrap.insertAdjacentHTML("beforeend", `<div class="tip"></div>`);
   if (!vals.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 수치가 있는 회차 없음</p>`); return; }
   const y0 = years[0], y1 = years[years.length-1], vmax = Math.max(...vals) * 1.05;
   const X = y => L + (y - y0) / Math.max(1, y1 - y0) * (W - L - R), Y = v => T + (1 - v / vmax) * (H - T - B);
@@ -1675,20 +1696,13 @@ function lineChart(host, rows, years, key, fmt, title, note){
     tip.innerHTML = `<b>${y}</b><br>` + confs.map(c => {
       const e = rows[c][y]; return e ? `<span style="color:var(${CONF_COLOR[c]})">━</span> ${esc(c)} <b>${e[key] != null ? fmt(e[key]) : "—"}</b> · ${esc(e.place)}` : "";
     }).filter(Boolean).join("<br>");
-    tip.style.display = "block"; tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 190) + "px"; tip.style.top = "40px";
+    tip.style.display = "block"; tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 190) + "px"; tip.style.top = "70px";
   });
   svg.addEventListener("pointerleave", () => { tip.style.display = "none"; xh.style.display = "none"; });
 }
-// 투고 대비 채택 막대: 한 해에 학회별 막대 하나. 막대 전체 = 투고, 색 칸 = 채택(학회 색 고정), 회색 칸 = 불채택.
-function barChart(host, rows, years, confs){
-  const mode = state.statBar || "pct";
+
+function barChart(wrap, rows, years, confs, mode){
   const ys = years.filter(y => confs.some(c => rows[c][y]?.submitted && rows[c][y]?.accepted));
-  const wrap = document.createElement("div"); wrap.className = "ch";
-  wrap.innerHTML = `<h3>투고 대비 채택 (막대)</h3><p>막대 전체 = 투고, 색 칸 = 채택(학회 색), 회색 = 불채택. 숫자 = 채택률.
-    <span class="win"><button data-bar="pct" aria-pressed="${mode === "pct"}">100%로 맞춤</button><button data-bar="abs" aria-pressed="${mode === "abs"}">실제 수</button></span></p>
-    <div class="lg">${confs.map(c => `<span><i style="border-color:var(${CONF_COLOR[c]})"></i>${esc(c)} 채택</span>`).join("")}<span><i style="border-color:var(--faint);opacity:.5"></i>불채택</span></div>`;
-  host.appendChild(wrap);
-  wrap.querySelectorAll("[data-bar]").forEach(b => b.onclick = () => { state.statBar = b.dataset.bar; renderStats(); });
   if (!ys.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 투고·채택 수가 모두 있는 회차 없음</p>`); return; }
   const bw = 12, gap = 3, pad = 14, L = 44, T = 14, B = 26, H = 250;
   const gw = confs.length * (bw + gap) + pad, W = L + ys.length * gw + 8;
@@ -1703,14 +1717,32 @@ function barChart(host, rows, years, confs){
     confs.forEach((c, ci) => {
       const e = rows[c][y]; if (!e?.submitted || !e?.accepted) return;
       const x = x0 + ci * (bw + gap), tot = mode === "pct" ? 1 : e.submitted, acc = mode === "pct" ? e.accepted / e.submitted : e.accepted;
-      const yTop = Y(tot), yAcc = Y(acc);
+      const yTop = Y(tot), yAcc = Y(acc), col = `var(${CONF_COLOR[c]})`;
       g += `<g><title>${esc(c)} ${y} · 투고 ${e.submitted.toLocaleString()} · 채택 ${e.accepted.toLocaleString()} · 채택률 ${(e.rate * 100).toFixed(1)}%</title>
-        <rect x="${x}" y="${yTop}" width="${bw}" height="${Math.max(0, yAcc - yTop - 2)}" rx="2" style="fill:var(--faint);opacity:.35"/>
-        <rect x="${x}" y="${yAcc}" width="${bw}" height="${Math.max(1, base - yAcc)}" rx="2" style="fill:var(${CONF_COLOR[c]})"/>
+        <rect x="${x}" y="${yTop}" width="${bw}" height="${Math.max(0, yAcc - yTop - 2)}" rx="2" style="fill:${col};opacity:.22"/>
+        <rect x="${x}" y="${yAcc}" width="${bw}" height="${Math.max(1, base - yAcc)}" rx="2" style="fill:${col}"/>
         ${mode === "pct" ? `<text x="${x + bw/2}" y="${yTop - 3}" text-anchor="middle" style="font-size:9px">${Math.round(e.rate * 100)}</text>` : ""}</g>`;
     });
   });
   wrap.insertAdjacentHTML("beforeend", `<div class="scroll"><svg viewBox="0 0 ${W} ${H}" style="width:${Math.max(720, W)}px" role="img" aria-label="투고 대비 채택 막대">${g}</svg></div>`);
+}
+
+function trendCard(host, rows, years, confs){
+  const mode = state.statChart || "abs";
+  const TABS = [["abs", "막대 · 실제 수", "막대 전체 = 투고, 진한 칸 = 채택, 연한 칸 = 불채택(같은 학회 색). 규모 차이까지 보인다."],
+                ["pct", "막대 · 100%", "막대 높이를 같게 맞춰 채택 비율만 비교한다. 숫자 = 채택률(%)."],
+                ["acc", "선 · 채택 수", "연도별 채택 논문 수. 점선 = 집계 기준이 바뀐 해."],
+                ["rate", "선 · 채택률", "채택 ÷ 투고. 투고 수가 공개된 해만 그린다."]];
+  const cur = TABS.find(t => t[0] === mode) || TABS[0];
+  const wrap = document.createElement("div"); wrap.className = "ch";
+  wrap.innerHTML = `<h3>투고·채택 추이</h3><div class="win">${TABS.map(([k, t]) =>
+      `<button data-chart="${k}" aria-pressed="${k === cur[0]}">${t}</button>`).join("")}</div><p>${cur[2]}</p>
+    <div class="lg">${confs.map(c => `<span><i style="border-color:var(${CONF_COLOR[c]})"></i>${esc(c)}</span>`).join("")}</div>`;
+  host.appendChild(wrap);
+  wrap.querySelectorAll("[data-chart]").forEach(b => b.onclick = () => { state.statChart = b.dataset.chart; renderStats(); });
+  if (cur[0] === "abs" || cur[0] === "pct") barChart(wrap, rows, years, confs, cur[0]);
+  else if (cur[0] === "acc") lineChart(wrap, rows, years, "accepted", v => Math.round(v).toLocaleString(), "연도별 채택 논문 수");
+  else lineChart(wrap, rows, years, "rate", v => (v * 100).toFixed(0) + "%", "연도별 채택률");
 }
 
 function renderStats(){
@@ -1749,9 +1781,7 @@ function renderStats(){
     if (i >= 0) { if (state.statSel.length > 1) state.statSel.splice(i, 1); }
     else if (state.statSel.length < CAP) state.statSel.push(c);
     renderStats(); });
-  lineChart(host, rows, years, "accepted", v => Math.round(v).toLocaleString(), "연도별 채택 논문 수", "본 학회 기준. 수치는 회차마다 출처 링크가 있다(아래 표). 점선 = 집계 기준이 바뀐 해.");
-  lineChart(host, rows, years, "rate", v => (v * 100).toFixed(0) + "%", "연도별 채택률", "채택 ÷ 투고. 투고 수가 공개된 해만 그린다.");
-  barChart(host, rows, years, confs);
+  trendCard(host, rows, years, confs);
   // 개최 타임라인: 수치가 없는 학회도 개최지·연도는 있다. 점 = 개최한 해, 큰 고리 = 다지역 동시 개최, 빈 칸 = 안 열린 해
   {
     const W = 720, rowH = 22, L = 90, R = 16, H = confs.length * rowH + 28, y0 = lo, y1 = yr;
@@ -1769,7 +1799,7 @@ function renderStats(){
           <circle cx="${X(e.year)}" cy="${cy}" r="${virt ? 3 : 4}" style="${virt ? `fill:none;stroke-width:1.5;stroke:var(${CONF_COLOR[c]})` : `fill:var(${CONF_COLOR[c]})`}"/></g>`;
       }
     });
-    host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>개최 타임라인</h3><p>점 = 개최한 해, 속이 빈 점 = 가상 개최, 큰 고리 = 다지역 동시 개최. 점에 올리면 개최지.</p>
+    host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>개최 타임라인</h3><p>학회가 열린 해를 점으로 표시한다. 대부분 매년이라 점이 이어지고, <b>빈칸 = 안 열린 해</b>(격년 학회, 초기 공백)다. 속 빈 점 = 가상 개최, 큰 고리 = 다지역 동시 개최. 점에 올리면 개최지.</p>
       <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회별 개최 연도">${g}</svg></div>`);
   }
   // 개최 국가별 회차 수: 다지역 개최는 지역마다 1회로 센다
@@ -1786,6 +1816,7 @@ function renderStats(){
   host.insertAdjacentHTML("beforeend", `<details class="ch"><summary>표로 보기 (연도 × 학회, 채택/투고)</summary><table><tr><th>연도</th>${confs.map(c => `<th>${esc(c)}</th>`).join("")}</tr>${
     [...years].reverse().map(y => `<tr><td>${y}</td>${confs.map(c => { const e = rows[c][y];
       return `<td>${e ? (e.source ? `<a href="${esc(e.source)}" target="_blank" rel="noopener">${e.accepted != null ? e.accepted.toLocaleString() : "—"}${e.submitted != null ? "/" + e.submitted.toLocaleString() : ""}</a>` : "—") : ""}</td>`; }).join("")}</tr>`).join("")}</table></details>`);
+  addHead("st");
 }
 
 function render(){
@@ -1796,6 +1827,7 @@ function render(){
     (state.view === "src" || state.view === "map" || state.view === "st") ? "none" : "";
   ({list:renderList, kb:renderKanban, tbl:renderTable, map:renderMap,
     cyc:renderCycle, src:renderSources, st:renderStats})[state.view]();
+  addHead(state.view);
 }
 
 function bindGroup(sel, apply){
