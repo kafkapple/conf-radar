@@ -320,7 +320,7 @@ def build(offline: bool = False) -> dict:
                           "year": h["year"], "source": h["source"]}
 
     for s in series:
-        # 손으로 학회를 더하지 않는다. 두 외부 정본이 동의하는 것만 메이저다.
+        # 손으로 학회를 더하지 않는다. 세 조건(CORE A* · 매년 개최 · h5)을 모두 만족하는 것만 메이저다.
         s["h5"] = impact["h5"].get(s["title"])
         s["annual"] = annual(s["editions"])
         s["major"] = (s["rank"].get("core") == "A*" and s["annual"]

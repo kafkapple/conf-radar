@@ -485,7 +485,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button id="fav">★ Favorites</button>
     <button id="ws" aria-pressed="true">Workshops &amp; tracks</button>
     <button id="sub-only" aria-pressed="true">Submit deadlines only</button>
-    <button id="openrev" title="심사 중부터 리뷰가 공개되는 학회만">🔓 Open review</button>
+    <button id="openrev" title="Review 중부터 공개되는 학회만 (OpenReview)">🔓 Open review</button>
     <input type="search" id="q" placeholder="Search conferences">
   </div>
 </div>
@@ -1469,7 +1469,7 @@ const CRITERIA = `
     <div class="srcitem"><div class="t">Review 단계 — Edition 하나에 쓰는 여섯 단계</div>
       <div class="n">타임라인의 Review 막대는 아래 경계들로 잘린다. <b>안쪽 진한 칸 = 저자가 일하는 때</b>,
         빈 칸 = 기다리는 때.<br>
-        <b>Submit</b>(초록·등록 → 본문 → 보충) · <b>Review</b>(제출 → Review 공개) ·
+        <b>Submit</b>(Abstract·Registration → Paper → Supplementary) · <b>Review</b>(Submit → Review 공개) ·
         <b>Reading</b>(공개 → 응답 시작) · <b>Rebuttal</b>(응답 시작 → 응답 Deadline) ·
         <b>Decision</b>(응답 Deadline → Notification) · <b>Camera-ready</b>(Notification → final-version deadline)<br>
         이름은 <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a>
@@ -1482,7 +1482,7 @@ const CRITERIA = `
         h회 이상 인용된 최대 h. <b>Submitted 편수가 아니다</b> — Major 필터의 세 조건 중 하나일 뿐이다.<br>
         카드 아래 막대 옆의 <b>N Submitted → M Accepted (x%)</b> 가 실제 Scale이다. 연도별 추세는 상세에서 본다.</div></div>
     <div class="srcitem"><div class="t">🔓 Review 공개 수준 — 세 단계</div>
-      <div class="n"><b>🔓 전면공개</b> = 심사 중부터 논문·리뷰·저자 응답이 누구에게나 보이고 탈락분도 영구 공개(ICLR).
+      <div class="n"><b>🔓 전면공개</b> = Review 중부터 논문·Review·저자 응답이 누구에게나 보이고 탈락분도 영구 공개(ICLR).
         Submit 전에 그 학회 Review 문화를 직접 읽을 수 있다.<br>
         <b>◐ 부분공개</b> = 결정 후 Accepted분만 공개, Review 중에는 비공개(NeurIPS · ICML).<br>
         <b>🔒 비공개</b> = Review가 공개되지 않는다. OpenReview 를 써도 마찬가지다(CVPR · ACL/ARR).<br>

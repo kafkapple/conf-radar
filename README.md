@@ -64,8 +64,8 @@ h5-index 236 이상. (코드 = `build.py` 의 `MAJOR_H5`)
 **티어(`T1`)와 다른 점**이 정확히 이것이다. 티어에는 개인 축(내 연구와의 거리)이 섞여 있고
 메이저에는 안 섞인다.
 
-`build.py --check` 가 6곳 전원 포함 · ACL/AAAI/EMNLP/IJCAI/ICRA/SIGGRAPH/RSS/COLT 배제 · 총 6건을
-assert 로 잡는다. 업스트림 등급 파싱이나 h5 표가 깨지면 필터가 조용히 틀리는 것을 막는다.
+`build.py --check` 가 5곳(CVPR·NeurIPS·ICLR·ICML·ACL) 전원 포함 · 총 5건을
+assert 로 잡는다. ECCV·ICCV 는 격년, 나머지는 h5 가 임계 아래라 빠진다. 업스트림 등급 파싱이나 h5 표가 깨지면 필터가 조용히 틀리는 것을 막는다.
 
 `https://kafkapple.github.io/conf-radar/#major` 로 열면 메이저 모드로 시작한다.
 
@@ -283,7 +283,7 @@ CVPR 2027 초록 11-10 · 본문 11-16 · ICML 2026 초록 01-23 · 본문 01-28
 | [ai-deadlines](https://huggingface.co/spaces/huggingface/ai-deadlines) | **업스트림.** 차기 마감을 빌드 때 자동으로 받아 온다 |
 | [ccf-deadlines](https://ccfddl.com/) | **업스트림.** 회차 이력 · CORE 등급 · 투고/채택 수 |
 | [Paper Copilot](https://papercopilot.com/statistics/) | 계층별 편수(오랄·스포트라이트·포스터)의 출처. 학회별 링크를 상세에 건다 |
-| [Google Scholar Metrics](https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_artificialintelligence) | h5-index. 메이저 필터의 두 번째 축 |
+| [Google Scholar Metrics](https://scholar.google.com/citations?view_op=top_venues&hl=en&vq=eng_artificialintelligence) | h5-index. 메이저 필터의 세 조건 중 하나 |
 | [CORE Portal](https://portal.core.edu.au/conf-ranks/) | 등급 원본 |
 | [OpenReview](https://openreview.net/) | 학회별 검색 링크를 상세에 건다 |
 

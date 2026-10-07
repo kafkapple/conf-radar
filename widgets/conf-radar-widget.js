@@ -51,7 +51,7 @@ w.backgroundColor = new Color("#0d1014");
 w.setPadding(12, 13, 12, 13);
 
 const head = w.addStack();
-const title = head.addText("학회 마감");
+const title = head.addText("Conference deadlines");
 title.font = Font.semiboldSystemFont(12);
 title.textColor = new Color("#8a94a2");
 head.addSpacer();
@@ -61,7 +61,7 @@ when.textColor = new Color("#6b7684");
 w.addSpacer(7);
 
 if (!rows.length) {
-  const t = w.addText("다가오는 마감 없음");
+  const t = w.addText("No upcoming deadline");
   t.font = Font.systemFont(13);
   t.textColor = new Color("#8a94a2");
 }
