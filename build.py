@@ -163,7 +163,7 @@ def place_of(e: dict) -> str:
     """개최지 문자열, 지오코딩 키로도 쓴다. "(Hybrid)" 같은 형식 주석은 지명이 아니라서 떼어낸다
     — 안 떼면 Nominatim 이 실물 도시가 있는데도 못 찾는다(260928 checks.py 85% 문턱 실패 원인)."""
     place = ", ".join(x for x in [e.get("city", ""), e.get("country", "")] if x) or e.get("venue", "")
-    return re.sub(r"\s*\((?:hybrid|virtual|online)\)\s*$", "", place.strip(), flags=re.I).strip()
+    return re.sub(r"\s*(?:\((?:hybrid|virtual|online)\)|and\s+(?:online|virtual))\s*$", "", place.strip(), flags=re.I).strip()
 
 
 def build_series(title, eds, group, tier, field, rank, rates, programs, extra, today) -> dict:

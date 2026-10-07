@@ -27,6 +27,10 @@ Athens, Greece:
   lon: 23.7348
   matched: 'Αθήνα, Δήμος Αθηναίων, Περιφερειακή Ενότητα Κεντρικού Τομέα Αθηνών, Περιφέρεια
     Αττικής, Αποκεντρωμένη Διοίκηση Αττικής, '
+Atlanta, Georgia, USA:
+  lat: 33.7545
+  lon: -84.3898
+  matched: Atlanta, Fulton County, Georgia, United States
 Atlanta, USA:
   lat: 33.7545
   lon: -84.3898
@@ -84,6 +88,7 @@ Brno, Czech Republic:
   lat: 49.1922
   lon: 16.6113
   matched: Brno, okres Brno-město, Jihomoravský kraj, Česko
+Brno, Czech Republic and Online: null
 Budapest, Hungary:
   lat: 47.4979
   lon: 19.0402
@@ -203,6 +208,7 @@ Incheon, South Korea:
   lat: 37.456
   lon: 126.7052
   matched: 인천광역시, 대한민국
+Incheon, South Korea and Online: null
 Jeju Island, South Korea.:
   lat: 33.3803
   lon: 126.5483
@@ -356,6 +362,7 @@ Prague, Czechia:
   lat: 50.0875
   lon: 14.4213
   matched: Praha, Česko
+Prague, Czechia and Online: null
 Punta Cana, Dominican Republic:
   lat: 18.5566
   lon: -68.3692
@@ -415,6 +422,7 @@ Singapore:
   lat: 1.3571
   lon: 103.8195
   matched: Singapore
+Singapore and Online: null
 Singapore, Singapore:
   lat: 1.2899
   lon: 103.8519
@@ -475,6 +483,10 @@ Vancouver:
   lat: 49.2609
   lon: -123.114
   matched: Vancouver, Metro Vancouver Regional District, British Columbia, Canada
+Vancouver, BC, Canada:
+  lat: 49.2609
+  lon: -123.114
+  matched: Vancouver, Metro Vancouver Regional District, British Columbia, Canada
 Vancouver, British Columbia, Canada:
   lat: 49.2609
   lon: -123.114
@@ -509,6 +521,10 @@ Washington, DC, USA:
   lat: 38.8951
   lon: -77.0364
   matched: Washington, District of Columbia, United States
+Xi'an, China:
+  lat: 34.261
+  lon: 108.9423
+  matched: 西安市, 陕西省, 中国
 Yokohama, Japan:
   lat: 35.4503
   lon: 139.6344
