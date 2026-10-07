@@ -54,8 +54,12 @@ def check(d: dict) -> None:
     eds = [e for x in s for e in x["editions"]]
     located = [e for e in eds if e["lat"] is not None]
     # 좌표가 대량으로 비면 지도가 조용히 빈 화면이 된다. 캐시 미스는 prep.py --geo 로 채운다.
-    assert len(located) / len(eds) > 0.85, \
+    # 몇 곳 빠지는 것은 지도 점이 모자란 정도라 경고만 한다(화면 지도 탭에 목록이 뜬다).
+    # 절반 아래로 빠지면 지오코딩 경로 자체가 깨진 것이라 멈춘다.
+    assert len(located) / len(eds) > 0.5, \
         f"좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} — python prep.py --geo 실행 필요"
+    if len(located) < len(eds):
+        print(f"    ⚠️  좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} (온라인 포함) — 지도 탭에 목록, python prep.py --geo 로 보충")
     assert d["world"]["paths"], "world.json 비어 있음"
     # 개최일을 못 얻은 회차가 많으면 타임라인 막대가 길이 0으로 뭉개진다
     nodate = [e for e in eds if not e["start"]]

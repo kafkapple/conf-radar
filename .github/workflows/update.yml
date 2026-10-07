@@ -1,6 +1,6 @@
 name: rebuild
 on:
-  schedule: [{cron: "0 20 * * *"}]   # 매일 05:00 KST
+  schedule: [{cron: "0 20 * * 0"}]   # 매주 월 05:00 KST (일 20:00 UTC)
   workflow_dispatch:
   push: {branches: [main]}
 permissions: {contents: write}
