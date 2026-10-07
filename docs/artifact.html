@@ -837,12 +837,15 @@ function renderMap(){
   const W = DATA.world.w, H = DATA.world.h;
   const rows = visible();
   // 도시 단위로 묶는다. 같은 도시의 여러 회차·여러 학회가 한 점이 되어야 읽힌다.
-  const cities = new Map();
+  const cities = new Map(), unlocated = new Set();
   for (const c of rows){
     const eds = state.mapMode === "all" ? c.editions
               : c.editions.filter(e => e.year === (c.next ?? c.next_year));
     for (const e of eds){
-      if (e.lat === null) continue;                      // 온라인 회차 = 좌표 없음
+      if (e.lat === null){                               // 온라인 회차 = 좌표 없음(정상). 실제 지명인데 없으면 캐시 미스
+        if (e.place && !/virtual|online|remote/i.test(e.place)) unlocated.add(e.place);
+        continue;
+      }
       // 좌표를 소수 1자리(~11km)로 묶는다. "Singapore" 와 "Singapore, Singapore" 처럼
       // 표기만 다른 같은 도시가 지오코더에서 미세하게 다른 좌표로 오는 경우가 있다.
       const k = `${e.lat.toFixed(1)},${e.lon.toFixed(1)}`;
@@ -888,6 +891,10 @@ function renderMap(){
       <div class="l">${g.items.sort((a,b) => b.year - a.year)
         .map(i => `<span style="color:var(--${i.group})">${esc(i.title)}</span> ${i.year}`).join(" · ")}</div>
     </div>`).join("") || `<p class="meta">표시할 개최지 없음</p>`;
+  // 좌표를 못 구한 개최지는 조용히 빠지지 않게 여기 적는다. 고치는 법 = 에이전트에게 아래 문장 전달
+  if (unlocated.size) document.querySelector("#v-map .citylist").insertAdjacentHTML("afterbegin",
+    `<p class="meta" style="color:var(--urgent)">지도에 못 찍은 ${unlocated.size}곳 — ${[...unlocated].sort().map(esc).join(" · ")}<br>
+     고치려면 에이전트에게: 「conf-radar geo 캐시 갱신 (prep.py --geo), 못 찾은 곳은 geo.yml 에 수동 좌표」</p>`);
 }
 
 function renderCycle(){
