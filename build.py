@@ -19,6 +19,7 @@ from pathlib import Path
 
 import yaml
 
+from history import load as load_history
 from ics import build_ics
 from sources import (DISPLAY, FIELD_AI, PAPERCOPILOT, TRACKED_AI, canon,
                      editions_from_ccf, editions_from_hf, fetch, month_of,
@@ -336,6 +337,7 @@ def build(offline: bool = False) -> dict:
 
     data = {"generated": today.isoformat(), "series": series,
             "world": json.loads((DATA / "world.json").read_text()),
+            "fullhist": load_history(geo),
             "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
             "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
     # 날짜 단위로 찍는다. 초 단위면 데이터가 그대로여도 .ics 가 매 빌드 달라져서, Actions 가

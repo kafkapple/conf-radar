@@ -80,6 +80,11 @@ def build_geo() -> None:
     for s in B.build(offline=False)["series"]:  # 260928: True 였으면 캐시된 tarball 만 스캔해 라이브에만 있는 신규 회차의 장소를 놓친다(checks.py 85% 문턱과 불일치의 근본원인)
         for e in s["editions"]:
             places.update(x["place"] for x in e["sites"])
+    from history import FILE as HIST
+    if HIST.exists():                                  # 전체 이력의 개최지도 지도에 올린다
+        for h in (yaml.safe_load(HIST.read_text()) or {}).values():
+            for e in h["editions"]:
+                places.update(p for p in e["sites"] if p != "Virtual")
     todo = sorted(places - set(cache))
     print(f"캐시 {len(cache)}건 · 신규 {len(todo)}건")
     for i, p in enumerate(todo, 1):

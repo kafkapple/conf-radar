@@ -1,0 +1,1559 @@
+# 메이저 5곳 전체 이력(첫 개최~2026). 조사 261007, 에이전트 5개가 출처 URL·원문 인용과 함께 수집.
+# 규칙: 수치마다 num_source 필수(history.py 가 막는다). null = 연 근거 페이지를 못 찾음, 0 이 아니다.
+# 주석 = 출처 불일치 기록. 합치기 전 재확인 필요 항목은 맨 아래 [REVIEW] 줄 참조.
+
+NeurIPS:
+  first_year: 1987
+  first_year_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems" # Wikipedia, 'First Held: 1987'; papercopilot table also starts at NIPS 1987
+
+  editions:
+    - year: 1987
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 90
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1987 row: Total '-', Accept '90', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1988
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 94
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1988 row: Total '-', Accept '94', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1989
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 101
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1989 row: Total '-', Accept '101', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1990
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 143
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1990 row: Total '-', Accept '143', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1991
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 144
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1991 row: Total '-', Accept '144', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1992
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 127
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1992 row: Total '-', Accept '127', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1993
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 158
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1993 row: Total '-', Accept '158', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1994
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 140
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1994 row: Total '-', Accept '140', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1995
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 152
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1995 row: Total '-', Accept '152', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1996
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 152
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1996 row: Total '-', Accept '152', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1997
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 150
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1997 row: Total '-', Accept '150', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1998
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 151
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1998 row: Total '-', Accept '151', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 1999
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 150
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 1999 row: Total '-', Accept '150', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2000
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      sites: ["Denver, United States"]
+      submitted: null
+      accepted: 152
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2000 row: Total '-', Accept '152', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2001
+      sites: ["Vancouver, Canada"]
+      submitted: 650
+      accepted: 197
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2001 row: Total '650', Accept '197'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2002
+      sites: ["Vancouver, Canada"]
+      submitted: 710
+      accepted: 207
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2002 row: Total '710', Accept '207'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2003
+      sites: ["Vancouver, Canada"]
+      submitted: 717
+      accepted: 198
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2003 row: Total '717', Accept '198'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2004
+      # accepted = papercopilot count derived from papers.nips.cc proceedings (may include non-main items); submissions not listed
+      # submissions not stated
+      sites: ["Vancouver, Canada"]
+      submitted: null
+      accepted: 207
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2004 row: Total '-', Accept '207', source 'papers.nips.cc'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2005
+      sites: ["Vancouver, Canada"]
+      submitted: 822
+      accepted: 207
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2005 row: Total '822', Accept '207'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2006
+      # accepted not stated in any opened page
+      sites: ["Vancouver, Canada"]
+      submitted: 833
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2006 row: Total '833', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2007
+      # accepted not stated in any opened page
+      sites: ["Vancouver, Canada"]
+      submitted: 973
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2007 row: Total '973', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2008
+      # accepted not stated in any opened page
+      sites: ["Vancouver, Canada"]
+      submitted: 1022
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2008 row: Total '1022', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2009
+      # accepted not stated in any opened page
+      sites: ["Vancouver, Canada"]
+      submitted: 1105
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2009 row: Total '1105', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2010
+      # accepted not stated in any opened page
+      sites: ["Vancouver, Canada"]
+      submitted: 1219
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2010 row: Total '1219', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2011
+      # accepted not stated in any opened page
+      sites: ["Granada, Spain"]
+      submitted: 1400
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2011 row: Total '1400', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2012
+      # accepted not stated in any opened page
+      sites: ["Stateline (Lake Tahoe), United States"]
+      submitted: 1397
+      accepted: null
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2012 row: Total '1397', Accept '-'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2013
+      sites: ["Stateline (Lake Tahoe), United States"]
+      submitted: 1420
+      accepted: 360
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2013 row: Total '1420', Accept '360'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2014
+      sites: ["Montreal, Canada"]
+      submitted: 1678
+      accepted: 411
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2014 row: Total '1678', Accept '411'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2015
+      sites: ["Montreal, Canada"]
+      submitted: 1838
+      accepted: 403
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2015 row: Total '1838', Accept '403'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2016
+      sites: ["Barcelona, Spain"]
+      submitted: 2425
+      accepted: 568
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2016 row: Total '2425', Accept '568'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2017
+      sites: ["Long Beach, United States"]
+      submitted: 3240
+      accepted: 691
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2017 row: Total '3240', Accept '691'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2018
+      sites: ["Montreal, Canada"]
+      submitted: 4856
+      accepted: 1009
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2018 row: Total '4856', Accept '1009'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2019
+      # a search snippet (not opened) cited 1,428 accepted vs papercopilot 1,427
+      sites: ["Vancouver, Canada"]
+      submitted: 6743
+      accepted: 1427
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2019 row: Total '6743', Accept '1427'"
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2020
+      # Wikipedia lists Vancouver (virtual); 2022 fact sheet says 'First Virtual Conference 2020'. A search snippet (not opened) cited 1,903 accepted vs papercopilot 1,899
+      sites: ["Virtual"]
+      submitted: 9467
+      accepted: 1899
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2020 row: Total '9467', Accept '1899'"
+      loc_source: "https://media.neurips.cc/Conferences/NeurIPS2022/NeurIPS_2022_Fact_Sheet.pdf"
+    - year: 2021
+      # agrees with papercopilot 9,122/2,334; fact sheet counts 8 tracks
+      sites: ["Virtual"]
+      submitted: 9122
+      accepted: 2334
+      num_source: "https://media.neurips.cc/Conferences/NeurIPS2022/NeurIPS_2022_Fact_Sheet.pdf"
+      num_evidence: "2021 Program stats for comparison: 2,334 papers accepted; 9,122 paper submissions; 25.6 % paper acceptance"
+      loc_source: "https://media.neurips.cc/Conferences/NeurIPS2022/NeurIPS_2022_Fact_Sheet.pdf"
+    - year: 2022
+      # DISAGREEMENT: official 2022 fact sheet says '2,905 accepted papers' and '9,634 full paper submissions' (likely main+D&B mixed, D&B = 447 submitted/163 accepted); papercopilot 10,411/2,671 used; a search snippet cited 2,672
+      # fact sheet url: https://media.neurips.cc/Conferences/NeurIPS2022/NeurIPS_2022_Fact_Sheet.pdf
+      sites: ["New Orleans, United States"]
+      submitted: 10411
+      accepted: 2671
+      num_source: "https://papercopilot.com/statistics/nips-statistics/"
+      num_evidence: "NIPS 2022 row: Total '10411', Accept '2671'"
+      loc_source: "https://media.neurips.cc/Conferences/NeurIPS2022/NeurIPS_2022_Fact_Sheet.pdf"
+    - year: 2023
+      # DISAGREEMENT: papercopilot 12,345 submitted / 3,218 accepted; official fact sheet 12,343 used
+      sites: ["New Orleans, United States"]
+      submitted: 12343
+      accepted: 3218
+      num_source: "https://media.neurips.cc/Conferences/NeurIPS2023/NeurIPS2023-Fact_Sheet.pdf"
+      num_evidence: "13,330 total submissions / 12,343 main conference track; 3,218 main conference track"
+      loc_source: "https://media.neurips.cc/Conferences/NeurIPS2023/NeurIPS2023-Fact_Sheet.pdf"
+    - year: 2024
+      # DISAGREEMENT: papercopilot accepted 4,035; official fact sheet 4,037 used
+      sites: ["Vancouver, Canada"]
+      submitted: 15671
+      accepted: 4037
+      num_source: "https://media.neurips.cc/Conferences/NeurIPS2024/NeurIPS2024-Fact_Sheet.pdf"
+      num_evidence: "15,671 main conference track; 4,037 main conference track"
+      loc_source: "https://media.neurips.cc/Conferences/NeurIPS2024/NeurIPS2024-Fact_Sheet.pdf"
+    - year: 2025
+      # DISAGREEMENT: papercopilot (openreview public data) lists 5,526 / 5,275; official blog used. Location: Wikipedia (San Diego + Mexico City)
+      sites: ["San Diego, United States", "Mexico City, Mexico"]
+      submitted: 21575
+      accepted: 5290
+      num_source: "https://blog.neurips.cc/2025/09/30/reflections-on-the-2025-review-process-from-the-program-committee-chairs/"
+      num_evidence: "The main track this year received 21,575 valid paper submissions, of which 5,290 were accepted."
+      loc_source: "https://en.wikipedia.org/wiki/Conference_on_Neural_Information_Processing_Systems"
+    - year: 2026
+      # main-track submission/acceptance counts not found in any opened page (decisions due 2026-09-24 per CallForPapers)
+      sites: ["Sydney, Australia", "Atlanta, United States", "Paris, France"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://blog.neurips.cc/2026/04/22/neurips-newsletter-april-2026/"
+
+ICML:
+  # ICML edition history. Generated from pages opened 2026-10-07.
+  # Main-track counts: csconfstats conf.json (secondary compilation) unless noted; cross-checked against papercopilot.
+  first_year: 1980
+  first_year_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+  # first_year_evidence: "ICML began as the International Workshop on Machine Learning, first held at Carnegie Mellon University in Pittsburgh in July 1980" (Wikipedia, as returned by page fetch)
+  # Held years per Wikipedia list (43 editions; csconfstats ordinals agree: 1988 = 5th, 2026 = 43rd). Not held: 1981, 1982, 1984, 1986.
+  editions:
+    - year: 2026
+      # DISAGREEMENT: ICML 2026 Fact Sheet (primary) says 24,661 submitted / 6,552 accepted; csconfstats conf.json and ai2.work blog say 23,918 (entered reviewing after desk rejections/withdrawals) / 6,352 (26.6%); papercopilot shows only 418 community-collected rows (incomplete, ignore). Fact sheet used; 6,552 vs 6,352 unresolved.
+      # Also via ai2.work/blog/icml-2026-hits-record-23-918-submissions-as-agents-take-over: 'ICML 2026 received a record 23,918 reviewed submissions ... accepting 6,352 papers at a 26.6% rate.'
+      sites: ["Seoul, South Korea"]
+      submitted: 24661
+      accepted: 6552
+      num_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+      num_evidence: "Main conference track: 24,661 submissions; Accepted papers 6,552"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2025
+      # accepted from ICML 2025 Fact Sheet (primary); submitted 12107 from csconfstats conf.json (num_sub 12107) and papercopilot ('12107 3260 (26.93%)'); fact sheet gives no submitted count.
+      # fact sheet marks this edition hybrid; physical site listed.
+      sites: ["Vancouver, Canada"]
+      submitted: 12107
+      accepted: 3260
+      num_source: "https://media.icml.cc/Conferences/ICML2025/ICML2025_Fact_Sheet.pdf"
+      num_evidence: "Papers Main Track: 3260 Acceptance Rate: 27%"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2024
+      # DISCREPANCY: official total 2609 (fact sheet 'main conference track: Over 2600, acceptance rate: 27.5%'; 2609/9473=27.5%; GitHub Conference-Acceptance-Rate: 144 orals, 191 spotlights, 2275 posters = 2610). papercopilot lists 2944 total = poster 2609 + spotlight 191 + oral 144 (poster count there is really the whole total, double-counts orals/spotlights); papercopilot submitted 9653 vs csconfstats/official 9473 ('excluding desk-rejected').
+      # fact sheet url: https://media.icml.cc/Conferences/ICML2024/ICML2024_Fact_Sheet.pdf
+      # fact sheet marks this edition hybrid; physical site listed.
+      sites: ["Vienna, Austria"]
+      submitted: 9473
+      accepted: 2609
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2024 ... \"num_acc\": 2609, \"num_sub\": 9473"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2023
+      # papercopilot differs slightly: submitted 6538, accepted 1828 (csconfstats used).
+      # fact sheet marks this edition hybrid; physical site listed.
+      sites: ["Honolulu, United States"]
+      submitted: 6538
+      accepted: 1827
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2023 ... \"num_acc\": 1827, \"num_sub\": 6538"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2022
+      # papercopilot differs slightly: submitted 5630, accepted 1233 (csconfstats used).
+      # fact sheet marks this edition hybrid; physical site listed.
+      sites: ["Baltimore, United States"]
+      submitted: 5630
+      accepted: 1235
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2022 ... \"num_acc\": 1235, \"num_sub\": 5630"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2021
+      # papercopilot differs slightly: submitted 5513, accepted 1183 (csconfstats used).
+      # Wikipedia lists Vienna (originally planned); ICML fact sheets say Virtual.
+      sites: ["Virtual"]
+      submitted: 5513
+      accepted: 1184
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2021 ... \"num_acc\": 1184, \"num_sub\": 5513"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2020
+      # papercopilot differs slightly: submitted 4990, accepted 1084 (csconfstats used).
+      # Wikipedia lists Vienna (originally planned); ICML fact sheets say Virtual.
+      sites: ["Virtual"]
+      submitted: 4990
+      accepted: 1088
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2020 ... \"num_acc\": 1088, \"num_sub\": 4990"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2019
+      # papercopilot differs slightly: submitted 3424, accepted 773 (csconfstats used).
+      # Wikipedia list says Los Angeles; ICML fact sheets and csconfstats say Long Beach (fact sheet used).
+      sites: ["Long Beach, United States"]
+      submitted: 3424
+      accepted: 774
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2019 ... \"num_acc\": 774, \"num_sub\": 3424"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2018
+      # papercopilot agrees (2473/621).
+      sites: ["Stockholm, Sweden"]
+      submitted: 2473
+      accepted: 621
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2018 ... \"num_acc\": 621, \"num_sub\": 2473"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2017
+      # papercopilot agrees (1676/434).
+      sites: ["Sydney, Australia"]
+      submitted: 1676
+      accepted: 434
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2017 ... \"num_acc\": 434, \"num_sub\": 1676"
+      loc_source: "https://media.icml.cc/Conferences/ICML2026/ICML2026_Fact_Sheet.pdf"
+    - year: 2016
+      # papercopilot: accepted 322, submitted 'Data unavailable'; csconfstats gives 1320 submitted. GitHub Conference-Acceptance-Rate lists '24.0% (322/?)'.
+      sites: ["New York City, United States"]
+      submitted: 1320
+      accepted: 322
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2016 ... \"num_acc\": 322, \"num_sub\": 1320"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2015
+      # papercopilot and Wikipedia agree (1037/270).
+      sites: ["Lille, France"]
+      submitted: 1037
+      accepted: 270
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2015 ... \"num_acc\": 270, \"num_sub\": 1037"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2014
+      # papercopilot: accepted 310, submitted unavailable; csconfstats 1238. GitHub Conference-Acceptance-Rate notes two cycles (15.0% Cycle I, 22.0% Cycle II); main-track total as given by csconfstats.
+      sites: ["Beijing, China"]
+      submitted: 1238
+      accepted: 310
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2014 ... \"num_acc\": 310, \"num_sub\": 1238"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2013
+      # csconfstats has no 2013 row; submitted not found in any opened page (ICML 2013 site search gave no total).
+      sites: ["Atlanta, United States"]
+      submitted: null
+      accepted: 283
+      num_source: "https://papercopilot.com/statistics/icml-statistics/"
+      num_evidence: "ICML 2013 Pages Loading... - 283 283 - - - - - proceedings.mlr.press"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2012
+      sites: ["Edinburgh, United Kingdom"]
+      submitted: 890
+      accepted: 242
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2012 ... \"num_acc\": 242, \"num_sub\": 890"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2011
+      sites: ["Bellevue, United States"]
+      submitted: 589
+      accepted: 152
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2011 ... \"num_acc\": 152, \"num_sub\": 589"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2010
+      sites: ["Haifa, Israel"]
+      submitted: 594
+      accepted: 152
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2010 ... \"num_acc\": 152, \"num_sub\": 594"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2009
+      sites: ["Montreal, Canada"]
+      submitted: 595
+      accepted: 160
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2009 ... \"num_acc\": 160, \"num_sub\": 595"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2008
+      sites: ["Helsinki, Finland"]
+      submitted: 583
+      accepted: 158
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2008 ... \"num_acc\": 158, \"num_sub\": 583"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2007
+      sites: ["Corvallis, United States"]
+      submitted: 522
+      accepted: 150
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2007 ... \"num_acc\": 150, \"num_sub\": 522"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2006
+      sites: ["Pittsburgh, United States"]
+      submitted: 548
+      accepted: 140
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2006 ... \"num_acc\": 140, \"num_sub\": 548"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2005
+      sites: ["Bonn, Germany"]
+      submitted: 491
+      accepted: 134
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2005 ... \"num_acc\": 134, \"num_sub\": 491"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2004
+      sites: ["Banff, Canada"]
+      submitted: 368
+      accepted: 118
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2004 ... \"num_acc\": 118, \"num_sub\": 368"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2003
+      sites: ["Washington, D.C., United States"]
+      submitted: 371
+      accepted: 119
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2003 ... \"num_acc\": 119, \"num_sub\": 371"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2002
+      sites: ["Sydney, Australia"]
+      submitted: 261
+      accepted: 86
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2002 ... \"num_acc\": 86, \"num_sub\": 261"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2001
+      sites: ["Williamstown, United States"]
+      submitted: 249
+      accepted: 80
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 2001 ... \"num_acc\": 80, \"num_sub\": 249"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 2000
+      sites: ["Stanford, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1999
+      sites: ["Bled, Slovenia"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1998
+      sites: ["Madison, United States"]
+      submitted: 215
+      accepted: 66
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 1998 ... \"num_acc\": 66, \"num_sub\": 215"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1997
+      sites: ["Nashville, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1996
+      sites: ["Bari, Italy"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1995
+      sites: ["Tahoe City, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1994
+      sites: ["New Brunswick, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1993
+      sites: ["Amherst, United States"]
+      submitted: 164
+      accepted: 44
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 1993 ... \"num_acc\": 44, \"num_sub\": 164"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1992
+      sites: ["Aberdeen, United Kingdom"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1991
+      sites: ["Evanston, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1990
+      sites: ["Austin, United States"]
+      submitted: 165
+      accepted: 50
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 1990 ... \"num_acc\": 50, \"num_sub\": 165"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1989
+      sites: ["Ithaca, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1988
+      sites: ["Ann Arbor, United States"]
+      submitted: 150
+      accepted: 49
+      num_source: "https://csconfstats.xoveexu.com/data/conf.json"
+      num_evidence: "\"year\": 1988 ... \"num_acc\": 49, \"num_sub\": 150"
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1987
+      sites: ["Irvine, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1985
+      sites: ["Skytop, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1983
+      sites: ["Monticello, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+    - year: 1980
+      sites: ["Pittsburgh, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: "https://en.wikipedia.org/wiki/International_Conference_on_Machine_Learning"
+
+ICLR:
+  first_year: 2013
+  first_year_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+  # first_year evidence: fact sheet "Previous ICLR Locations" list ends "2013: Scottsdale (USA)"; 2016 opening slides table starts at 2013 (67 submissions)
+  editions:
+    - year: 2013
+      sites: ["Scottsdale, USA"]
+      submitted: 67
+      accepted: 23
+      num_source: https://ICLR.cc/archive/www/lib/exe/fetch.php%3Fmedia=iclr2016:opening.pdf
+      num_evidence: "2013  67  23  20  ~105 (columns: Submissions, Conference Track, Workshop Track, Attendees)"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # agrees with papercopilot (67 / 23) and Wikipedia
+    - year: 2014
+      sites: ["Banff, Canada"]
+      submitted: 87
+      accepted: 35
+      num_source: https://ICLR.cc/archive/www/lib/exe/fetch.php%3Fmedia=iclr2016:opening.pdf
+      num_evidence: "2014  87  35  38  176 (columns: Submissions, Conference Track, Workshop Track, Attendees)"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # DISAGREEMENT: papercopilot.com and Wikipedia list 69 submitted / 69 accepted (100%); ICLR 2016 opening slides list 87 / 35 conference track. Primary slide used. 69 likely mixes conference + workshop-type entries (unverified guess).
+    - year: 2015
+      sites: ["San Diego, USA"]
+      submitted: 143
+      accepted: 31
+      num_source: https://ICLR.cc/archive/www/lib/exe/fetch.php%3Fmedia=iclr2016:opening.pdf
+      num_evidence: "2015  143  31  71  369 (columns: Submissions, Conference Track, Workshop Track, Attendees)"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia and papercopilot give no numbers for 2015. Venue also confirmed on iclr.cc archive 2015 page (Hilton San Diego Resort & Spa, May 7-9, 2015).
+    - year: 2016
+      sites: ["San Juan, Puerto Rico"]
+      submitted: null   # slide says ">265*" (lower bound, conference track only); not an exact count
+      accepted: 80
+      num_source: https://ICLR.cc/archive/www/lib/exe/fetch.php%3Fmedia=iclr2016:opening.pdf
+      num_evidence: "2016  >265*  80  108  449 ... * only includes Conference Track submissions"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # accepted = Conference Track (80); Workshop Track 108 excluded. Submitted is only a lower bound so left null. Wikipedia/papercopilot have no 2016 numbers.
+    - year: 2017
+      sites: ["Toulon, France"]
+      submitted: 490
+      accepted: 198
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2017: \"490\" total submissions; \"198 (40.41%)\" accepted; 183 poster, 15 oral"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees (490 / 198). No primary iclr.cc source opened for this year.
+    - year: 2018
+      sites: ["Vancouver, Canada"]
+      submitted: 1013
+      accepted: 337
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2018: \"1013\" total submissions; \"337 (33.27%)\" accepted; 314 poster, 23 oral"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees.
+    - year: 2019
+      sites: ["New Orleans, USA"]
+      submitted: 1579
+      accepted: 502
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2019: \"1579\" total submissions, \"502 (31.79%)\" accepted"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees.
+    - year: 2020
+      sites: ["Virtual"]
+      submitted: 2594
+      accepted: 687
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2020: \"2594\" total submissions, \"687 (26.48%)\" accepted"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # DISAGREEMENT on site: Wikipedia lists Addis Ababa, Ethiopia (planned host; event moved online); fact sheet lists "2020: Virtual (Global)". Fact sheet used. Numbers agree with Wikipedia.
+    - year: 2021
+      sites: ["Virtual"]
+      submitted: 3014
+      accepted: 860
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2021: \"3014\" total submissions, \"860 (28.53%)\" accepted"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # DISAGREEMENT on site: Wikipedia lists Vienna, Austria (planned host); fact sheet "2021: Virtual (Global)". Fact sheet used. Numbers agree with Wikipedia.
+    - year: 2022
+      sites: ["Virtual"]
+      submitted: 3422
+      accepted: 1095
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2022: \"3422\" total submissions, \"1095 (32.00%)\" accepted"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees (Virtual).
+    - year: 2023
+      sites: ["Kigali, Rwanda"]
+      submitted: 4955
+      accepted: 1575
+      num_source: https://papercopilot.com/statistics/iclr-statistics/
+      num_evidence: "ICLR 2023: \"4955\" total submissions, \"1575 (31.79%)\" accepted"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees.
+    - year: 2024
+      sites: ["Vienna, Austria"]
+      submitted: 7304
+      accepted: 2260
+      num_source: https://papercopilot.com/statistics/iclr-statistics/iclr-2024-statistics
+      num_evidence: "7304 min:1.00max:9.00 avg:5.11std:1.26 ; 2260 (30.94%)"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # Wikipedia agrees (7,304 / 2,260). A web-search summary snippet (not opened) said 7,404; not used.
+    - year: 2025
+      sites: ["Singapore, Singapore"]
+      submitted: 11603
+      accepted: 3704
+      num_source: https://media.iclr.cc/Conferences/ICLR2025/ICLR2025_Fact_Sheet.pdf
+      num_evidence: "11,603 submissions, 3704 accepted; 32% acceptance rate (last year: 31%)"
+      loc_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      # DISAGREEMENT: papercopilot lists 11672 / 3703 (31.73%). Official fact sheet and Wikipedia (11,603 / 3,704) used; the 2026 fact sheet repeats 11,603/3704. Workshop submissions are reported separately, so main track.
+    - year: 2026
+      sites: ["Rio de Janeiro, Brazil"]
+      submitted: 19525
+      accepted: 5357
+      num_source: https://media.iclr.cc/Conferences/ICLR2026/ICLR2026_Fact_Sheet.pdf
+      num_evidence: "19,525 submissions, 5357 accepted (11,603 submissions/3704 accepted in 2025); 27% acceptance rate"
+      loc_source: https://iclr.cc/Conferences/2026
+      # DISAGREEMENT: papercopilot venue overview lists 19,814 submitted / 5,340 accepted (breakdown 5,117 poster + 223 oral; 8,418 rejected, 5,134 withdrawn, 907 desk rejected); Wikipedia lists 19,525 / 5,355. Official fact sheet used. Fact sheet reports workshop submissions separately (122), so main track. Loc: iclr.cc says Riocentro, April 23-27, 2026.
+
+CVPR:
+  first_year: 1983
+  first_year_source: https://tc.computer.org/tcpami/conferences/
+  # Years NOT held per TC PAMI conference table (no row) and csconfstats (no row): 1984, 1987, 1990, 1995, 2002. The task premise 'every year since 1985' is not supported; no entries written for these years.
+  # Wikipedia (raw wikitext) infobox says history 1985-present but body says 'first held in 1983 in Washington, DC' (cn-tagged). TC PAMI table: 1983 Arlington, T. Kanade / D. Ballard.
+  # Secondary-source caveat: numbers for years <=2021 come from csconfstats (conf.json) only, except 2013-2021 also cross-checked vs papercopilot and the GitHub README; none of these is a primary conference page.
+  editions:
+    - year: 1983
+      # csconfstats lists sub=210 acc=117 but flags 'note: Estimated' -> not used (null)
+      # LOCATION DISAGREEMENT: Wikipedia says Washington, DC; TC PAMI and csconfstats say Arlington; Arlington used
+      sites: ["Arlington, United States"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1985
+      sites: ["San Francisco, United States"]
+      submitted: 240
+      accepted: 124
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1985, \"location\": \"San Francisco, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 124, \"num_sub\": 240}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1986
+      sites: ["Miami, United States"]
+      submitted: 200
+      accepted: 91
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1986, \"location\": \"Miami, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 91, \"num_sub\": 200}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1988
+      sites: ["Ann Arbor, United States"]
+      submitted: 300
+      accepted: 140
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1988, \"location\": \"Ann Arbor, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 140, \"num_sub\": 300}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1989
+      # LOCATION DISAGREEMENT: TC PAMI table says San Francisco, csconfstats says San Diego; San Diego used (not independently verified)
+      sites: ["San Diego, United States"]
+      submitted: 327
+      accepted: 95
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1989, \"location\": \"San Diego, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 95, \"num_sub\": 327}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1991
+      # TC PAMI says Lahaina, csconfstats says Maui (same island)
+      sites: ["Lahaina, United States"]
+      submitted: 491
+      accepted: 143
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1991, \"location\": \"Maui, Hawaii, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 143, \"num_sub\": 491}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1992
+      sites: ["Champaign, United States"]
+      submitted: 357
+      accepted: 159
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1992, \"location\": \"Champaign, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 159, \"num_sub\": 357}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1993
+      sites: ["New York, United States"]
+      submitted: 431
+      accepted: 186
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1993, \"location\": \"New York City, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 186, \"num_sub\": 431}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1994
+      sites: ["Seattle, United States"]
+      submitted: 472
+      accepted: 164
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1994, \"location\": \"Seattle, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 164, \"num_sub\": 472}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1996
+      sites: ["San Francisco, United States"]
+      submitted: 551
+      accepted: 137
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1996, \"location\": \"San Francisco, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 137, \"num_sub\": 551}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1997
+      sites: ["San Juan, Puerto Rico"]
+      submitted: 544
+      accepted: 173
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1997, \"location\": \"San Juan, Puerto Rico\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 173, \"num_sub\": 544}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1998
+      sites: ["Santa Barbara, United States"]
+      submitted: 453
+      accepted: 139
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1998, \"location\": \"Santa Barbara, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 139, \"num_sub\": 453}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 1999
+      sites: ["Fort Collins, United States"]
+      submitted: 503
+      accepted: 192
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 1999, \"location\": \"Fort Collins, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 192, \"num_sub\": 503}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2000
+      sites: ["Hilton Head, United States"]
+      submitted: 466
+      accepted: 220
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2000, \"location\": \"Hilton Head, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 220, \"num_sub\": 466}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2001
+      sites: ["Kauai, United States"]
+      submitted: 920
+      accepted: 273
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2001, \"location\": \"Kauai, Hawaii, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 273, \"num_sub\": 920}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2003
+      sites: ["Madison, United States"]
+      submitted: 905
+      accepted: 209
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2003, \"location\": \"Madison, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 209, \"num_sub\": 905}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2004
+      sites: ["Washington, United States"]
+      submitted: 873
+      accepted: 260
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2004, \"location\": \"Washington DC, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 260, \"num_sub\": 873}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2005
+      sites: ["San Diego, United States"]
+      submitted: 1160
+      accepted: 324
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2005, \"location\": \"San Diego, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 324, \"num_sub\": 1160}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2006
+      sites: ["New York, United States"]
+      submitted: 1131
+      accepted: 318
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2006, \"location\": \"New York City, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 318, \"num_sub\": 1131}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2007
+      sites: ["Minneapolis, United States"]
+      submitted: 1250
+      accepted: 353
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2007, \"location\": \"Minneapolis, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 353, \"num_sub\": 1250}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2008
+      sites: ["Anchorage, United States"]
+      submitted: 1593
+      accepted: 508
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2008, \"location\": \"Anchorage, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 508, \"num_sub\": 1593}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2009
+      sites: ["Miami, United States"]
+      submitted: 1464
+      accepted: 383
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2009, \"location\": \"Miami, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 383, \"num_sub\": 1464}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2010
+      sites: ["San Francisco, United States"]
+      submitted: 1724
+      accepted: 462
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2010, \"location\": \"San Francisco, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 462, \"num_sub\": 1724}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2011
+      sites: ["Colorado Springs, United States"]
+      submitted: 1688
+      accepted: 438
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2011, \"location\": \"Colorado Springs, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 438, \"num_sub\": 1688}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2012
+      sites: ["Providence, United States"]
+      submitted: 1776
+      accepted: 465
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2012, \"location\": \"Providence, Rhode Island, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 465, \"num_sub\": 1776}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2013
+      # papercopilot says sub=1816 acc=472
+      sites: ["Portland, United States"]
+      submitted: 1798
+      accepted: 472
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2013, \"location\": \"Portland, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 472, \"num_sub\": 1798}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2014
+      # papercopilot says sub=1807 acc=540
+      # GitHub README says sub=1807 acc=540
+      sites: ["Columbus, United States"]
+      submitted: 1778
+      accepted: 540
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2014, \"location\": \"Columbus, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 540, \"num_sub\": 1778}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2015
+      # papercopilot says sub=2123 acc=602
+      # GitHub README says sub=2123 acc=602
+      sites: ["Boston, United States"]
+      submitted: 1815
+      accepted: 602
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2015, \"location\": \"Boston, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 602, \"num_sub\": 1815}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2016
+      # papercopilot says sub=2145 acc=643
+      # GitHub README says sub=2145 acc=643
+      sites: ["Las Vegas, United States"]
+      submitted: 1865
+      accepted: 643
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2016, \"location\": \"Las Vegas, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 643, \"num_sub\": 1865}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2017
+      # papercopilot says sub=2680 acc=783
+      # LOCATION DISAGREEMENT: TC PAMI table says San Juan, csconfstats says Honolulu; Honolulu used (TC row looks like a copy error from 1997)
+      sites: ["Honolulu, United States"]
+      submitted: 2620
+      accepted: 783
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2017, \"location\": \"Honolulu, Hawaii, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 783, \"num_sub\": 2620}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2018
+      # papercopilot says sub=3359 acc=979
+      sites: ["Salt Lake City, United States"]
+      submitted: 3303
+      accepted: 979
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2018, \"location\": \"Salt Lake City, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 979, \"num_sub\": 3303}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2019
+      # GitHub README says sub=5160 acc=1294
+      # papercopilot agrees
+      sites: ["Long Beach, United States"]
+      submitted: 5165
+      accepted: 1300
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2019, \"location\": \"Long Beach, California, USA\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 1300, \"num_sub\": 5165}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2020
+      # papercopilot says sub=6424 acc=1467
+      # csconfstats location 'Online'; TC PAMI 'Virtual'
+      sites: ["Virtual"]
+      submitted: 6656
+      accepted: 1470
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2020, \"location\": \"Online, Online\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 1470, \"num_sub\": 6656}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2021
+      # papercopilot says sub=7500 acc=1661
+      # GitHub README says sub=7015 acc=1661
+      # csconfstats location 'Online'; TC PAMI 'Virtual'
+      sites: ["Virtual"]
+      submitted: 7015
+      accepted: 1663
+      num_source: https://csconfstats.xoveexu.com/data/conf.json
+      num_evidence: "{\"year\": 2021, \"location\": \"Online, Online\", \"main_track\": {\"track_name\": \"Research Track\", \"num_acc\": 1663, \"num_sub\": 7015}}"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2022
+      # papercopilot says sub=8262 acc=2062
+      # GitHub README says sub=8161 acc=2067
+      # papercopilot/GitHub vs official opening slides differ
+      sites: ["New Orleans, United States"]
+      submitted: 8161
+      accepted: 2064
+      num_source: https://cvpr2022.thecvf.com/sites/default/files/CVPR2022-ChairsOpeningMessages.pdf
+      num_evidence: "8,161 Paper submissions / 2,064 Papers accepted; 2,064 papers in CVPR'22 (25.3% acceptance rate)"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2023
+      # papercopilot says sub=9155 acc=2360
+      # GitHub README says sub=9155 acc=2360
+      sites: ["Vancouver, Canada"]
+      submitted: 9155
+      accepted: 2359
+      num_source: https://cvpr.thecvf.com/Conferences/2023/BlogPaperSubmissions
+      num_evidence: "we had a record number of paper submissions, 9,155 to be exact. ... the CVPR 2023 Program Committee accepted just 2,359 papers, an acceptance rate of only 25.8 percent"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2024
+      sites: ["Seattle, United States"]
+      submitted: 11532
+      accepted: 2719
+      num_source: https://cvpr.thecvf.com/Conferences/2024/News/Wrap_Release
+      num_evidence: "the highest number of paper submissions ever-11,532, a 26% increase over 2023 ... From the 2,719 accepted papers, 10 were chosen as Best Papers"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2025
+      # csconfstats says sub=13008 acc=2878
+      # papercopilot says sub=13008 acc=2878
+      sites: ["Nashville, United States"]
+      submitted: 13008
+      accepted: 2872
+      num_source: https://cvpr.thecvf.com/Conferences/2025/News/Wrap
+      num_evidence: "the CVPR Program Committee received 13,008 paper submissions ... but only 2,872 were accepted"
+      loc_source: https://tc.computer.org/tcpami/conferences/
+    - year: 2026
+      # csconfstats says sub=16092 acc=4071
+      # papercopilot says sub=16092 acc=4090
+      # loc: cvpr.thecvf.com/Conferences/2026 says Colorado Convention Center, Denver; TC PAMI agrees
+      sites: ["Denver, United States"]
+      submitted: 16092
+      accepted: 4089
+      num_source: https://cvpr.thecvf.com/Conferences/2026/News/Technical_Program
+      num_evidence: "CVPR 2026 drew a record number of paper submissions-16,092, a 24% increase over 2025. ... resulting in 4,089 paper pr[esentations]"
+      loc_source: https://cvpr.thecvf.com/Conferences/2026 ; https://tc.computer.org/tcpami/conferences/
+
+ACL:
+  first_year: 1963
+  first_year_source: https://en.wikipedia.org/wiki/Association_for_Computational_Linguistics
+  # first_year_evidence: "The annual meeting was first held in 1963 in conjunction with the Association for Computing Machinery National Conference." (Wikipedia; society founded 1962 as AMTCL.)
+  # Consistency check: 17th Annual Meeting = 1979 (anthology P79 booktitle), implying one meeting per year 1963-1979. Proceedings volumes exist only from 1979.
+  # accepted/submitted definitions per year are given in comments; they are NOT uniform: <=2015 = wiki table (long papers unless noted), 2016-2026 = primary front matter (long+short main conference, Findings excluded).
+  editions:
+    - year: 1963
+      sites: ["Denver, USA"]
+      # 1963: AMTCL annual meeting, Aug 25-26, Denver, Colorado (mt-archive page).
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://aclanthology.org/www.mt-archive.info/srch/conferences-1.htm
+    - year: 1964
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1965
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1966
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1967
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1968
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1969
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1970
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1971
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1972
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1973
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1974
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1975
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1976
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1977
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1978
+      sites: []  # location not found in any opened source
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: null
+    - year: 1979
+      sites: ["La Jolla, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P79.xml
+    - year: 1980
+      sites: ["Philadelphia, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P80.xml
+    - year: 1981
+      sites: ["Stanford, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P81.xml
+    - year: 1982
+      sites: ["Toronto, Canada"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P82.xml
+    - year: 1983
+      sites: ["Cambridge, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P83.xml
+    - year: 1984
+      sites: ["Stanford, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      # joint with COLING 1984 (anthology P84, Stanford).
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P84.xml
+    - year: 1985
+      sites: ["Chicago, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P85.xml
+    - year: 1986
+      sites: ["New York, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P86.xml
+    - year: 1987
+      sites: ["Stanford, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P87.xml
+    - year: 1988
+      sites: ["Buffalo, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P88.xml
+    - year: 1989
+      sites: ["Vancouver, Canada"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P89.xml
+    - year: 1990
+      sites: ["Pittsburgh, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P90.xml
+    - year: 1991
+      sites: ["Berkeley, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P91.xml
+    - year: 1992
+      sites: ["Newark, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P92.xml
+    - year: 1993
+      sites: ["Columbus, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P93.xml
+    - year: 1994
+      sites: ["Las Cruces, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P94.xml
+    - year: 1995
+      sites: ["Cambridge, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P95.xml
+    - year: 1996
+      sites: ["Santa Cruz, USA"]
+      submitted: null
+      accepted: null
+      num_source: null
+      num_evidence: null  # no opened source states main-conference counts for this year
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P96.xml
+    - year: 1997
+      sites: ["Madrid, Spain"]
+      submitted: 264
+      accepted: 83  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 1997 | 264 | 83 | ... | Long papers |"
+      # joint with EACL.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P97.xml
+    - year: 1998
+      sites: ["Montreal, Canada"]
+      submitted: 550
+      accepted: 137  # source counts: w/COLING (joint conference)
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 1998 | 550 | 137 | ... | w/COLING |"
+      # joint with COLING (17th International Conference on Computational Linguistics); wiki table counts combined joint conference.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P98.xml
+    - year: 1999
+      sites: ["College Park, USA"]
+      submitted: 320
+      accepted: 80  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 1999 | 320 | 80 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P99.xml
+    - year: 2000
+      sites: ["Hong Kong, China"]
+      submitted: 267
+      accepted: 70  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2000 | 267 | 70 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P00.xml
+    - year: 2001
+      sites: ["Toulouse, France"]
+      submitted: 260
+      accepted: 69  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2001 | 260 | 69 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P01.xml
+    - year: 2002
+      sites: ["Philadelphia, USA"]
+      submitted: 256
+      accepted: 66  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2002 | 256 | 66 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P02.xml
+    - year: 2003
+      sites: ["Sapporo, Japan"]
+      submitted: 360
+      accepted: 71  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2003 | 360 | 71 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P03.xml
+    - year: 2004
+      sites: ["Barcelona, Spain"]
+      submitted: 348
+      accepted: 88  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2004 | 348 | 88 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P04.xml
+    - year: 2005
+      sites: ["Ann Arbor, USA"]
+      submitted: 423
+      accepted: 77  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2005 | 423 | 77 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P05.xml
+    - year: 2006
+      sites: ["Sydney, Australia"]
+      submitted: 630
+      accepted: 147  # source counts: w/COLING (joint conference)
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2006 | 630 | 147 | ... | w/COLING |"
+      # joint with COLING; wiki table counts joint conference.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P06.xml
+    - year: 2007
+      sites: ["Prague, Czech Republic"]
+      submitted: 588
+      accepted: 131  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2007 | 588 | 131 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P07.xml
+    - year: 2008
+      sites: ["Columbus, USA"]
+      submitted: 470
+      accepted: 119  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2008 | 470 | 119 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P08.xml
+    - year: 2009
+      sites: ["Singapore, Singapore"]
+      submitted: 569
+      accepted: 121  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2009 | 569 | 121 | ... | Long papers |"
+      # joint with IJCNLP.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P09.xml
+    - year: 2010
+      sites: ["Uppsala, Sweden"]
+      submitted: 638
+      accepted: 160  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2010 | 638 | 160 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P10.xml
+    - year: 2011
+      sites: ["Portland, USA"]
+      submitted: 634
+      accepted: 164  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2011 | 634 | 164 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P11.xml
+    - year: 2012
+      sites: ["Jeju Island, South Korea"]
+      submitted: 571
+      accepted: 111  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2012 | 571 | 111 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P12.xml
+    - year: 2013
+      sites: ["Sofia, Bulgaria"]
+      submitted: 664
+      accepted: 174  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2013 | 664 | 174 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P13.xml
+    - year: 2014
+      sites: ["Baltimore, USA"]
+      submitted: 572
+      accepted: 146  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2014 | 572 | 146 | ... | Long papers |"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P14.xml
+    - year: 2015
+      sites: ["Beijing, China"]
+      submitted: 692
+      accepted: 173  # source counts: Long papers only; short papers not counted
+      num_source: https://aclweb.org/aclwiki/Conference_acceptance_rates
+      num_evidence: "| 2015 | 692 | 173 | ... | Long papers |"
+      # joint with IJCNLP.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P15.xml
+    - year: 2016
+      sites: ["Berlin, Germany"]
+      submitted: 1288
+      accepted: 328  # long+short main. 825+463=1288 submitted, 231+97=328 accepted (sums computed from stated parts). Wiki table says 825/231 long only.
+      num_source: https://aclanthology.org/P16-1000.pdf
+      num_evidence: "received 825 long paper submissions (a new record) and 463 short paper submissions. Of the long papers, 231 were accepted for presentation at ACL ... 97 short papers were accepted"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P16.xml
+    - year: 2017
+      sites: ["Vancouver, Canada"]
+      submitted: 1318
+      accepted: 302  # long+short main. 751+567=1318, 195+107=302 (sums computed). Wiki table says 751/195 long only.
+      num_source: https://aclanthology.org/P17-1000.pdf
+      num_evidence: "ACL received 751 long paper submissions and 567 short paper submissions. Of the long papers, 195 were accepted ... 107 short papers were accepted"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P17.xml
+    - year: 2018
+      sites: ["Melbourne, Australia"]
+      submitted: 1544
+      accepted: 381  # long+short main. 1018+526=1544, 256+125=381 (sums computed). Preface states overall rate 24.7%; the 2019 preface cites 24.9% for ACL 2018 (disagreement in rate only). Wiki table: 1045/256 long (1045 vs 1018 long submissions differ).
+      num_source: https://aclanthology.org/P18-1000.pdf
+      num_evidence: "we accepted 256 out of 1018 submitted long papers and 125 out of 526 short papers"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P18.xml
+    - year: 2019
+      sites: ["Florence, Italy"]
+      submitted: 2905
+      accepted: 660  # long+short main. Wiki table says 1740/447 (long only).
+      num_source: https://aclanthology.org/P19-1000.pdf
+      num_evidence: "we received 2905 submissions ... 660 papers were finally accepted ... we have 447 long papers and 213 short papers"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/P19.xml
+    - year: 2020
+      sites: ["Virtual"]
+      submitted: 3429
+      accepted: 779  # long+short main. Wiki table says 2248/571 long only (2248 vs 3429 differ in definition).
+      num_source: https://aclanthology.org/2020.acl-main.0.pdf
+      num_evidence: "ACL 2020 received 3,429 submissions ... 779 papers were accepted which includes 571 long papers and 208 short papers"
+      # planned for Seattle, held online (Wikipedia table: Seattle, Washington, online due to COVID-19; anthology address: Online).
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2020.acl.xml
+    - year: 2021
+      sites: ["Virtual"]
+      submitted: 3350
+      accepted: 710  # long+short main. Papercopilot also lists 710.
+      num_source: https://aclanthology.org/2021.acl-long.0.pdf
+      num_evidence: "out of the 3, 350 full submissions, 710 papers (139 short, 571 long) were accepted into the main conference"
+      # joint with IJCNLP; hosted nominally in Bangkok, held online (anthology address: Online).
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2021.acl.xml
+    - year: 2022
+      sites: ["Dublin, Ireland"]
+      submitted: 3378
+      accepted: 701  # long+short main. Papercopilot lists 1031 for 2022 (page opened; definition not stated, unreconciled, not used). Wiki table 3378/701 agrees.
+      num_source: https://aclanthology.org/2022.acl-long.0.pdf
+      num_evidence: "for a total of 3,378 papers ... 701 papers (604 long and 97 short) were accepted into the main conference"
+      # hybrid; Dublin, Ireland.
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2022.acl.xml
+    - year: 2023
+      sites: ["Toronto, Canada"]
+      submitted: 4864
+      accepted: 1074  # long+short main: 910 long + 164 short = 1074. Findings 901 excluded. 4864 = 4559 direct + 305 ARR commitments. Papercopilot lists 2052 (likely includes Findings; unreconciled).
+      num_source: https://aclanthology.org/2023.acl-long.0.pdf
+      num_evidence: "In total, we considered 4864 (3872 long and 992 short) papers ... We accepted 910 (23.50%) long and 164 (16.53%) short papers for the main conference"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2023.acl.xml
+    - year: 2024
+      sites: ["Bangkok, Thailand"]
+      submitted: 4407
+      accepted: 940  # main conference, long+short (papercopilot split: 863 long + 77 short = 940). Findings 975 excluded. DISAGREEMENTS: accepted 943 and 865 (long only) appear in other sources per task brief, NOT verified in any page opened here; GC report (aclweb adminwiki 2024Q3) says 940 from around 4,835 submissions; preface: 4,835 = ARR Feb 2024 cycle submissions, 4407 = acceptance-rate denominator; papercopilot 4407 submissions / 1915 accepted (1915 = 940 main + 975 Findings, not main-only).
+      num_source: https://aclanthology.org/2024.acl-long.0.pdf
+      num_evidence: "In total, the denominator for the acceptance rate calculation is 4244 + 3 + 160= 4407 ... 940 were accepted to the Main Conference"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2024.acl.xml
+    - year: 2025
+      sites: ["Vienna, Austria"]
+      submitted: 8360
+      accepted: 1699  # main conference. 8360 = unique ARR submissions (5501 committed to ACL; rate 20.3% = 1699/8360). Preface intro says 1700 main; body says 1,699 (used). Papercopilot lists 3091 accepted = 1699 main + 1392 Findings (not main-only).
+      num_source: https://aclanthology.org/2025.acl-long.0.pdf
+      num_evidence: "In total, there are 1,699 papers accepted to the Main Conference and 1,392 papers accepted to Findings ... we had 8,360 unique submissions across the December 2024 and February 2025 ARR cycles of which 5,501 papers were committed to ACL"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2025.acl.xml
+    - year: 2026
+      sites: ["San Diego, USA"]
+      submitted: 12148
+      accepted: 2296  # main conference. 12148 = unique ARR submissions; rate 18.9%. Preface intro says 'more than 12,148'. Findings 2,163 excluded.
+      num_source: https://aclanthology.org/2026.acl-long.0.pdf
+      num_evidence: "we had 12,148 unique submissions across the October 2025 (1,630) and January 2026 ARR (10,518) ... 2,296 papers accepted to the Main Conference and 2,163 papers accepted to Findings"
+      loc_source: https://raw.githubusercontent.com/acl-org/acl-anthology/master/data/xml/2026.acl.xml
+
+# [REVIEW] 합치기 시점(261007)에 판정 못 한 항목. 풀리면 이 줄을 지운다.
+#  - NeurIPS 2022: papercopilot 2,671/10,411 · 공식 fact sheet 2,905/9,634(데이터셋 트랙 포함 추정) · 검색 2,672. 지금 값 = papercopilot.
+#  - NeurIPS 2019·2020 채택: papercopilot 단독(1,427·1,899), 검색 스니펫은 1,428·1,903.
+#  - ICML 2026: fact sheet 24,661/6,552 vs csconfstats 23,918/6,352. 지금 값 = fact sheet.
+#  - ICML 2024: 2,609/9,473 = 승인율 27.5% 와 맞는다. venues.yml 의 2,944(=2,609+144+191)는 이중 합산 의심 — 본 파일 값과 어긋난다.
+#  - ACL 2024: 940(long 863 + short 77) vs venues.yml 943. ACL 은 1997-2015 long 만, 2016- long+short 라 2016 에서 기준이 바뀐다.
+#  - CVPR 1983 수치 null(추정치만 있음), 1984·1987·1990·1995·2002 는 개최 기록 없음.
+#  - 개최지: NeurIPS·ACL 일부는 Wikipedia 요약·ACL Anthology XML 경유, 공식 연도별 페이지 아님.
