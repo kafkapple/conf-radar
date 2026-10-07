@@ -105,6 +105,14 @@ Cape Town, South Africa.:
   lat: -33.9288
   lon: 18.4172
   matched: Cape Town, City of Cape Town, Western Cape, 8001, South Africa
+Cascais, Portugal:
+  lat: 38.6969
+  lon: -9.4204
+  matched: Cascais, Lisboa, Portugal
+Chicago, USA:
+  lat: 41.8756
+  lon: -87.6244
+  matched: Chicago, South Chicago Township, Cook County, Illinois, United States
 Cold Spring Harbor, USA:
   lat: 40.8601
   lon: -73.4529
@@ -192,6 +200,11 @@ Heidelberg, Germany:
   lat: 49.4094
   lon: 8.6947
   matched: Heidelberg, Baden-Württemberg, Deutschland
+Hengqin, China:
+  lat: 22.1407
+  lon: 113.5449
+  matched: 橫琴 Hengqin, 蓮花大橋 Ponte Flor de Lótus, 横琴镇, 横琴粤澳深度合作区, 香洲区, 珠海市, 广东省, 519000,
+    中国
 Hong Kong, China:
   lat: 22.3492
   lon: 114.1858
@@ -231,6 +244,10 @@ Kyoto, Japan:
   matched: 京都市, 京都府, 日本
 Kyoto, Japan (Hybrid): null
 Kyoto, Japan and Hengqin, China: null
+Lisbon, Portugal:
+  lat: 38.7078
+  lon: -9.1366
+  matched: Lisboa, Portugal
 London, UK:
   lat: 51.5074
   lon: -0.1278
@@ -291,6 +308,10 @@ Miami, Florida, USA:
   lat: 25.7742
   lon: -80.1936
   matched: Miami, Miami-Dade County, Florida, United States
+Mont-Tremblant, Canada:
+  lat: 46.1159
+  lon: -74.5891
+  matched: Mont-Tremblant, Les Laurentides, Laurentides, Québec, Canada
 Montreal:
   lat: 45.5032
   lon: -73.5698
@@ -336,6 +357,10 @@ Online: null
 Paris:
   lat: 48.8535
   lon: 2.3484
+  matched: Paris, Île-de-France, France métropolitaine, France
+Paris, France:
+  lat: 48.8589
+  lon: 2.32
   matched: Paris, Île-de-France, France métropolitaine, France
 Philadelphia (PA), USA:
   lat: 39.9116

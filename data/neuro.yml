@@ -20,9 +20,11 @@
   past:
     - year: 2026
       date: March 2026
+      place: Lisbon, Portugal and Cascais, Portugal   # https://www.cosyne.org/venues/lisbon-ccl (본회의 Lisbon, 워크샵 Cascais)
       deadline: '2025-10-16'   # https://x.com/CosyneMeeting/status/1975564152006713689
     - year: 2025
       date: March 2025
+      place: Montreal, Canada and Mont-Tremblant, Canada   # https://cosyne.org/venues/montreal-fairmont-tremblant (본회의 Montreal, 워크샵 Mont-Tremblant)
       deadline: '2024-10-23'   # https://x.com/CosyneMeeting/status/1839771493594738724
   tier: 1
   field: neuro
@@ -506,8 +508,8 @@
       date: '2026-06-24'
       timezone: ''
       status: confirmed
-  city: ''
-  country: ''
+  city: Chicago
+  country: USA   # https://web.cvent.com/event/18878308-da54-4c71-8abd-9ebae6aebec9/summary (Chicago Marriott Naperville)
   date: August 4-6, 2026
   start: '2026-08-04'
   end: '2026-08-06'

@@ -113,6 +113,9 @@ CVPR:
       verified: '2026-09-10'
 
 NeurIPS:
+  sites:                  # 다지역 동시 개최. 업스트림은 주 개최지 1곳만 싣는다 (verified 2026-10-07)
+    2025: ["San Diego, USA", "Mexico City, Mexico"]   # https://blog.neurips.cc/2025/07/16/neurips-announces-second-physical-location-in-mexico-city/ · Copenhagen(EurIPS)은 별도 학회라 제외
+    2026: ["Sydney, Australia", "Atlanta, USA", "Paris, France"]   # https://neurips.cc/Conferences/2026/Dates
   workshops:
     year: 2026
     paper: ['2026-08-29', '2026-08-29']   # Suggested Submission Date for Workshop Contributions

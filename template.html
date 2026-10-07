@@ -847,18 +847,18 @@ function renderMap(){
   for (const c of rows){
     const eds = state.mapMode === "all" ? c.editions
               : c.editions.filter(e => e.year === (c.next ?? c.next_year));
-    for (const e of eds){
-      if (e.lat === null){                               // 온라인 회차 = 좌표 없음(정상). 실제 지명인데 없으면 캐시 미스
-        if (e.place && !/virtual|online|remote/i.test(e.place)) unlocated.add(e.place);
+    for (const e of eds) for (const st of e.sites){      // 다지역 동시 개최 = 회차 하나가 점 여럿
+      if (st.lat === null){                              // 온라인 회차 = 좌표 없음(정상). 실제 지명인데 없으면 캐시 미스
+        if (!/virtual|online|remote/i.test(st.place)) unlocated.add(st.place);
         continue;
       }
       // 좌표를 소수 1자리(~11km)로 묶는다. "Singapore" 와 "Singapore, Singapore" 처럼
       // 표기만 다른 같은 도시가 지오코더에서 미세하게 다른 좌표로 오는 경우가 있다.
-      const k = `${e.lat.toFixed(1)},${e.lon.toFixed(1)}`;
-      const g = cities.get(k) ?? cities.set(k, {lat:e.lat, lon:e.lon, place:e.place,
+      const k = `${st.lat.toFixed(1)},${st.lon.toFixed(1)}`;
+      const g = cities.get(k) ?? cities.set(k, {lat:st.lat, lon:st.lon, place:st.place,
                                                places:new Set(), items:[], groups:new Set()}).get(k);
-      g.places.add(e.place);
-      if (e.place.length < g.place.length) g.place = e.place;   // 가장 짧은 표기를 대표로
+      g.places.add(st.place);
+      if (st.place.length < g.place.length) g.place = st.place;   // 가장 짧은 표기를 대표로
       g.items.push({title:c.title, year:e.year, id:c.id, group:c.group});
       g.groups.add(c.group);
     }
@@ -1667,7 +1667,7 @@ document.addEventListener("click", e => {
   }
   const city = e.target.closest("[data-city]");
   if (city){
-    const hits = DATA.series.filter(c => c.editions.some(x => x.place === city.dataset.city));
+    const hits = DATA.series.filter(c => c.editions.some(x => x.sites.some(st => st.place === city.dataset.city)));
     if (hits.length === 1) openDetail(hits[0].id);
     else { state.q = city.dataset.city.split(",")[0]; document.getElementById("q").value = state.q;
            state.view = "list";

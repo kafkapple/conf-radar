@@ -166,6 +166,17 @@ def place_of(e: dict) -> str:
     return re.sub(r"\s*(?:\((?:hybrid|virtual|online)\)|and\s+(?:online|virtual))\s*$", "", place.strip(), flags=re.I).strip()
 
 
+def sites_of(e: dict, extra: list | None = None) -> list[str]:
+    """회차의 개최지 목록. 다지역 동시 개최는 venues.yml 의 sites 가 우선(업스트림은 주 개최지 1곳만 싣는다).
+    없으면 "Kyoto, Japan and Hengqin, China" 처럼 쉼표 있는 두 지명이 and 로 이어진 경우만 쪼갠다 —
+    "Trinidad and Tobago" 같은 국가명의 and 는 쉼표가 없는 쪽이 생겨서 안 쪼개진다."""
+    if extra:
+        return list(extra)
+    place = place_of(e)
+    parts = [x.strip() for x in re.split(r"\s+and\s+", place) if x.strip()]
+    return parts if len(parts) > 1 and all("," in x for x in parts) else ([place] if place else [])
+
+
 def build_series(title, eds, group, tier, field, rank, rates, programs, extra, today) -> dict:
     eds = [e for e in eds if e["year"] >= today.year - 6]
     def ends(e: dict) -> str:
@@ -254,15 +265,17 @@ def build(offline: bool = False) -> dict:
             else:
                 e.setdefault("date_src", "iso")
 
-    for s in series:                                     # 회차마다 좌표를 붙인다(지도 뷰)
+    venues = yaml.safe_load((DATA / "venues.yml").read_text())
+    for s in series:                                     # 회차마다 개최지별 좌표를 붙인다(지도 뷰)
+        extra = (venues.get(s["title"]) or {}).get("sites") or {}
         for e in s["editions"]:
-            place = place_of(e)
-            hit = geo.get(place)
-            e["place"] = place
-            e["lat"], e["lon"] = (hit["lat"], hit["lon"]) if hit else (None, None)
+            e["sites"] = [{"place": n, "lat": (geo.get(n) or {}).get("lat"), "lon": (geo.get(n) or {}).get("lon")}
+                          for n in sites_of(e, extra.get(e["year"]))]
+            e["place"] = " + ".join(x["place"] for x in e["sites"])
+            first = next((x for x in e["sites"] if x["lat"] is not None), None)
+            e["lat"], e["lon"] = (first["lat"], first["lon"]) if first else (None, None)
 
     impact = yaml.safe_load((DATA / "impact.yml").read_text())
-    venues = yaml.safe_load((DATA / "venues.yml").read_text())
     for s in series:
         # 발표 계층과 별도 트랙은 업스트림이 안 나른다. 투고처를 고를 때는 총 채택률보다 결정적이다.
         v = venues.get(s["title"]) or {}

@@ -60,6 +60,7 @@ def check(d: dict) -> None:
         f"좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} — python prep.py --geo 실행 필요"
     if len(located) < len(eds):
         print(f"    ⚠️  좌표 없는 회차 {len(eds)-len(located)}/{len(eds)} (온라인 포함) — 지도 탭에 목록, python prep.py --geo 로 보충")
+    assert any(len(e["sites"]) > 1 for e in eds), "다지역 개최 회차가 하나도 없다 — venues.yml sites / sites_of 확인"
     assert d["world"]["paths"], "world.json 비어 있음"
     # 개최일을 못 얻은 회차가 많으면 타임라인 막대가 길이 0으로 뭉개진다
     nodate = [e for e in eds if not e["start"]]
