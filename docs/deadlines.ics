@@ -1520,9 +1520,9 @@ DTSTAMP:20261007T000000Z
 DTSTART;VALUE=DATE:20260408
 DTEND;VALUE=DATE:20260409
 SUMMARY:🔴 ICONS 마감
-DESCRIPTION:Submissions due (No Extension) · August 4-6\, 2026 \nhttps:/
+DESCRIPTION:Submissions due (No Extension) · August 4-6\, 2026 Chicago\n
  
- /iconsneuromorphic.cc/
+ https://iconsneuromorphic.cc/
 URL:https://iconsneuromorphic.cc/
 TRANSP:TRANSPARENT
 BEGIN:VALARM
@@ -1537,7 +1537,7 @@ DTSTAMP:20261007T000000Z
 DTSTART;VALUE=DATE:20260804
 DTEND;VALUE=DATE:20260807
 SUMMARY:📍 ICONS 
-LOCATION:
+LOCATION:Chicago
 URL:https://iconsneuromorphic.cc/
 TRANSP:TRANSPARENT
 END:VEVENT
