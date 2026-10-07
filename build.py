@@ -14,14 +14,14 @@ import argparse
 import json
 import re
 from collections import Counter
-from datetime import date, datetime, timedelta, timezone
+from datetime import date
 from pathlib import Path
 
 import yaml
 
 from history import load as load_history
 from ics import build_ics
-from sources import (DISPLAY, FIELD_AI, PAPERCOPILOT, TRACKED_AI, canon,
+from sources import (DISPLAY, FIELD_AI, PAPERCOPILOT, SUBMIT, TRACKED_AI, canon,
                      editions_from_ccf, editions_from_hf, fetch, month_of,
                      rates_from_ccf, valid)
 
@@ -34,7 +34,6 @@ DATA = ROOT / "data"
 # SUBMIT = 저자가 "내야 하는" 날. PHASE = 낸 뒤에 흐르는 심사 단계의 경계.
 # 화면의 심사 막대는 이 경계들 사이를 구간으로 잘라 그린다 — 어느 구간이 저자가 일하는
 # 때(리버틀·최종본)이고 어느 구간이 기다리는 때인지가 투고 계획의 핵심이다.
-SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late", "registration"}
 PHASE = {"review_release", "rebuttal_start", "rebuttal_end", "author_response",
          "rebuttal_and_revision", "notification", "commitment_deadline",
          "withdrawal", "camera_ready"}
@@ -263,9 +262,6 @@ def build(offline: bool = False) -> dict:
         for e in s["editions"]:
             if not e["start"]:
                 e["start"], e["end"] = parse_range(e["date_text"], e["year"])
-                e["date_src"] = "text" if e["start"] else "none"
-            else:
-                e.setdefault("date_src", "iso")
 
     venues = yaml.safe_load((DATA / "venues.yml").read_text())
     for s in series:                                     # 회차마다 개최지별 좌표를 붙인다(지도 뷰)
@@ -335,14 +331,12 @@ def build(offline: bool = False) -> dict:
         s.update(city=nx.get("city", ""), country=nx.get("country", ""), venue=nx.get("venue", ""),
                  date_text=nx.get("date_text", ""), start=nx.get("start", ""), end=nx.get("end", ""),
                  deadlines=nx.get("deadlines", []), next_year=nx.get("year"),
-                 # 사이클 뷰는 '전형 개최월'을 쓴다 — 차기 회차가 없는 학회도 자리를 갖는다
-                 start_month=s["typical"]["meeting_month"],
-                 # 트랙 이름도 검색어에 넣는다 — "포지션"·"Findings" 로 바로 걸러진다
+                  # 트랙 이름도 검색어에 넣는다 — "포지션"·"Findings" 로 바로 걸러진다
                  search=" ".join([s["title"], s["full_name"], nx.get("city", ""),
                                   nx.get("country", ""), s["field"],
                                   s["rank"].get("core", ""),
-                                  {"open": "공개리뷰 openreview", "partial": "부분공개",
-                                   "closed": "비공개"}.get((s["review"] or {}).get("level"), "")]
+                                  {"open": "공개리뷰 open review openreview", "partial": "부분공개 partial",
+                                   "closed": "비공개 closed"}.get((s["review"] or {}).get("level"), "")]
                                  + [t["name"] for t in s["tracks"]]).lower())
 
     data = {"generated": today.isoformat(), "series": series,

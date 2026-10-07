@@ -327,7 +327,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 .span{position:absolute;left:0;right:0;top:12px;height:2px;background:var(--line)}
 .mk{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:15px;height:15px;
   border-radius:4px;font-size:9px;line-height:15px;color:#fff;font-weight:700}
-.mk.dl{border-radius:50%}
+.mk.dlk{border-radius:50%}
 .g-ai .mk{background:var(--ai)} .g-neuro .mk{background:var(--neuro)}
 .mk.est{opacity:.45}
 .legend{color:var(--dim);font-size:11.5px;margin:8px 2px 0;display:flex;gap:14px;flex-wrap:wrap}
@@ -363,9 +363,6 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 .lnk{background:none;border:0;padding:0;font:inherit;color:var(--ai);cursor:pointer;text-decoration:underline}
 .foot{color:var(--dim);font-size:11.5px;margin-top:26px;line-height:1.7}
 .foot a{color:var(--dim)}
-.toprow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.toprow>.bar{display:contents}
-.toprow>.bar.views::after{content:"";width:1px;height:18px;background:var(--line);margin:0 3px}
 .bar.views i{display:none}
 .bar.views b{font-weight:inherit}
 .bar.views s{display:none;text-decoration:none}
@@ -429,7 +426,6 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
 .vhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:6px 0 10px;padding:7px 12px;
   border-left:5px solid var(--vc);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--vc) 11%,var(--card))}
 .vhead b{font-size:15px;color:var(--fg)}.vhead span{color:var(--dim);font-size:12px}
-.bar.views button[aria-pressed="true"]{border-color:var(--vc);background:color-mix(in srgb,var(--vc) 20%,transparent);color:var(--fg);font-weight:600}
 .stat .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
 .stat .sc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .stat .sc b{display:block;font-size:20px}.stat .sc span{color:var(--dim);font-size:12px}
@@ -474,7 +470,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-g="ai">AI</button>
     <span class="sep"></span>
     <span class="lbl">Tier</span>
-    <button data-t="major" aria-pressed="true" title="CORE A* · 매년 개최 · h5 236+ 를 모두 만족하는 5곳">Major</button>
+    <button data-t="major" aria-pressed="true" title="CORE A* · Annual · h5 236+ 를 모두 만족하는 5곳">Major</button>
     <button data-t="2">T1-2</button>
     <button data-t="1">T1 only</button>
     <button data-t="3">All tiers</button>
@@ -498,7 +494,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
   </div>
 </div>
 
-<p class="note" id="majornote" hidden>메이저 = CORE A* · 매년 개최 · h5 236+ 를 모두 만족하는 5곳.
+<p class="note" id="majornote" hidden>Major = CORE A* · Annual · h5 236+ 를 모두 만족하는 5곳.
   <button class="lnk" data-goto="src">기준과 한계 보기 →</button></p>
 
 <section id="v-list"></section>
@@ -515,16 +511,16 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-m="all">All years</button>
   </div>
   <div class="mapwrap"></div>
-  <p class="legend"><span>색 = 개최 빈도</span>
+  <p class="legend"><span>색 = Edition 수</span>
     <span class="sw h1"></span><span>1회</span>
     <span class="sw h2"></span><span>2</span>
     <span class="sw h3"></span><span>3</span>
     <span class="sw h4"></span><span>4-5</span>
     <span class="sw h5"></span><span>6회+</span>
-    <span>원 크기 = 회차 수</span>
+    <span>원 크기 = Edition 수</span>
     <span>테두리 = 뇌과학(실선)·혼합(점선)</span>
-    <span>바깥 링 + 연도 = 올해 개최지</span>
-    <span style="opacity:.7">온라인 회차는 좌표가 없어 지도에 없다</span></p>
+    <span>바깥 링 + 연도 = 올해 Venue</span>
+    <span style="opacity:.7">온라인 Edition은 좌표가 없어 지도에 없다</span></p>
   <div class="citylist"></div>
 </section>
 
@@ -533,7 +529,7 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <span class="lbl">Axis</span>
     <button data-c="actual" aria-pressed="true">Timeline</button>
     <button data-c="typical">Typical cycle</button>
-    <button data-c="plan" title="메이저 5곳의 한 해를 접은 준비 달력">Annual plan</button>
+    <button data-c="plan" title="Major 5곳의 한 해를 접은 준비 달력">Annual plan</button>
     <span id="tlctl" style="display:contents">
     <span class="sep"></span>
     <span class="lbl">Zoom</span>
@@ -543,13 +539,13 @@ tbody tr:nth-child(even) td.nm{background:color-mix(in srgb,var(--fg) 3%,var(--c
     <button data-mo="24" title="한 화면에 약 2년">2 yr</button>
     <span class="sep"></span>
     <span class="lbl">Show</span>
-    <button data-tm="both" aria-pressed="true" title="마감에서 개최까지 한 막대">Deadline → Conference</button>
-    <button data-tm="dl" title="제출 마감만">Deadline only</button>
-    <button data-tm="meet" title="개최 기간만">Conference only</button>
-    <button data-tm="ws" title="부설 워크샵 — 논문 창과 워크샵 날 (공식 권장일 또는 추산)">🧩 Workshops</button>
+    <button data-tm="both" aria-pressed="true" title="Deadline에서 Conference까지 한 막대">Deadline → Conference</button>
+    <button data-tm="dl" title="Submit deadline만">Deadline only</button>
+    <button data-tm="meet" title="Conference 기간만">Conference only</button>
+    <button data-tm="ws" title="부설 Workshop — 논문 창과 Workshop 날 (공식 권장일 또는 추산)">🧩 Workshops</button>
     <span class="sep"></span>
     <span class="lbl">Rows</span>
-    <button data-ts="cal" aria-pressed="true" title="전형 제출 마감이 이른 학회부터 — 1월 ACL·ICML → 5월 NeurIPS → 9월 ICLR → 11월 CVPR">By deadline month</button>
+    <button data-ts="cal" aria-pressed="true" title="전형 Submit deadline이 이른 학회부터 — 1월 ACL·ICML → 5월 NeurIPS → 9월 ICLR → 11월 CVPR">By deadline month</button>
     <button data-ts="next" title="지금부터 가장 먼저 다가오는 일정 순">Upcoming</button>
     <button data-ts="name" title="학회 이름 순">Name</button>
     <span class="sep"></span>
@@ -598,11 +594,11 @@ function kstText(d){
 }
 const FIELD = {ml:"머신러닝", vision:"비전·3D", nlp:"자연어·음성", robotics:"로보틱스",
                medical:"의료영상", neuro:"신경과학", neuroimaging:"뇌영상", cognitive:"인지·시지각", neuroai:"NeuroAI·brain-inspired"};
-const METRIC = {submitted:"투고", attendees:"참가"};
-const KIND = {shared_review:"공용 리뷰", journal_option:"저널 연계", journal_invite:"저널 초청",
+const METRIC = {submitted:"Submitted", attendees:"Attendees"};
+const KIND = {shared_review:"공용 Review", journal_option:"저널 연계", journal_invite:"저널 초청",
               society_journal:"학회 저널", none:"제도 없음"};
 // 실제로 "내야 하는" 마감. notification·rebuttal·camera_ready 는 그 질문의 답이 아니다.
-const SUBMIT = new Set(["abstract","paper","submission","supplementary","abstract_late"]);
+const SUBMIT = new Set(["abstract","paper","submission","supplementary","abstract_late","registration"]);
 
 // 심사 막대 안을 단계로 자른다. 투고 계획의 실제 질문은 "언제 내나"가 아니라
 // "언제 또 손이 가나"다 — 리버틀과 최종본은 저자가 일하는 때이고 나머지는 기다리는 때다.
@@ -658,12 +654,12 @@ const dlsOf = c => state.subOnly ? c.deadlines.filter(d => SUBMIT.has(d.type)) :
 const nextDl = c => dlsOf(c).find(d => days(d.date) >= 0) || null;
 const meetState = c => { if (!c.start) return "";
   const a = until(c.start), b = until(c.end || c.start);
-  return a >= 0 ? `개최 ${dday(a)}` : (b >= 0 ? "진행 중" : "종료"); };
+  return a >= 0 ? `Conference ${dday(a)}` : (b >= 0 ? "진행 중" : "종료"); };
 // 차기 회차가 공지되지 않은 학회의 대체 표시. 과거 회차에서 유도한 전형 시기다.
 const typicalText = c => {
   const t = c.typical;
-  const d = t.deadline_month ? `${t.deadline_month}월 마감` : "마감 표본 없음";
-  return `전형 ${d} · ${t.meeting_month}월 개최 (${t.years[0]}-${t.years[1]}, ${t.n_meeting}회)`;
+  const d = t.deadline_month ? `${t.deadline_month}월 Deadline` : "Deadline 표본 없음";
+  return `전형 ${d} · ${t.meeting_month}월 Conference (${t.years[0]}-${t.years[1]}, ${t.n_meeting}회)`;
 };
 
 // 규모 막대는 지표별 로그 스케일. 650~30,000 을 선형으로 그리면 작은 학회가 전부 0 이 된다.
@@ -684,19 +680,19 @@ function prepLine(c, d){
       const iso = new Date(new Date(d.date + "T00:00:00Z") - PREP_DAYS*864e5).toISOString().slice(0,10);
       return `🛠 준비 착수 ${fmt(iso)} (${dday(left)})`;
     }
-    return `🛠 <b>지금이 준비 기간</b> — 마감까지 ${days(d.date)}일`;
+    return `🛠 <b>지금이 준비 기간</b> — Deadline까지 ${days(d.date)}일`;
   }
   // 차기 마감이 없는 학회(메이저 14곳 중 11곳이 그렇다)는 전형 마감월에서 착수월만 준다.
   // 추정 위의 추정이므로 표본 수를 붙이고 '전형' 이라고 못박는다.
   const m = c.typical.deadline_month;
   if (!m) return "";
-  return `🛠 전형 착수 ${((m + 9) % 12) + 1}월 (전형 ${m}월 마감, 표본 ${c.typical.n_deadline}회)`;
+  return `🛠 전형 착수 ${((m + 9) % 12) + 1}월 (전형 ${m}월 Deadline, 표본 ${c.typical.n_deadline}회)`;
 }
 
 const rankChip = c => c.rank.core ? `<span class="chip r">CORE ${esc(c.rank.core)}</span>` : "";
 // 등급은 4단계뿐이라 A* 안의 격차를 못 보여준다. 메이저 경계가 어디서 그어졌는지 보이도록 수치를 같이 낸다.
 const h5Chip = c => c.h5
-  ? `<span class="chip r" title="Google Scholar h5-index — 최근 5년 인용 지표. 투고 편수가 아니다">인용 h5 ${c.h5}</span>` : "";
+  ? `<span class="chip r" title="Google Scholar h5-index — 최근 5년 인용 지표. Submitted 편수가 아니다">인용 h5 ${c.h5}</span>` : "";
 // 카드에서 규모는 "얼마나 내고 얼마나 붙나" 여야 한다. 투고 편수만으로는 절반이다.
 const latestStat = c => c.history && c.history.length ? c.history[c.history.length - 1] : null;
 // 워크샵은 본 학회와 마감이 완전히 다르다. 어느 학회 부설인지 같이 안 보이면 오해한다.
@@ -707,9 +703,9 @@ const TIERNAME = {Oral:"오랄", Highlight:"하이라이트", Spotlight:"스포�
 // 아이콘은 스캔용이다. 뜻은 옆 글자가 지고, 아이콘 혼자로는 아무것도 주장하지 않는다.
 const TRACKNAME = {position:"📝 포지션", datasets:"📊 벤치마크·데이터셋", findings:"📑 Findings",
                    other:"기타 트랙", none:"없음"};
-const REVIEW = {open:  {icon:"🔓", label:"리뷰 전면공개"},
-                partial:{icon:"◐", label:"리뷰 부분공개"},
-                closed:{icon:"🔒", label:"리뷰 비공개"}};
+const REVIEW = {open:  {icon:"🔓", label:"Review 전면공개"},
+                partial:{icon:"◐", label:"Review 부분공개"},
+                closed:{icon:"🔒", label:"Review 비공개"}};
 const reviewChip = c => c.review && REVIEW[c.review.level]
   ? `<span class="chip rv ${c.review.level}" title="${esc(c.review.note || "")}">${REVIEW[c.review.level].icon} ${REVIEW[c.review.level].label}</span>` : "";
 // 투고처를 고를 때 실제로 갈리는 것 셋만 카드에 낸다. 나머지(블로그·주제·ARR)는 상세에서.
@@ -748,7 +744,7 @@ function cardHTML(c){
         ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}
       </div>
       <div class="meta">${d ? `<b>${fmt(d.date)}</b> ${esc(d.label)}${d.tz ? ` <span style="opacity:.7">${esc(d.tz)}</span>` : ""}`
-                            : (c.next ? "제출 마감 종료" : "차기 회차 미공지")}
+                            : (c.next ? "Submit deadline 종료" : "차기 Edition 미공지")}
         ${c.link ? `<a class="ext" href="${esc(c.link)}" target="_blank" rel="noopener" title="학회 사이트">사이트 ↗</a>` : ""}</div>
       ${prepLine(c, d) ? `<div class="meta">${prepLine(c, d)}</div>` : ""}
       <div class="meta">${c.next ? `📍 ${esc(c.date_text)} · ${esc([c.city,c.country].filter(Boolean).join(", "))}`
@@ -757,9 +753,9 @@ function cardHTML(c){
             style="width:${scalePct(sc)}%"></span></span>
             <span>${(() => { const h = latestStat(c);
               return h && h.accepted
-                ? `<span class="n">${num(h.submitted)}</span> 투고 → <span class="n">${num(h.accepted)}</span> 채택 (${(h.rate*100).toFixed(1)}%) · ${h.year}`
+                ? `<span class="n">${num(h.submitted)}</span> Submitted → <span class="n">${num(h.accepted)}</span> Accepted (${(h.rate*100).toFixed(1)}%) · ${h.year}`
                 : `<span class="n">${num(sc.value)}</span> ${METRIC[sc.metric]} · ${sc.year}`; })()}</span></div>`
-        :`<div class="scale"><span class="track"></span><span style="opacity:.6">규모 미상</span></div>`}
+        :`<div class="scale"><span class="track"></span><span style="opacity:.6">Scale 미상</span></div>`}
     </div></div>`;
 }
 
@@ -796,11 +792,11 @@ function renderList(){
   if (state.sort === "field")      groups = bucket(x => x.c.field, f => FIELD[f] || f);
   else if (state.sort === "tier")  groups = bucket(x => x.c.tier, t => `T${t} — ${["","핵심","인접","참고"][t]}`);
   else if (state.sort === "rank")  groups = bucket(x => x.c.rank.core || "등급 없음",
-                                                   k => k === "등급 없음" ? "CORE 등급 미부여" : `CORE ${k}`);
-  else if (state.sort === "cycle") groups = bucket(x => x.c.typical.meeting_month, m => `${m}월 개최`);
+                                                   k => k === "등급 없음" ? "CORE rank 미부여" : `CORE ${k}`);
+  else if (state.sort === "cycle") groups = bucket(x => x.c.typical.meeting_month, m => `${m}월 Conference`);
   else if (state.sort === "scale") groups = bucket(x => x.c.scale?.metric ?? "none",
-                    k => k === "none" ? "규모 미상"
-                       : `${METRIC[k]} 규모순 (${k === "submitted" ? "논문 투고 편수" : "참가자 수"})`);
+                    k => k === "none" ? "Scale 미상"
+                       : `Scale · ${METRIC[k]}`);
   else if (state.sort === "start") groups = [["By start date", items]];
   else groups = [["🔥 ≤ 2 wk",          items.filter(x => x.d && days(x.d.date) <= 14)],
                  ["1-3 mo", items.filter(x => x.d && days(x.d.date) > 14 && days(x.d.date) <= 92)],
@@ -816,9 +812,9 @@ function renderList(){
 // 빈 화면은 "없다"로 읽힌다. 왜 비었는지와 무엇을 누르면 되는지까지 적는다.
 function emptyWhy(){
   if (state.rank === "major" && state.group === "neuro")
-    return "메이저는 CORE 등급 기반이라 뇌과학 학회가 없다 — 등급을 <b>T1만</b> 으로 바꾸면 뇌과학 대표 학회가 보인다.";
+    return "Major는 CORE rank 기반이라 뇌과학 학회가 없다 — Tier를 <b>T1 only</b> 로 바꾸면 뇌과학 대표 학회가 보인다.";
   if (state.rank === "major" && state.favOnly)
-    return "메이저 5곳 중 별을 켜 둔 학회가 없다.";
+    return "Major 5곳 중 별을 켜 둔 학회가 없다.";
   if (state.q) return `검색어 "${esc(state.q)}" 에 걸리는 학회가 없다.`;
   return "지금 필터에 걸리는 학회가 없다.";
 }
@@ -845,7 +841,7 @@ function renderKanban(){
             <span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌"}</span>
             <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}${h5Chip(c)}${reviewChip(c)}${trackChips(c)}
             ${est?`<span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`:""}</div>
-          <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:(c.next?"제출 마감 종료":"차기 회차 미공지")}</div>
+          <div class="sm">${d?`<b>${fmt(d.date)}</b> ${esc(d.label)}`:(c.next?"Submit deadline 종료":"차기 Edition 미공지")}</div>
           ${prepLine(c, d)?`<div class="sm">${prepLine(c, d)}</div>`:""}
           <div class="sm">${c.next?`📍 ${esc(c.date_text)} · ${esc(c.city)}`:`🔁 ${esc(typicalText(c))}`}</div>
         </div>`;
@@ -879,7 +875,7 @@ function renderTable(){
           <span style="color:var(--dim)">${(st.rate*100).toFixed(1)}% · ${st.year}</span>`;
         return sc ? `${num(sc.value)} <span style="color:var(--dim)">${METRIC[sc.metric]} · ${sc.year}</span>` : "—"; })()}</td>
       <td class="w">${c.review
-        ? `<span class="chip rv ${c.review.level}" title="${esc(c.review.note || "")}">${REVIEW[c.review.level].icon} ${esc(REVIEW[c.review.level].label.replace("리뷰 ",""))}</span>`
+        ? `<span class="chip rv ${c.review.level}" title="${esc(c.review.note || "")}">${REVIEW[c.review.level].icon} ${esc(REVIEW[c.review.level].label.replace("Review ",""))}</span>`
         : "—"}</td>
       <td class="w">${trackChips(c) || (c.tracks && c.tracks.length ? "<span style=\"color:var(--faint)\">없음</span>" : "—")}</td>
       <td>${c.programs.length?esc(KIND[c.programs[0].kind]||"연계"):"—"}</td>
@@ -939,7 +935,7 @@ function renderMap(){
         text-anchor="middle">${esc(label)}</text>` : ""}</g>`;
   }).join("");
   document.querySelector("#v-map .mapwrap").innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회 개최지 세계 지도">
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회 Venue 세계 지도">
       <path class="land" d="${DATA.world.paths.join(" ")}"></path>${pts}</svg>`;
   document.querySelector("#v-map .citylist").innerHTML = list.map(g => `
     <div class="cityrow ${g.items.some(i => i.year === YEAR) ? "cur" : ""}" data-city="${esc(g.place)}">
@@ -947,7 +943,7 @@ function renderMap(){
         ${g.items.some(i => i.year === YEAR) ? `<span class="chip yr">${YEAR}</span>` : ""}</div>
       <div class="l">${g.items.sort((a,b) => b.year - a.year)
         .map(i => `<span style="color:var(--${i.group})">${esc(i.title)}</span> ${i.year}`).join(" · ")}</div>
-    </div>`).join("") || `<p class="meta">표시할 개최지 없음</p>`;
+    </div>`).join("") || `<p class="meta">표시할 Venue 없음</p>`;
   // 좌표를 못 구한 개최지는 조용히 빠지지 않게 여기 적는다. 고치는 법 = 에이전트에게 아래 문장 전달
   if (unlocated.size) document.querySelector("#v-map .citylist").insertAdjacentHTML("afterbegin",
     `<p class="meta" style="color:var(--urgent)">지도에 못 찍은 ${unlocated.size}곳 — ${[...unlocated].sort().map(esc).join(" · ")}<br>
@@ -967,23 +963,23 @@ function renderCycle(){
   const missing = mode === "plan" || (actual && state.tlMode === "ws") ? []
     : visible().filter(c => !drawn.has(c.id));
   document.getElementById("cyc-legend").innerHTML = mode === "plan" ? "" : actual
-    ? `<span><b>📮 Deadline → ⏳ Review → 🎤 Conference</b> · 🧩 부설 워크샵 = 각 학회 아래 ↳ 줄(빗금 = 워크샵 날, 점선 = 추산)</span>
+    ? `<span><b>📮 Deadline → ⏳ Review → 🎤 Conference</b> · 🧩 부설 Workshop = 각 학회 아래 ↳ 줄(빗금 = Workshop 날, 점선 = 추산)</span>
        <span><span class="sw2 rev"></span> 회색 막대 = <b>Review period</b> (submit → notification)</span>
        <span><span class="sw2 act"></span> 안쪽 진한 칸 = <b>Author action</b> (Submit · Rebuttal · Camera-ready)</span>
        <span><span class="sw2 meet"></span> 진한 막대 = <b>Conference</b></span>
-       <span>▼ = 제출 마감일 · 막대에 올리면 단계별 날짜</span>
+       <span>▼ = Submit deadline 날짜 · 막대에 올리면 단계별 날짜</span>
        <span style="opacity:.7">공지 안 된 단계는 안 그린다 — 없는 기간을 길게 그리지 않는다</span>
        <span style="opacity:.5">흐림 = 추정/미공지</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
-       <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 마감월</b> (공지된 날이 아니다)</span>
+       <span style="opacity:.7">점선 빈 막대 = 과거 주기로 투영한 <b>예상 Deadline month</b> (공지된 날이 아니다)</span>
        <span style="color:var(--urgent)">▏빨간 세로선 = Today</span>
-       <span style="opacity:.7">흐린 막대 = 이미 지난 회차</span>
+       <span style="opacity:.7">흐린 막대 = 이미 지난 Edition</span>
        <span style="opacity:.7"><b>과거 1년 + 앞으로 2년</b>을 다 그려 둔다. 트랙패드 두 손가락으로 좌우로 밀면 된다</span>
        ${missing.length ? `<span style="color:var(--urgent)">이 기간에 확정 일정이 없어 빠진 ${missing.length}건 —
-         ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 마감)` : "")).join(" · ")}</span>` : ""}`
-    : `<span>● 제출 마감</span><span>■ 개최</span><span style="opacity:.5">흐림 = 표본 1회</span>
+         ${missing.map(c => esc(c.title) + (c.typical.deadline_month ? ` (전형 ${c.typical.deadline_month}월 Deadline)` : "")).join(" · ")}</span>` : ""}`
+    : `<span>● Submit deadline</span><span>■ Conference</span><span style="opacity:.5">흐림 = 표본 1회</span>
        <span style="color:var(--ai)">파랑 AI</span><span style="color:var(--neuro)">주황 뇌과학</span>
-       <span style="opacity:.7">과거 회차에서 유도한 연 주기 · 연도를 접은 그림</span>`;
+       <span style="opacity:.7">과거 Edition에서 유도한 연 주기 · 연도를 접은 그림</span>`;
 }
 
 function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이 빠진 것을 이름으로 적는다)
@@ -1000,7 +996,7 @@ function cycTypical(){   // 반환 = 그린 시리즈 id 목록 (renderCycle 이
     const cells = MONTHS.map((_,i) => {
       const m = i+1, line = (m > lo && m < hi) ? `<span class="span"></span>` : "";
       if (m === mm) return `<td class="cell">${line}<span class="mk">■</span></td>`;
-      if (m === dm) return `<td class="cell">${line}<span class="mk dl ${c.typical.n_deadline<2?"est":""}">●</span></td>`;
+      if (m === dm) return `<td class="cell">${line}<span class="mk dlk ${c.typical.n_deadline<2?"est":""}">●</span></td>`;
       return `<td class="cell">${line}</td>`;
     }).join("");
     return `<tr class="g-${c.group}" data-id="${c.id}"><td class="nm"><span class="t">${esc(c.title)}</span></td>${cells}</tr>`;
@@ -1075,19 +1071,19 @@ function cycPlan(){
 
   const rows = plans.map(p => {
     const main = seg(p.dl - 56, p.dl, "prep", `✍️ 준비 8주 (${md(p.dl - 56)}~${md(p.dl)})`)
-      + seg(p.dl, p.sub, "prep2", `📮 제출 (${md(p.dl)}~${md(p.sub)})`)
-      + seg(p.sub, p.rr ?? p.reb ?? p.notif, "wait", "⏳ 심사")
+      + seg(p.dl, p.sub, "prep2", `📮 Submit (${md(p.dl)}~${md(p.sub)})`)
+      + seg(p.sub, p.rr ?? p.reb ?? p.notif, "wait", "⏳ Review")
       + (p.rr != null && p.reb != null && gap(p.rr, p.reb) < 60 ? seg(p.rr, p.reb, "reb", `💬 Rebuttal (${md(p.rr)}~${md(p.reb)})`) : "")
       + seg(p.reb ?? p.rr, p.notif, "wait", "⏳ Decision")
-      + seg(p.ms, p.me, "meet", `🎤 개최 (${md(p.ms)}~${md(p.me)})`)
-      + mark(p.dl, "📮", `제출 마감 ${md(p.dl)}`) + mark(p.notif, "📨", p.notif == null ? "" : `통보 ${md(p.notif)}`)
-      + mark(p.ms, "🎤", `개최 ${md(p.ms)}`);
+      + seg(p.ms, p.me, "meet", `🎤 Conference (${md(p.ms)}~${md(p.me)})`)
+      + mark(p.dl, "📮", `Submit deadline ${md(p.dl)}`) + mark(p.notif, "📨", p.notif == null ? "" : `Notification ${md(p.notif)}`)
+      + mark(p.ms, "🎤", `Conference ${md(p.ms)}`);
     const sub = !p.ws ? "" : seg(p.ws.p0, p.ws.p1, "wsp" + (p.ws.est ? " est" : ""),
-        `🧩 워크샵 논문 ${md(p.ws.p0)}${p.ws.p1 !== p.ws.p0 ? "~" + md(p.ws.p1) : ""}${p.ws.est ? " (추산)" : ""}`)
-      + (p.ws.n != null ? seg(p.ws.p1, p.ws.n, "wait", "⏳ 워크샵 결정 대기") : "")
-      + seg(p.ws.d0, p.ws.d1, "wsd", `🧩 워크샵 ${md(p.ws.d0)}~${md(p.ws.d1)}`)
-      + mark(p.ws.p1, "📝", `워크샵 논문 마감 ${md(p.ws.p1)}${p.ws.est ? " (추산)" : ""}`)
-      + mark(p.ws.d0, "🧩", `워크샵 ${md(p.ws.d0)}~${md(p.ws.d1)}`);
+        `🧩 Workshop 논문 ${md(p.ws.p0)}${p.ws.p1 !== p.ws.p0 ? "~" + md(p.ws.p1) : ""}${p.ws.est ? " (추산)" : ""}`)
+      + (p.ws.n != null ? seg(p.ws.p1, p.ws.n, "wait", "⏳ Workshop 결정 대기") : "")
+      + seg(p.ws.d0, p.ws.d1, "wsd", `🧩 Workshop ${md(p.ws.d0)}~${md(p.ws.d1)}`)
+      + mark(p.ws.p1, "📝", `Workshop 논문 Deadline ${md(p.ws.p1)}${p.ws.est ? " (추산)" : ""}`)
+      + mark(p.ws.d0, "🧩", `Workshop ${md(p.ws.d0)}~${md(p.ws.d1)}`);
     const order = [`📮 ${md(p.dl)}`, p.notif != null ? `📨 ${md(p.notif)}` : "", p.ms != null ? `🎤 ${md(p.ms)}` : ""]
       .filter(Boolean).join(" → ");
     const wsOrder = p.ws ? `📝 ${md(p.ws.p1)} → 🧩 ${md(p.ws.d0)}` : "";
@@ -1108,11 +1104,11 @@ function cycPlan(){
     return `<tr><td><b>${esc(p.c.title)}</b> 📨 ${md(p.notif)}</td>
       <td>${next ? `${esc(next.c.title)} 📮 ${md(next.dl)} <span class="dim">(${Math.round(gap(p.notif, next.dl))}일 뒤)</span>` : "—"}</td>
       <td>${miss.map(q => `${esc(q.c.title)} 📮 ${md(q.dl)} <span class="dim">(${gap(q.dl, p.notif) <= 21
-          ? `통보 ${Math.round(gap(q.dl, p.notif))}일 전 마감` : `통보 ${Math.round(gap(p.notif, q.dl))}일 뒤 마감 — 고칠 시간 없음`})</span>`).join("<br>") || "—"}</td></tr>`;
+          ? `Notification ${Math.round(gap(q.dl, p.notif))}일 전 Deadline` : `Notification ${Math.round(gap(p.notif, q.dl))}일 뒤 Deadline — 고칠 시간 없음`})</span>`).join("<br>") || "—"}</td></tr>`;
   }).join("");
 
   document.querySelector("#v-cyc .plan").innerHTML = `
-    <div class="pseasons">탑티어의 한 해 = ${seasons}</div>
+    <div class="pseasons">Major 의 한 해 = ${seasons}</div>
     <div class="pgrid">
       <div class="prow hd"><div class="pnm">학회</div><div class="ptrack"><div class="pmon">${MONTHS.map(m => `<span>${m}</span>`).join("")}</div></div></div>
       ${rows}
@@ -1126,9 +1122,9 @@ function cycPlan(){
     </div>
     <table class="pchain"><thead><tr><th>이 학회에서 떨어지면</th><th>다음으로 낼 수 있는 곳</th>
       <th>결과를 기다리면 못 내는 곳</th></tr></thead><tbody>${chain}</tbody></table>
-    <div class="plegend">날짜 = 최근 5년 회차의 월·일 원형 평균(n = 표본 회차 수). 공지된 날이 아니라 전형이다.
-      ✍️ 준비 8주는 경험칙. 🧩 워크샵 창은 NeurIPS·ICML·ICLR 은 학회 공식 권장일, CVPR·ACL 은
-      개별 워크샵이 정해 학회 차원 날짜가 없어 전형 창을 추산했다.</div>`;
+    <div class="plegend">날짜 = 최근 5년 Edition의 월·일 원형 평균(n = 표본 Edition 수). 공지된 날이 아니라 전형이다.
+      ✍️ 준비 8주는 경험칙. 🧩 Workshop 창은 NeurIPS·ICML·ICLR 은 학회 공식 권장일, CVPR·ACL 은
+      개별 Workshop이 정해 학회 차원 날짜가 없어 전형 창을 추산했다.</div>`;
   return plans.map(p => p.c.id);
 }
 
@@ -1166,7 +1162,7 @@ function cycActual(){
     const w = wsOf(c, e);
     if (!w) return;
     const pEnd = w.paper[1] > w.paper[0] ? w.paper[1] : addDays(w.paper[0], 3);
-    const ph = [{from: w.paper[0], to: pEnd, act: true, name: "워크샵 논문"},
+    const ph = [{from: w.paper[0], to: pEnd, act: true, name: "Workshop 논문"},
                 ...(w.notify ? [{from: pEnd, to: w.notify, act: false, name: "Decision"}] : [])];
     const a = pct(w.paper[0]), z = pct(ph[ph.length - 1].to), d0 = pct(w.days[0]), d1 = pct(w.days[1]);
     if (z > 0 && a < 100)
@@ -1313,12 +1309,12 @@ function cycActual(){
       const meetW = (ms !== null && me !== null)
         ? Math.max(0.3, Math.min(100, me) - Math.max(from, ms)) : 0;
       const tip = ghost
-        ? `${c.title} — 과거 ${c.typical.n_deadline}회에서 유도한 전형 마감월. 공지된 날짜가 아니다`
-        : kind === "wsp" || kind === "wsd" ? `${c.title} ${e.year} 부설 워크샵${b.ws.est ? " (추산)" : ""}`
+        ? `${c.title} — 과거 ${state.tlMode === "meet" ? c.typical.n_meeting : c.typical.n_deadline}회에서 유도한 전형 ${state.tlMode === "meet" ? "Conference" : "Deadline"} month. 공지된 날짜가 아니다`
+        : kind === "wsp" || kind === "wsd" ? `${c.title} ${e.year} 부설 Workshop${b.ws.est ? " (추산)" : ""}`
         : kind === "rev"    ? `${c.title} ${e.year} — ${ph.map(p => `${p.name} ${p.from}~${p.to}`).join(" · ")}`
-        : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} 마감 (통보일 미공지)`
-        : kind === "meet"   ? `${c.title} ${e.year} 개최 — ${e.date_text}`
-                            : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " 마감 · " : ""}${e ? e.date_text : ""}`;
+        : kind === "dlonly" ? `${c.title} ${e.year} — ${dl.date} Deadline (Notification date TBA)`
+        : kind === "meet"   ? `${c.title} ${e.year} Conference — ${e.date_text}`
+                            : `${c.title} ${e ? e.year : ""} — ${dl ? dl.date + " Deadline · " : ""}${e ? e.date_text : ""}`;
       const bi = tlInfo.push({c, e, dl, ph, kind, ghost, ws: b.ws}) - 1;
       return `<div class="tlbar ${c.group} ${kind ? "k-" + kind : ""} ${ghost ? "ghost" : ""} ${past ? "past" : ""} ${(dl && dl.status !== "confirmed") || b.ws?.est ? "est" : ""} ${trunc ? "trunc" : ""}"
         data-id="${c.id}" data-b="${bi}" title="${esc(tip)}"
@@ -1360,10 +1356,15 @@ const DLNAME2 = {abstract: "Abstract", abstract_late: "Abstract (ext.)", paper: 
                  camera_ready: "Camera-ready"};
 
 function popHTML(i){
-  const {c, e, dl, ph, kind, ghost} = tlInfo[i] || {};
+  const {c, e, dl, ph, kind, ghost, ws} = tlInfo[i] || {};
   if (!c) return "";
-  if (ghost) return `<b>${esc(c.title)}</b><div class="pn">과거 ${c.typical.n_deadline}회에서 유도한
-    전형 마감월 — 공지된 날짜가 아니다</div>`;
+  const gm = state.tlMode === "meet";
+  if (ghost) return `<b>${esc(c.title)}</b><div class="pn">과거 ${gm ? c.typical.n_meeting : c.typical.n_deadline}회에서 유도한
+    Typical ${gm ? "conference" : "deadline"} month — 공지된 날짜가 아니다</div>`;
+  if ((kind === "wsp" || kind === "wsd") && ws) return `<b>${esc(c.title)} ${e.year} Workshop${ws.est ? " (est.)" : ""}</b><table>
+    <tr><td>Paper</td><td colspan="2">${esc(ws.paper[0])}${ws.paper[1] !== ws.paper[0] ? " ~ " + esc(ws.paper[1]) : ""}</td></tr>
+    ${ws.notify ? `<tr><td>Notification</td><td colspan="2">${esc(ws.notify)}</td></tr>` : ""}
+    <tr class="mt"><td>Workshop day</td><td colspan="2">${esc(ws.days[0])} ~ ${esc(ws.days[1])}</td></tr></table>`;
   const dls = (e.deadlines || []).filter(d => DLNAME2[d.type]);
   const line = d => {
     const k = kstText(d);
@@ -1372,12 +1373,12 @@ function popHTML(i){
       <td class="k">${k ? "→ " + esc(k) : "<span class=\"na\">시각 미표기</span>"}</td></tr>`;
   };
   const meet = e.start
-    ? `<tr class="mt"><td>개최</td><td colspan="2">${esc(e.start)} ~ ${esc(e.end || e.start)}</td></tr>` : "";
+    ? `<tr class="mt"><td>Conference</td><td colspan="2">${esc(e.start)} ~ ${esc(e.end || e.start)}</td></tr>` : "";
   const seg = (ph || []).length
     ? `<div class="pn">${ph.map(p => `${esc(p.name)} ${p.from}~${p.to}`).join(" · ")}</div>` : "";
   return `<b>${esc(c.title)} ${e.year}</b>
     <table>${dls.map(line).join("")}${meet}</table>${seg}
-    <div class="pn">마감 시각은 학회 표기 그대로 두고 KST 로 환산해 함께 적는다.
+    <div class="pn">Deadline 시각은 학회 표기 그대로 두고 KST 로 환산해 함께 적는다.
       AoE = UTC-12 라 KST 와 21시간 차다.</div>`;
 }
 
@@ -1438,69 +1439,69 @@ function coverage(){
     return `<tr><td><b>${esc(FIELD[f] || f)}</b></td><td>${xs.length}</td>
       <td>${xs.map(x => `<span class="ct t${x.tier}">${nm(x)}</span>`).join(" ")}</td></tr>`;
   };
-  return `<table class="cov"><thead><tr><th>분야</th><th>수</th><th>수록 학회 (T1 → T3 순, W=워크샵·T=트랙)</th></tr></thead>
+  return `<table class="cov"><thead><tr><th>분야</th><th>수</th><th>수록 학회 (T1 → T3 순, W=Workshop·T=트랙)</th></tr></thead>
     <tbody>${order.map(row).join("")}</tbody></table>`;
 }
 
 const CRITERIA = `
   <div class="srcgrp"><h3>기준과 한계</h3>
-    <div class="srcitem"><div class="t">메이저 = 세 조건을 모두 만족하는 5곳</div>
-      <div class="n"><b>CORE A* 등급</b> · <b>매년 개최</b> · <b>Google Scholar h5-index 236 이상</b>.
+    <div class="srcitem"><div class="t">Major = 세 조건을 모두 만족하는 5곳</div>
+      <div class="n"><b>CORE A* rank</b> · <b>Annual</b> · <b>Google Scholar h5-index 236 이상</b>.
         CVPR 450 · NeurIPS 371 · ICLR 362 · ICML 272 · ACL 236.<br>
         손으로 뺀 학회는 없다. 조건이 가른다 — ECCV 262 · ICCV 256 은 격년이라(짝수 해 · 홀수 해) 빠졌고,
         AAAI 232 · EMNLP 218 · IJCAI 136 · ICRA 129 · SIGGRAPH 114 · RSS 83 · COLT 는 h5 문턱 아래다.
         <b>급이 낮아서가 아니다</b> — ECCV · ICCV 는 ACL 보다 h5 가 높다.<br>
         한계 — 이 문턱은 ACL 236 과 AAAI 232 사이 4점 차에 얹혀 있어 Scholar 판이 바뀌면 뒤집힐 수 있다.
         SIGGRAPH 는 본회의 논문이 ACM TOG 로 집계돼 수치가 학회를 과소평가한다.
-        뇌과학 학회에는 CORE 등급이 없어 이 필터에 안 잡힌다.</div></div>
-    <div class="srcitem"><div class="t">티어 T1 · T2 · T3 = 두 축의 조합</div>
-      <div class="n">객관 축 = CORE 등급(외부 정본). 개인 축 = 이 연구(3D 비전 · 행동/뇌 계측 · NeuroAI)와의 거리.<br>
-        <b>T1</b> = 둘 다 충족 · <b>T2</b> = 한 축만 · <b>T3</b> = 마감 캘린더용.
-        분야마다 T1 이 최소 하나 있도록 빌드가 강제한다. 신경과학 학회는 CORE 등급이 없어 분야 대표성으로 대신한다.</div></div>
-    <div class="srcitem"><div class="t">준비 착수 줄 = 마감 8주 전</div>
+        뇌과학 학회에는 CORE rank이 없어 이 필터에 안 잡힌다.</div></div>
+    <div class="srcitem"><div class="t">Tier T1 · T2 · T3 = 두 축의 조합</div>
+      <div class="n">객관 축 = CORE rank(외부 정본). 개인 축 = 이 연구(3D 비전 · 행동/뇌 계측 · NeuroAI)와의 거리.<br>
+        <b>T1</b> = 둘 다 충족 · <b>T2</b> = 한 축만 · <b>T3</b> = Deadline 캘린더용.
+        분야마다 T1 이 최소 하나 있도록 빌드가 강제한다. 신경과학 학회는 CORE rank이 없어 분야 대표성으로 대신한다.</div></div>
+    <div class="srcitem"><div class="t">준비 착수 줄 = Deadline 8주 전</div>
       <div class="n">고정 경험칙이고 학회가 정한 날이 아니다.
-        차기 마감이 아직 없으면 <b>전형 착수 N월</b>(과거 전형 마감월 − 2개월)로 대신하고 표본 수를 함께 적는다.</div></div>
+        차기 Deadline이 아직 없으면 <b>전형 착수 N월</b>(과거 전형 Deadline월 − 2개월)로 대신하고 표본 수를 함께 적는다.</div></div>
     <div class="srcitem"><div class="t">분야별 수록 범위 — 무엇이 들어 있고 무엇이 빠졌나</div>
       <div class="n">%%COVERAGE%%
         <b>AI 쪽은 자동, 뇌과학 쪽은 수동이다.</b> AI 학회는 업스트림 둘이 실어 오는 목록을 그대로 쓰고,
         뇌과학·NeuroAI 는 <code>data/neuro.yml</code> 에 손으로 적는다. 그래서 누락의 성격이 다르다 —
         AI 는 업스트림이 안 실으면 없고, 뇌과학은 우리가 안 적으면 없다.<br>
         <b>뇌과학 쪽에 넣는 기준</b>: 학술단체의 <b>정기</b> 총회·학술대회일 것 ·
-        공개 URL 로 회차와 일정을 확인할 수 있을 것 · 위 네 분야 중 하나에 속할 것.
-        T1 이 아니어도 넣는다 — 티어는 분야 대표성이지 수록 여부가 아니다.<br>
+        공개 URL 로 Edition과 일정을 확인할 수 있을 것 · 위 네 분야 중 하나에 속할 것.
+        T1 이 아니어도 넣는다 — Tier는 분야 대표성이지 수록 여부가 아니다.<br>
         <b>알려진 얇은 곳</b>: 의료영상은 MICCAI 하나뿐이다(IPMI·ISBI·SPIE MI 미수록).
-        국내 학회는 초록 마감을 공식 페이지에 안 올리고 사무국 공지로만 도는 곳이 많아
-        일정만 있고 마감이 비는 경우가 있다.</div></div>
-    <div class="srcitem"><div class="t">심사 단계 — 회차 하나에 쓰는 일곱 이름</div>
-      <div class="n">타임라인의 심사 막대는 아래 경계들로 잘린다. <b>안쪽 진한 칸 = 저자가 일하는 때</b>,
+        국내 학회는 초록 Deadline을 공식 페이지에 안 올리고 사무국 공지로만 도는 곳이 많아
+        일정만 있고 Deadline이 비는 경우가 있다.</div></div>
+    <div class="srcitem"><div class="t">Review 단계 — Edition 하나에 쓰는 여섯 단계</div>
+      <div class="n">타임라인의 Review 막대는 아래 경계들로 잘린다. <b>안쪽 진한 칸 = 저자가 일하는 때</b>,
         빈 칸 = 기다리는 때.<br>
-        <b>제출</b>(초록·등록 → 본문 → 보충) · <b>심사</b>(제출 → 리뷰 공개) ·
-        <b>리뷰 숙독</b>(공개 → 응답 시작) · <b>리버틀</b>(응답 시작 → 응답 마감) ·
-        <b>결정 대기</b>(응답 마감 → 통보) · <b>최종본</b>(통보 → 카메라레디)<br>
+        <b>Submit</b>(초록·등록 → 본문 → 보충) · <b>Review</b>(제출 → Review 공개) ·
+        <b>Reading</b>(공개 → 응답 시작) · <b>Rebuttal</b>(응답 시작 → 응답 Deadline) ·
+        <b>Decision</b>(응답 Deadline → Notification) · <b>Camera-ready</b>(Notification → final-version deadline)<br>
         이름은 <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a>
         가 쓰는 어휘를 그대로 쓴다 — 우리가 따로 지으면 같은 뜻의 이름이 둘 공존한다.
         업스트림이 모르는 이름을 실어 오면 빌드가 멈춘다(조용히 안 그려지는 대신).<br>
         <b>공지 안 된 단계는 그리지 않는다.</b> 추정으로 길이를 주면 화면이 없는 정보를 만든다 —
-        ACL 2027 은 ARR 2027 주기가 아직 안 나와 마감 표식만 찍힌다.</div></div>
-    <div class="srcitem"><div class="t">인용 h5 · 투고 → 채택 — 다른 수치다</div>
+        ACL 2027 은 ARR 2027 주기가 아직 안 나와 Deadline 표식만 찍힌다.</div></div>
+    <div class="srcitem"><div class="t">인용 h5 · Submitted → Accepted — 다른 수치다</div>
       <div class="n"><b>인용 h5</b> = Google Scholar h5-index. 최근 5년(2020-2024) 게재분 중 h편이 각각
-        h회 이상 인용된 최대 h. <b>투고 편수가 아니다</b> — 메이저 필터의 두 축 중 하나일 뿐이다.<br>
-        카드 아래 막대 옆의 <b>N 투고 → M 채택 (x%)</b> 가 실제 규모다. 연도별 추세는 상세에서 본다.</div></div>
-    <div class="srcitem"><div class="t">🔓 리뷰 공개 수준 — 세 단계</div>
+        h회 이상 인용된 최대 h. <b>Submitted 편수가 아니다</b> — Major 필터의 세 조건 중 하나일 뿐이다.<br>
+        카드 아래 막대 옆의 <b>N Submitted → M Accepted (x%)</b> 가 실제 Scale이다. 연도별 추세는 상세에서 본다.</div></div>
+    <div class="srcitem"><div class="t">🔓 Review 공개 수준 — 세 단계</div>
       <div class="n"><b>🔓 전면공개</b> = 심사 중부터 논문·리뷰·저자 응답이 누구에게나 보이고 탈락분도 영구 공개(ICLR).
-        투고 전에 그 학회 리뷰 문화를 직접 읽을 수 있다.<br>
-        <b>◐ 부분공개</b> = 결정 후 채택분만 공개, 심사 중에는 비공개(NeurIPS · ICML).<br>
-        <b>🔒 비공개</b> = 리뷰가 공개되지 않는다. OpenReview 를 써도 마찬가지다(CVPR · ACL/ARR).<br>
-        필터 바의 <b>🔓 공개 리뷰만</b> 은 전면공개만 남긴다.</div></div>
+        Submit 전에 그 학회 Review 문화를 직접 읽을 수 있다.<br>
+        <b>◐ 부분공개</b> = 결정 후 Accepted분만 공개, Review 중에는 비공개(NeurIPS · ICML).<br>
+        <b>🔒 비공개</b> = Review가 공개되지 않는다. OpenReview 를 써도 마찬가지다(CVPR · ACL/ARR).<br>
+        필터 바의 <b>🔓 Open review</b> 는 전면공개만 남긴다.</div></div>
     <div class="srcitem"><div class="t">📝 포지션 · 📊 벤치마크·데이터셋 트랙</div>
       <div class="n"><b>📝 포지션</b> = 실험 없이 관점·주장만으로 낼 수 있는 별도 트랙(ICML 2024~ · NeurIPS 2025~).
-        본 논문과 마감·심사가 다르다.<br>
+        본 논문과 Deadline·Review가 다르다.<br>
         <b>📊 벤치마크·데이터셋</b> = 데이터셋·평가 전용 트랙(NeurIPS 2021~, 2026년부터 Evaluations & Datasets).<br>
-        <b>📑 Findings</b> = 본 학회에 안 실리지만 심사를 통과한 논문의 별도 게재 등급(ACL 2020~). 발표 슬롯은 없다.<br>
+        <b>📑 Findings</b> = 본 학회에 안 실리지만 Review를 통과한 논문의 별도 게재 등급(ACL 2020~). 발표 슬롯은 없다.<br>
         배지가 없으면 그 학회에 해당 트랙이 없다는 뜻이다 — 조사하지 않았다는 뜻이 아니다.</div></div>
     <div class="srcitem"><div class="t">추정 · 미공지 · 예상 표시</div>
-      <div class="n"><b>추정</b>·<b>미공지</b> 배지가 붙은 마감은 공식 확정값이 아니다.
-        타임라인의 점선 막대는 과거 주기로 투영한 <b>예상</b>이지 예고가 아니다. 전형 주기는 과거 회차 평균이다.</div></div>
+      <div class="n"><b>추정</b>·<b>미공지</b> 배지가 붙은 Deadline은 공식 확정값이 아니다.
+        타임라인의 점선 막대는 과거 주기로 투영한 <b>예상</b>이지 예고가 아니다. 전형 주기는 과거 Edition 평균이다.</div></div>
   </div>`;
 
 function renderSources(){
@@ -1514,7 +1515,7 @@ function renderSources(){
       <div class="u">${esc(sub)}</div></a>` : ""}
     <div class="srcitem" id="ics-fav" style="cursor:pointer">
       <div class="t">★ 즐겨찾기만 내보내기 (.ics)</div>
-      <div class="n">지금 별을 켜 둔 학회의 마감·개최만 파일로 받는다. 현재 ${state.fav.size}건.</div></div>
+      <div class="n">지금 별을 켜 둔 학회의 Deadline·Conference만 파일로 받는다. 현재 ${state.fav.size}건.</div></div>
     <div class="srcitem" id="ics-view" style="cursor:pointer">
       <div class="t">현재 필터 결과 내보내기 (.ics)</div>
       <div class="n">지금 보고 있는 목록 그대로. 현재 ${visible().length}건.</div></div>
@@ -1548,10 +1549,10 @@ function trendSVG(hist){
               fill="var(--dim)">${h.year}</text>`;
   }).join("");
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="height:auto;display:block" role="img"
-      aria-label="연도별 투고 편수와 채택률">
+      aria-label="연도별 Submitted 편수와 Acceptance rate">
       <line x1="0" y1="${BASE}" x2="${W}" y2="${BASE}" stroke="var(--line)" stroke-width="1"></line>
       ${g}</svg>
-    <p class="note">막대 = 투고 편수 · 주황 = 채택률. 출처가 연도마다 다르고, 빠진 해는
+    <p class="note">막대 = Submitted 편수 · 주황 = Acceptance rate. 출처가 연도마다 다르고, 빠진 해는
     데이터가 없는 것이지 0 이 아니다. 연도 간격이 일정하지 않으므로 시간축이 아니라 나열이다.</p>`;
 }
 
@@ -1563,12 +1564,12 @@ function openDetail(id){
       ` <span class="chip est">${d.status==="tba"?"미공지":"추정"}</span>`;
     return `<div class="dl ${n<0?"done":""}"><span class="l">${esc(d.label)}${tag}</span>
       <span class="d">${fmt(d.date)}${d.tz?" "+esc(d.tz):""} ${n>=0?`· ${dday(n)}`:""}</span></div>`;
-  }).join("") || `<p class="note">차기 회차 마감이 공지되지 않았다.</p>`;
+  }).join("") || `<p class="note">차기 Edition Deadline이 공지되지 않았다.</p>`;
   const eds = c.editions.slice().reverse().map(e => {
     const sub = e.deadlines.filter(d => SUBMIT.has(d.type))[0];
     return `<div class="dl"><span class="l">${e.year} · ${esc(e.date_text || "—")}
         <span style="color:var(--faint)">${esc(e.city || e.venue || "")}</span></span>
-      <span class="d">${sub ? fmt(sub.date)+" 마감" : "마감 기록 없음"}</span></div>`;
+      <span class="d">${sub ? fmt(sub.date)+" Deadline" : "Deadline 기록 없음"}</span></div>`;
   }).join("");
   const progs = c.programs.length ? c.programs.map(p => `
       <div style="margin-bottom:9px">
@@ -1583,7 +1584,7 @@ function openDetail(id){
     const parts = KEYS.filter(([k]) => x[k] != null)
       .map(([k,n]) => `${TIERNAME[n]} <b>${num(x[k])}</b>`).join(" · ");
     const head = x.submitted && x.accepted
-      ? `<b>${num(x.submitted)}</b> 투고 → <b>${num(x.accepted)}</b> 채택 (${(x.rate*100).toFixed(1)}%)`
+      ? `<b>${num(x.submitted)}</b> Submitted → <b>${num(x.accepted)}</b> Accepted (${(x.rate*100).toFixed(1)}%)`
       : "총계 미기재";
     return `<div style="margin-bottom:9px">
       <div><b>${x.year}</b> · ${head}</div>
@@ -1613,24 +1614,24 @@ function openDetail(id){
     <h3>${esc(c.title)}${c.next?` ${c.next}`:""}</h3>
     <p class="meta">${esc(c.full_name)}</p>
     ${c.next ? `<p class="meta">📍 ${esc(c.date_text)} · ${esc(c.venue || [c.city,c.country].filter(Boolean).join(", "))}</p>`
-             : `<p class="meta">차기 회차 미공지 · 🔁 ${esc(typicalText(c))}</p>`}
+             : `<p class="meta">차기 Edition 미공지 · 🔁 ${esc(typicalText(c))}</p>`}
     <p class="meta"><span class="chip ${c.group}">${c.group==="ai"?"AI":"뇌과학"}</span>
       <span class="chip t">T${c.tier}</span>${wsChip(c)}${rankChip(c)}
       ${esc(FIELD[c.field]||c.field)}</p>
 
-    <h4>${c.next ? "차기 회차 일정" : "최근 회차 일정 (지난 회차)"}</h4>${dls}
+    <h4>${c.next ? "차기 Edition 일정" : "최근 Edition 일정 (지난 Edition)"}</h4>${dls}
 
-    <h4>전형 주기 (과거 회차에서 유도)</h4>
+    <h4>전형 주기 (과거 Edition에서 유도)</h4>
     <p class="meta">${esc(typicalText(c))}
-      ${t.n_deadline < 2 ? `<br><span class="note">확정 마감 표본이 ${t.n_deadline}건이라 마감월은 신뢰하지 말 것.</span>` : ""}</p>
+      ${t.n_deadline < 2 ? `<br><span class="note">확정 Deadline 표본이 ${t.n_deadline}건이라 Deadline월은 신뢰하지 말 것.</span>` : ""}</p>
 
-    <h4>회차 이력 (${c.editions.length}회)</h4>${eds}
+    <h4>Edition 이력 (${c.editions.length}회)</h4>${eds}
 
-    <h4>규모</h4>
-    ${sc ? `<p class="meta"><b>${num(sc.value)}</b> ${sc.metric==="submitted"?"편 투고":"명 참가"} (${sc.year})
+    <h4>Scale</h4>
+    ${sc ? `<p class="meta"><b>${num(sc.value)}</b> ${METRIC[sc.metric]} (${sc.year})
              ${sc.source?`· <a href="${esc(sc.source)}" target="_blank" rel="noopener">출처 ↗</a>`:""}</p>`
-         : `<p class="note">근거 있는 규모 수치를 찾지 못했다. 추측으로 채우지 않는다.</p>`}
-    ${c.history.length ? `<h4>연도별 투고·채택 추세</h4>${trendSVG(c.history)}` : ""}
+         : `<p class="note">근거 있는 Scale 수치를 찾지 못했다. 추측으로 채우지 않는다.</p>`}
+    ${c.history.length ? `<h4>연도별 Submitted·Accepted 추세</h4>${trendSVG(c.history)}` : ""}
     ${tiersBlock}
     ${tracksBlock}
 
@@ -1638,7 +1639,7 @@ function openDetail(id){
 
     <h4>캘린더</h4>
     <div class="linkrow"><button id="ics-one">이 학회 일정 추가 (.ics)</button></div>
-    <p class="note">제출 마감 + 개최 기간이 종일 일정으로 들어가고, 마감 1주 전 알림이 붙는다.
+    <p class="note">Submit deadline + Conference 기간이 종일 일정으로 들어가고, Deadline 1주 전 알림이 붙는다.
       ${CAN_DL ? "" : `이 미리보기에서는 막혀 있다 — <a href="${SITE}" target="_blank" rel="noopener">정식 사이트</a>에서.`}</p>
 
     <h4>바로 가기</h4><div class="linkrow">${links}</div>
@@ -1659,11 +1660,11 @@ const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","
 // 보기별 고유색·제목·한 줄 설명. 버튼(--vc)과 제목 띠가 같은 색을 쓴다.
 const VIEWS = {
   list: ["▤", "List",         "정렬 기준대로 학회를 카드로 훑는다",                         "--c1"],
-  kb:   ["▥", "Kanban",       "마감까지 남은 기간별 열(≤ 2 wk · 1-3 mo · > 3 mo · TBA)로 나눠 본다", "--c2"],
+  kb:   ["▥", "Kanban",       "Deadline까지 남은 기간별 열(≤ 2 wk · 1-3 mo · > 3 mo · TBA)로 나눠 본다", "--c2"],
   tbl:  ["▦", "Table",        "학회를 표에 놓고 항목별로 비교한다",                         "--c3"],
-  map:  ["◍", "Map",          "개최지를 세계 지도의 점으로 본다. 점 색 = 그 도시에서 열린 회차 수", "--c4"],
+  map:  ["◍", "Map",          "Venue를 세계 지도의 점으로 본다. 점 색 = 그 도시에서 열린 Edition 수", "--c4"],
   cyc:  ["◷", "Timeline",     "Deadline → Review → Conference 를 달력 위 막대로 본다",                   "--c5"],
-  st:   ["▁▃▇","Stats",         "첫 개최부터의 Submitted · Accepted · 개최 이력을 학회별로 비교한다",      "--c7"],
+  st:   ["▁▃▇","Stats",         "첫 Conference부터의 Submitted · Accepted · Conference 이력을 학회별로 비교한다",      "--c7"],
   src:  ["⚑", "Sources",      "데이터 출처와 수록 기준·한계",                               "--c6"],
 };
 for (const b of document.querySelectorAll("[data-v]")) b.style.setProperty("--vc", `var(${VIEWS[b.dataset.v][3]})`);
@@ -1681,7 +1682,7 @@ function lineChart(wrap, rows, years, key, fmt, title){
   if (has.length) years = years.filter(y => y >= has[0]);   // 값이 시작되는 해부터 그린다
   const vals = confs.flatMap(c => years.map(y => rows[c][y]?.[key]).filter(v => v != null));
   wrap.insertAdjacentHTML("beforeend", `<div class="tip"></div>`);
-  if (!vals.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 수치가 있는 회차 없음</p>`); return; }
+  if (!vals.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 수치가 있는 Edition 없음</p>`); return; }
   const y0 = years[0], y1 = years[years.length-1], vmax = Math.max(...vals) * 1.05;
   const X = y => L + (y - y0) / Math.max(1, y1 - y0) * (W - L - R), Y = v => T + (1 - v / vmax) * (H - T - B);
   let g = ""; const ends = [];
@@ -1692,7 +1693,7 @@ function lineChart(wrap, rows, years, key, fmt, title){
   for (const c of confs){
     const pts = years.filter(y => rows[c][y]?.[key] != null);
     let d = "", prev = null;
-    for (const y of pts){ d += (prev !== null && y - prev <= 1 ? "L" : "M") + `${X(y).toFixed(1)},${Y(rows[c][y][key]).toFixed(1)} `; prev = y; }
+    for (const y of pts){ d += (prev !== null && y - prev <= 2 ? "L" : "M") + `${X(y).toFixed(1)},${Y(rows[c][y][key]).toFixed(1)} `; prev = y; }
     g += `<path class="ln" d="${d}" style="stroke:var(${CONF_COLOR[c]})"/>`;
     const last = pts[pts.length-1];                    // 끝점 직접 표기(색 단독 식별 금지)
     if (last !== undefined){
@@ -1726,7 +1727,7 @@ function lineChart(wrap, rows, years, key, fmt, title){
 
 function barChart(wrap, rows, years, confs, mode){
   const ys = years.filter(y => confs.some(c => rows[c][y]?.submitted && rows[c][y]?.accepted));
-  if (!ys.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 투고·채택 수가 모두 있는 회차 없음</p>`); return; }
+  if (!ys.length){ wrap.insertAdjacentHTML("beforeend", `<p>이 구간에 Submitted·Accepted 수가 모두 있는 Edition 없음</p>`); return; }
   const bw = 12, gap = 3, pad = 14, L = 44, T = 14, B = 26, H = 250;
   const gw = confs.length * (bw + gap) + pad, W = L + ys.length * gw + 8;
   const vmax = mode === "abs" ? Math.max(...ys.flatMap(y => confs.map(c => rows[c][y]?.submitted || 0))) * 1.05 : 1;
@@ -1741,21 +1742,21 @@ function barChart(wrap, rows, years, confs, mode){
       const e = rows[c][y]; if (!e?.submitted || !e?.accepted) return;
       const x = x0 + ci * (bw + gap), tot = mode === "pct" ? 1 : e.submitted, acc = mode === "pct" ? e.accepted / e.submitted : e.accepted;
       const yTop = Y(tot), yAcc = Y(acc), col = `var(${CONF_COLOR[c]})`;
-      g += `<g><title>${esc(c)} ${y} · 투고 ${e.submitted.toLocaleString()} · 채택 ${e.accepted.toLocaleString()} · 채택률 ${(e.rate * 100).toFixed(1)}%</title>
+      g += `<g><title>${esc(c)} ${y} · Submitted ${e.submitted.toLocaleString()} · Accepted ${e.accepted.toLocaleString()} · Acceptance rate ${(e.rate * 100).toFixed(1)}%</title>
         <rect x="${x}" y="${yTop}" width="${bw}" height="${Math.max(0, yAcc - yTop - 2)}" rx="2" style="fill:${col};opacity:.22"/>
         <rect x="${x}" y="${yAcc}" width="${bw}" height="${Math.max(1, base - yAcc)}" rx="2" style="fill:${col}"/>
         ${mode === "pct" ? `<text x="${x + bw/2}" y="${yTop - 3}" text-anchor="middle" style="font-size:9px">${Math.round(e.rate * 100)}</text>` : ""}</g>`;
     });
   });
-  wrap.insertAdjacentHTML("beforeend", `<div class="scroll"><svg viewBox="0 0 ${W} ${H}" style="width:${Math.max(720, W)}px" role="img" aria-label="투고 대비 채택 막대">${g}</svg></div>`);
+  wrap.insertAdjacentHTML("beforeend", `<div class="scroll"><svg viewBox="0 0 ${W} ${H}" style="width:${Math.max(720, W)}px" role="img" aria-label="Submitted 대비 Accepted 막대">${g}</svg></div>`);
 }
 
 function trendCard(host, rows, years, confs){
   const mode = state.statChart || "abs";
-  const TABS = [["abs", "Bars · count", "막대 전체 = 투고, 진한 칸 = 채택, 연한 칸 = 불채택(같은 학회 색). 규모 차이까지 보인다."],
-                ["pct", "Bars · 100%", "막대 높이를 같게 맞춰 채택 비율만 비교한다. 숫자 = 채택률(%)."],
-                ["acc", "Line · accepted", "연도별 채택 논문 수. 점선 = 집계 기준이 바뀐 해."],
-                ["rate", "Line · acceptance rate", "채택 ÷ 투고. 투고 수가 공개된 해만 그린다."]];
+  const TABS = [["abs", "Bars · count", "막대 전체 = Submitted, 진한 칸 = Accepted, 연한 칸 = Not accepted(같은 학회 색). Scale 차이까지 보인다."],
+                ["pct", "Bars · 100%", "막대 높이를 같게 맞춰 Accepted 비율만 비교한다. 숫자 = Acceptance rate(%)."],
+                ["acc", "Line · accepted", "연도별 Accepted 논문 수. 점선 = 집계 기준이 바뀐 해."],
+                ["rate", "Line · acceptance rate", "Accepted ÷ Submitted. Submitted 수가 공개된 해만 그린다."]];
   const cur = TABS.find(t => t[0] === mode) || TABS[0];
   const wrap = document.createElement("div"); wrap.className = "ch";
   wrap.innerHTML = `<h3>Submitted vs Accepted</h3><div class="win">${TABS.map(([k, t]) =>
@@ -1764,8 +1765,8 @@ function trendCard(host, rows, years, confs){
   host.appendChild(wrap);
   wrap.querySelectorAll("[data-chart]").forEach(b => b.onclick = () => { state.statChart = b.dataset.chart; renderStats(); });
   if (cur[0] === "abs" || cur[0] === "pct") barChart(wrap, rows, years, confs, cur[0]);
-  else if (cur[0] === "acc") lineChart(wrap, rows, years, "accepted", v => Math.round(v).toLocaleString(), "연도별 채택 논문 수");
-  else lineChart(wrap, rows, years, "rate", v => (v * 100).toFixed(0) + "%", "연도별 채택률");
+  else if (cur[0] === "acc") lineChart(wrap, rows, years, "accepted", v => Math.round(v).toLocaleString(), "연도별 Accepted 논문 수");
+  else lineChart(wrap, rows, years, "rate", v => (v * 100).toFixed(0) + "%", "연도별 Acceptance rate");
 }
 
 function renderStats(){
@@ -1786,11 +1787,11 @@ function renderStats(){
   const years = []; for (let y = lo; y <= yr; y++) years.push(y);
   const rows = {};
   for (const c of confs){ rows[c] = {};
-    for (const e of FH[c].editions) rows[c][e.year] = {...e, place: e.sites.map(s => s.place).join(" + ") || "개최지 미상"}; }
+    for (const e of FH[c].editions) rows[c][e.year] = {...e, place: e.sites.map(s => s.place).join(" + ") || "Venue 미상"}; }
   const first = c => FH[c].editions.find(e => e.accepted != null), lastN = c => [...FH[c].editions].reverse().find(e => e.accepted != null);
   host.innerHTML = `<div class="win">${[[0,"All"],[30,"30 yr"],[10,"10 yr"],[5,"5 yr"]].map(([n, t]) =>
       `<button data-win="${n}" aria-pressed="${state.statWin === n}">${t}</button>`).join("")}
-    <span class="meta">첫 개최부터 ${yr}년 · 값 없는 해는 선을 끊음 · 학회는 최대 ${CAP}개</span></div>
+    <span class="meta">첫 Conference부터 ${yr}년 · 2년 넘는 공백은 선을 끊음 · 학회는 최대 ${CAP}개</span></div>
     <div class="picker"><h3>Select conferences (${confs.length}/${CAP})</h3><p>눌러서 추가·제거. 켜진 학회가 아래 모든 차트에 나온다. 테두리가 굵은 것 = 선택됨.</p>
     ${groups.map(([g, list]) => `<div class="win"><span class="meta">${g}</span> ${list.map(c =>
       `<button data-sel="${esc(c)}" aria-pressed="${confs.includes(c)}">${esc(c)}</button>`).join("")}</div>`).join("")}</div>
@@ -1817,20 +1818,20 @@ function renderStats(){
       g += `<text x="${L-8}" y="${cy+4}" text-anchor="end">${esc(c)}</text><line class="ax" x1="${L}" x2="${W-R}" y1="${cy}" y2="${cy}"/>`;
       for (const e of FH[c].editions) if (e.year >= y0){
         const multi = e.sites.length > 1, virt = e.sites.length && e.sites.every(s => s.place === "Virtual");
-        const tip = `${c} ${e.year} · ${e.sites.map(s => s.place).join(" + ") || "개최지 미상"}`;
+        const tip = `${c} ${e.year} · ${e.sites.map(s => s.place).join(" + ") || "Venue 미상"}`;
         g += `<g><title>${esc(tip)}</title>${multi ? `<circle cx="${X(e.year)}" cy="${cy}" r="7" fill="none" stroke-width="2" style="stroke:var(${CONF_COLOR[c]})"/>` : ""}
           <circle cx="${X(e.year)}" cy="${cy}" r="${virt ? 3 : 4}" style="${virt ? `fill:none;stroke-width:1.5;stroke:var(${CONF_COLOR[c]})` : `fill:var(${CONF_COLOR[c]})`}"/></g>`;
       }
     });
-    host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>Edition timeline</h3><p>학회가 열린 해를 점으로 표시한다. 대부분 매년이라 점이 이어지고, <b>빈칸 = 안 열린 해</b>(격년 학회, 초기 공백)다. 속 빈 점 = 가상 개최, 큰 고리 = 다지역 동시 개최. 점에 올리면 개최지.</p>
-      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회별 개최 연도">${g}</svg></div>`);
+    host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>Edition timeline</h3><p>학회가 열린 해를 점으로 표시한다. 대부분 매년이라 점이 이어지고, <b>빈칸 = 안 열린 해</b>(격년 학회, 초기 공백)다. 속 빈 점 = 가상 Conference, 큰 고리 = 다지역 동시 Conference. 점에 올리면 Venue.</p>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="학회별 Conference 연도">${g}</svg></div>`);
   }
   // 개최 국가별 회차 수: 다지역 개최는 지역마다 1회로 센다
   const cnt = new Map();
   for (const c of confs) for (const e of FH[c].editions) if (e.year >= lo) for (const s of e.sites){
     if (s.place === "Virtual") continue; const raw = s.place.split(",").pop().trim(), k = COUNTRY_ALIAS[raw] ?? raw; cnt.set(k, (cnt.get(k) || 0) + 1); }
   const top = [...cnt].sort((a, b) => b[1] - a[1]).slice(0, 10), mx = top[0]?.[1] || 1;
-  host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>Editions by country</h3><p>선택한 학회 합계, 같은 회차의 다지역은 지역마다 1회. 가상 개최 제외.</p>
+  host.insertAdjacentHTML("beforeend", `<div class="ch"><h3>Editions by country</h3><p>선택한 학회 합계, 같은 Edition의 다지역은 지역마다 1회. 가상 Conference 제외.</p>
     <svg viewBox="0 0 720 ${top.length * 22 + 6}">${top.map(([k, n], i) =>
       `<text x="110" y="${i*22+16}" text-anchor="end">${esc(k)}</text>
        <rect x="116" y="${i*22+4}" width="${n / mx * 520}" height="14" rx="3" style="fill:var(--c1)"/>
@@ -1926,10 +1927,10 @@ document.addEventListener("click", e => {
 /* ── 캘린더 (.ics) ───────────────────────────────────────────────────────────
    빌드가 만드는 구독 피드(deadlines.ics)와 별개로, 고른 학회만 즉석으로 뽑는 경로.
    구독은 "전부 상시", 이건 "관심 있는 것만 지금". 둘 다 필요하다. */
-const icsEsc = t => String(t ?? "").replace(/\\/g,"\\\\").replace(/;/g,"\;")
+const icsEsc = t => String(t ?? "").replace(/\\/g,"\\\\").replace(/;/g,"\\;")
                                   .replace(/,/g,"\\,").replace(/\n/g,"\\n");
 const plusDay = iso => { const d = new Date(iso+"T00:00:00"); d.setDate(d.getDate()+1);
-  return d.toISOString().slice(0,10).replace(/-/g,""); };
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`; };
 const icsFold = l => {                    // RFC 5545 = 75옥텟. 한글은 3바이트라 금방 넘는다
   const b = new TextEncoder().encode(l);
   if (b.length <= 73) return l;
@@ -1952,11 +1953,11 @@ function buildICS(list){
       const tag = d.status === "confirmed" ? "" : (d.status === "tba" ? " (미공지)" : " (추정)");
       L.push("BEGIN:VEVENT", `UID:${c.id}-${d.type}-${d.date}@conf-radar`, `DTSTAMP:${stamp}`,
         `DTSTART;VALUE=DATE:${d.date.replace(/-/g,"")}`, `DTEND;VALUE=DATE:${plusDay(d.date)}`,
-        `SUMMARY:🔴 ${icsEsc(c.title)} 마감${icsEsc(tag)}`,
+        `SUMMARY:🔴 ${icsEsc(c.title)} Deadline${icsEsc(tag)}`,
         `DESCRIPTION:${icsEsc(d.label)} · ${icsEsc(c.date_text)} ${icsEsc(c.city)}`,
         `URL:${c.link}`, "TRANSP:TRANSPARENT",
         "BEGIN:VALARM","TRIGGER:-P7D","ACTION:DISPLAY",
-        `DESCRIPTION:${icsEsc(c.title)} 마감 1주 전`,"END:VALARM","END:VEVENT");
+        `DESCRIPTION:${icsEsc(c.title)} Deadline 1주 전`,"END:VALARM","END:VEVENT");
     }
     if (c.start && c.end)
       L.push("BEGIN:VEVENT", `UID:${c.id}-meeting@conf-radar`, `DTSTAMP:${stamp}`,
@@ -1991,10 +1992,10 @@ const n = DATA.series.length, nn = DATA.series.filter(c => c.group === "neuro").
 const noNext = DATA.series.filter(c => !c.next).length;
 const nw = DATA.series.filter(c => c.kind !== "conference").length;
 document.getElementById("sub").textContent =
-  `${DATA.generated} 갱신 · ${n}개 (학회 ${n-nw} · 워크샵·트랙 ${nw}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
+  `${DATA.generated} 갱신 · ${n}개 (학회 ${n-nw} · Workshop·트랙 ${nw}) · 차기 미공지 ${noNext}건은 전형 주기로 표시`;
 document.getElementById("foot").innerHTML =
-  `<b>출처</b> — 차기 마감 = <a href="https://github.com/huggingface/ai-deadlines" target="_blank" rel="noopener">ai-deadlines</a> ·
-   회차 이력·CORE 등급·투고수 = <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a> ·
+  `<b>출처</b> — 차기 Deadline = <a href="https://github.com/huggingface/ai-deadlines" target="_blank" rel="noopener">ai-deadlines</a> ·
+   Edition 이력·CORE rank·Submitted수 = <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a> ·
    h5-index = <a href="https://scholar.google.com/citations?view_op=top_venues&amp;hl=en&amp;vq=eng_artificialintelligence" target="_blank" rel="noopener">Google Scholar Metrics</a> ·
    뇌과학 학회·연계 제도·발표 계층·트랙 = 수동 큐레이션.
    <button class="lnk" data-goto="src">기준과 한계 · 정보원 →</button>`;

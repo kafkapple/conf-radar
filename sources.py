@@ -14,6 +14,9 @@ from pathlib import Path
 
 import yaml
 
+# 저자가 "내야 하는" 날의 일정 이름. ccf-deadlines 어휘 그대로. build.py·ics.py 가 같은 정의를 쓴다(복제하면 어긋난다).
+SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late", "registration"}
+
 CACHE = Path(__file__).parent / ".cache"
 
 SOURCES = {   # 이름: (tarball, 캐시파일)

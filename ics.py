@@ -8,7 +8,8 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
-SUBMIT = {"abstract", "paper", "submission", "supplementary", "abstract_late"}
+from sources import SUBMIT
+
 
 
 def ics_escape(t: str) -> str:
@@ -46,12 +47,12 @@ def build_ics(series: list[dict], stamp: str) -> str:
             tag = "" if d["status"] == "confirmed" else (" (미공지)" if d["status"] == "tba" else " (추정)")
             L += ["BEGIN:VEVENT", f"UID:{s['id']}-{d['type']}-{d['date']}@conf-radar",
                   f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{y}{m}{dd}", f"DTEND;VALUE=DATE:{nxt}",
-                  f"SUMMARY:🔴 {ics_escape(s['title'])} 마감{ics_escape(tag)}",
+                  f"SUMMARY:🔴 {ics_escape(s['title'])} Deadline{ics_escape(tag)}",
                   fold(f"DESCRIPTION:{ics_escape(d['label'])} · {ics_escape(s['date_text'])} "
                        f"{ics_escape(s['city'])}\\n{ics_escape(s['link'])}"),
                   f"URL:{s['link']}", "TRANSP:TRANSPARENT",
                   "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY",
-                  f"DESCRIPTION:{ics_escape(s['title'])} 마감 1주 전", "END:VALARM",
+                  f"DESCRIPTION:{ics_escape(s['title'])} Deadline in 1 week", "END:VALARM",
                   "END:VEVENT"]
         if s["start"] and s["end"]:
             ey, em, ed = s["end"].split("-")
