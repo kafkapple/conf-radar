@@ -1,3 +1,7 @@
+Aalborg, Denmark:
+  lat: 57.0463
+  lon: 9.9215
+  matched: Aalborg, Aalborg Kommune, Region Nordjylland, 9000, Danmark
 Aberdeen, United Kingdom:
   lat: 57.1482
   lon: -2.0928
@@ -10,10 +14,39 @@ Abu Dhabi, UAE:
   lat: 24.4538
   lon: 54.3774
   matched: أبو ظبي, أبوظبي, أبو ظبي, الإمارات العربية المتحدة
+Abu Dhabi, United Arab Emirates:
+  lat: 24.4538
+  lon: 54.3774
+  matched: أبو ظبي, أبوظبي, أبو ظبي, الإمارات العربية المتحدة
+Acapulco, Mexico:
+  lat: 16.868
+  lon: -99.894
+  matched: Acapulco, Acapulco de Juárez, Guerrero, 39300, México
+Adelaide, Australia:
+  lat: -34.9282
+  lon: 138.5999
+  matched: Adelaide, South Australia, Australia
+Albany, USA:
+  lat: 42.6512
+  lon: -73.755
+  matched: City of Albany, Albany County, New York, United States
 Albuquerque, New Mexico:
   lat: 35.0841
   lon: -106.651
   matched: Albuquerque, Bernalillo County, New Mexico, United States
+Albuquerque, USA:
+  lat: 35.0841
+  lon: -106.651
+  matched: Albuquerque, Bernalillo County, New Mexico, United States
+Alicante, Spain:
+  lat: 38.3436
+  lon: -0.4882
+  matched: Alacant / Alicante, l'Alacantí, Alacant / Alicante, Comunitat Valenciana,
+    España
+Amherst, USA:
+  lat: 42.3732
+  lon: -72.5199
+  matched: Amherst, Hampshire County, Massachusetts, United States
 Amherst, United States:
   lat: 42.3732
   lon: -72.5199
@@ -22,10 +55,18 @@ Amsterdam, Netherlands:
   lat: 52.3731
   lon: 4.8925
   matched: Amsterdam, Noord-Holland, Nederland
+Anaheim, USA:
+  lat: 33.8348
+  lon: -117.9117
+  matched: Anaheim, Orange County, California, United States
 Anaheim, United States:
   lat: 33.8348
   lon: -117.9117
   matched: Anaheim, Orange County, California, United States
+Anchorage, USA:
+  lat: 61.2163
+  lon: -149.8949
+  matched: Anchorage, Alaska, United States
 Anchorage, United States:
   lat: 61.2163
   lon: -149.8949
@@ -38,6 +79,15 @@ Ann Arbor, United States:
   lat: 42.2814
   lon: -83.7485
   matched: Ann Arbor, Washtenaw County, Michigan, United States
+Antibes, France:
+  lat: 43.5814
+  lon: 7.1237
+  matched: Antibes, Grasse, Alpes-Maritimes, Provence-Alpes-Côte d'Azur, France métropolitaine,
+    France
+Antwerp, Belgium:
+  lat: 51.2211
+  lon: 4.3997
+  matched: Antwerpen, Vlaanderen, België / Belgique / Belgien
 Arlington, USA:
   lat: 32.7356
   lon: -97.1071
@@ -63,10 +113,19 @@ Atlanta, United States:
   lat: 33.7545
   lon: -84.3898
   matched: Atlanta, Fulton County, Georgia, United States
+Atlanta/Decatur, USA:
+  lat: 33.7768
+  lon: -84.297
+  matched: Courtyard Atlanta Decatur Downtown/Emory, 130, Clairemont Avenue, Decatur,
+    DeKalb County, Georgia, 30030, United States
 Auckland, New Zealand:
   lat: -36.8521
   lon: 174.7632
   matched: Auckland, Waitematā, Auckland, 1010, New Zealand / Aotearoa
+Austin, USA:
+  lat: 30.2711
+  lon: -97.7437
+  matched: Austin, Travis County, Texas, United States
 Austin, United States:
   lat: 30.2711
   lon: -97.7437
@@ -123,6 +182,15 @@ Berlin, Germany:
   lat: 52.5174
   lon: 13.3951
   matched: Berlin, Deutschland
+Bertinoro, Italy:
+  lat: 44.1487
+  lon: 12.1342
+  matched: Bertinoro, Unione di Comuni della Romagna Forlivese, Forlì-Cesena, Emilia-Romagna,
+    47032, Italia
+Big Sky, USA:
+  lat: 45.2551
+  lon: -111.2662
+  matched: Big Sky, Gallatin County, Montana, 59716, United States
 Bled, Slovenia:
   lat: 46.3684
   lon: 14.1101
@@ -148,19 +216,60 @@ Boulder, Colorado, USA:
   lon: -105.2705
   matched: Boulder, Boulder County, Colorado, United States
 Boulder, Colorado, USA (Hybrid): null
+Boulder, USA:
+  lat: 40.015
+  lon: -105.2705
+  matched: Boulder, Boulder County, Colorado, United States
+Bowling Green, USA:
+  lat: 36.9929
+  lon: -86.4429
+  matched: Bowling Green, Warren County, Kentucky, 42101, United States
+Breckenridge, USA:
+  lat: 32.7555
+  lon: -98.9027
+  matched: Breckenridge, Stephens County, Texas, 76424, United States
 Bremen, Germany:
   lat: 53.0758
   lon: 8.8072
   matched: Bremen, Deutschland
+Bridgetown, Barbados:
+  lat: 13.0978
+  lon: -59.6184
+  matched: Bridgetown, Saint Michael, Barbados
+Brighton, England:
+  lat: 50.8215
+  lon: -0.1401
+  matched: Brighton, Brighton and Hove, England, BN1 1HJ, United Kingdom
 Brighton, UK:
   lat: 50.8215
   lon: -0.1401
   matched: Brighton, Brighton and Hove, England, BN1 1HJ, United Kingdom
+Brighton, United Kingdom:
+  lat: 50.8215
+  lon: -0.1401
+  matched: Brighton, Brighton and Hove, England, BN1 1HJ, United Kingdom
+Brisbane, Australia:
+  lat: -27.469
+  lon: 153.0235
+  matched: Brisbane, Queensland, Australia
 Brno, Czech Republic:
   lat: 49.1922
   lon: 16.6113
   matched: Brno, okres Brno-město, Jihomoravský kraj, Česko
 Brno, Czech Republic and Online: null
+Brno, Czechia:
+  lat: 49.1922
+  lon: 16.6113
+  matched: Brno, okres Brno-město, Jihomoravský kraj, Česko
+Bruges, Belgium:
+  lat: 51.2086
+  lon: 3.2268
+  matched: Brugge, West-Vlaanderen, Vlaanderen, België / Belgique / Belgien
+Brussels, Belgium:
+  lat: 50.8467
+  lon: 4.3525
+  matched: Bruxelles - Brussel, Brussel-Hoofdstad - Bruxelles-Capitale, Région de
+    Bruxelles-Capitale - Brussels Hoofdstedelijk Gewe
 Budapest, Hungary:
   lat: 47.4979
   lon: 19.0402
@@ -169,6 +278,10 @@ Buena Vista, FL, USA:
   lat: 28.3717
   lon: -81.524
   matched: Lake Buena Vista, Orange County, Florida, United States
+Buenos Aires, Argentina:
+  lat: -34.6096
+  lon: -58.3888
+  matched: Buenos Aires, Comuna 1, Ciudad Autónoma de Buenos Aires, Argentina
 Buffalo, USA:
   lat: 42.8864
   lon: -78.8781
@@ -177,6 +290,19 @@ COEX, Seoul, Korea:
   lat: 37.5119
   lon: 127.0591
   matched: 코엑스, 테헤란로87길, 삼성동, 삼성1동, 강남구, 서울특별시, 06166, 대한민국
+Cadiz, Spain:
+  lat: 36.5297
+  lon: -6.2929
+  matched: Cádiz, Bahía de Cádiz, Cádiz, Andalucía, España
+Calgary, Canada:
+  lat: 51.0456
+  lon: -114.0575
+  matched: Calgary, Alberta, Canada
+Cambridge, UK:
+  lat: 52.1976
+  lon: 0.1392
+  matched: Cambridge, Cambridgeshire, Cambridgeshire and Peterborough, England, United
+    Kingdom
 Cambridge, USA:
   lat: 42.3656
   lon: -71.104
@@ -189,14 +315,35 @@ Cascais, Portugal:
   lat: 38.6969
   lon: -9.4204
   matched: Cascais, Lisboa, Portugal
+Catalina Island, USA:
+  lat: 55.5481
+  lon: -133.2924
+  matched: Catalina Island, Unorganized Borough, Alaska, United States
+Chambery, France:
+  lat: 45.5663
+  lon: 5.9204
+  matched: Chambéry, Savoie, Auvergne-Rhône-Alpes, France métropolitaine, 73000, France
 Champaign, United States:
   lat: 40.1165
   lon: -88.2431
   matched: Champaign, Champaign County, Illinois, United States
+Chia Laguna, Italy:
+  lat: 38.8971
+  lon: 8.8685
+  matched: Chia Laguna, Viale Erica, Setti Ballas, Domus De Maria, Casteddu/Cagliari,
+    Sardigna/Sardegna, 09010, Italia
 Chicago, USA:
   lat: 41.8756
   lon: -87.6244
   matched: Chicago, South Chicago Township, Cook County, Illinois, United States
+Cincinnati, USA:
+  lat: 39.1013
+  lon: -84.5127
+  matched: Cincinnati, Hamilton County, Ohio, United States
+Clearwater Beach, USA:
+  lat: 27.9775
+  lon: -82.8279
+  matched: Clearwater Beach, Clearwater, Pinellas County, Florida, 33767, United States
 Cold Spring Harbor, USA:
   lat: 40.8601
   lon: -73.4529
@@ -218,10 +365,27 @@ Columbus, United States:
   lat: 39.9623
   lon: -83.0007
   matched: Columbus, Franklin County, Ohio, United States
+Copenhagen, Denmark:
+  lat: 55.6867
+  lon: 12.5701
+  matched: København, Københavns Kommune, Region Hovedstaden, 1357, Danmark
+Copper Mountain, USA:
+  lat: 39.4781
+  lon: -106.1629
+  matched: Copper Mountain, Summit County, Colorado, United States
+Corfu, Greece:
+  lat: 39.5913
+  lon: 19.8596
+  matched: Κέρκυρα, Περιφερειακή Ενότητα Κέρκυρας, Περιφέρεια Ιονίων Νήσων, Αποκεντρωμένη
+    Διοίκηση Πελοποννήσου, Δυτικής Ελλάδας κα
 Corvallis, United States:
   lat: 44.5646
   lon: -123.262
   matched: Corvallis, Benton County, Oregon, United States
+Daegu, Korea:
+  lat: 35.8713
+  lon: 128.6018
+  matched: 대구광역시, 대한민국
 Daegu, Republic of Korea:
   lat: 35.8713
   lon: 128.6018
@@ -230,6 +394,18 @@ Daejeon, Republic of Korea:
   lat: 36.3497
   lon: 127.3849
   matched: 대전광역시, 대한민국
+Daejeon, South Korea:
+  lat: 36.3497
+  lon: 127.3849
+  matched: 대전광역시, 대한민국
+Daejon, South Korea:
+  lat: 36.3497
+  lon: 127.3849
+  matched: 대전광역시, 대한민국
+Dallas, USA:
+  lat: 32.7763
+  lon: -96.7969
+  matched: Dallas, Dallas County, Texas, United States
 Davos, Switzerland:
   lat: 46.7962
   lon: 9.8237
@@ -250,14 +426,34 @@ Denver, United States:
   lat: 39.7392
   lon: -104.9849
   matched: Denver, Colorado, United States
+Desenzano del Garda, Italy:
+  lat: 45.4695
+  lon: 10.5389
+  matched: Desenzano del Garda, Brescia, Lombardia, 25015, Italia
 Detroit, Michigan, USA:
   lat: 42.3316
   lon: -83.0466
   matched: Detroit, Wayne County, Michigan, United States
+Detroit, USA:
+  lat: 42.3316
+  lon: -83.0466
+  matched: Detroit, Wayne County, Michigan, United States
+Doha, Qatar:
+  lat: 25.3109
+  lon: 51.5082
+  matched: الدوحة, قطر
+Dresden, Germany:
+  lat: 51.0493
+  lon: 13.7381
+  matched: Dresden, Sachsen, Deutschland
 Dublin, Ireland:
   lat: 53.3494
   lon: -6.2606
   matched: Dublin, County Dublin, Leinster, Éire / Ireland
+Dusseldorf, Germany:
+  lat: 51.2254
+  lon: 6.7763
+  matched: Düsseldorf, Nordrhein-Westfalen, Deutschland
 Edinburgh, UK:
   lat: 55.9533
   lon: -3.1884
@@ -283,6 +479,10 @@ ExCeL London, UK:
   lon: 0.0297
   matched: 'Excel, 1, Western Gateway, Custom House, Silvertown, London Borough of
     Newham, Greater London, England, E16 1XL, United '
+Fairfax, USA:
+  lat: 38.8462
+  lon: -77.3064
+  matched: Fairfax, Virginia, 20030, United States
 Florence, Italy:
   lat: 43.7698
   lon: 11.2556
@@ -291,10 +491,30 @@ Fort Collins, United States:
   lat: 40.5872
   lon: -105.077
   matched: Fort Collins, Larimer County, Colorado, United States
+Fort Lauderdale, USA:
+  lat: 26.1223
+  lon: -80.1434
+  matched: Fort Lauderdale, Broward County, Florida, United States
 Frankfurt am Main, Germany:
   lat: 50.1106
   lon: 8.6821
   matched: Frankfurt am Main, Hessen, Deutschland
+Frankfurt, Germany:
+  lat: 50.1106
+  lon: 8.6821
+  matched: Frankfurt am Main, Hessen, Deutschland
+Freiburg, Germany:
+  lat: 47.9961
+  lon: 7.8494
+  matched: Freiburg im Breisgau, Baden-Württemberg, Deutschland
+Geneva, Switzerland:
+  lat: 46.2018
+  lon: 6.1466
+  matched: Genève, Schweiz/Suisse/Svizzera/Svizra
+Glasgow, Scotland:
+  lat: 55.8612
+  lon: -4.2502
+  matched: Glasgow, Glasgow City, Alba / Scotland, G2 1AL, United Kingdom
 Glasgow, UK:
   lat: 55.8612
   lon: -4.2502
@@ -307,18 +527,50 @@ Granada, Spain:
   lat: 37.1735
   lon: -3.5995
   matched: Granada, Comarca de la Vega de Granada, Granada, Andalucía, España
+Graz, Austria:
+  lat: 47.0709
+  lon: 15.4383
+  matched: Graz, Steiermark, Österreich
 Greece:
   lat: 38.9954
   lon: 21.9877
   matched: Ελλάς
+Grenoble, France:
+  lat: 45.1876
+  lon: 5.7358
+  matched: Grenoble, Isère, Auvergne-Rhône-Alpes, France métropolitaine, France
+Guangzhou, China:
+  lat: 23.1288
+  lon: 113.259
+  matched: 广州市, 广东省, 中国
+Gyeongju, South Korea:
+  lat: 35.8557
+  lon: 129.2249
+  matched: 경주시, 경상북도, 대한민국
+Göttingen, Germany:
+  lat: 51.5328
+  lon: 9.9352
+  matched: Göttingen, Radolfshausen, Landkreis Göttingen, Niedersachsen, Deutschland
 Haifa, Israel:
   lat: 32.8191
   lon: 34.9984
   matched: חיפה, נפת חיפה, מחוז חיפה, ישראל
+Halifax, Canada:
+  lat: 44.6486
+  lon: -63.5859
+  matched: Halifax, Halifax Regional Municipality, Halifax County, Nova Scotia, Canada
+Hamburg, Germany:
+  lat: 53.5502
+  lon: 10.0013
+  matched: Hamburg, Deutschland
 Hangzhou, China:
   lat: 30.249
   lon: 120.2052
   matched: 杭州市, 浙江省, 中国
+Hartford, USA:
+  lat: 41.7662
+  lon: -72.6733
+  matched: Hartford, Capitol Planning Region, Connecticut, United States
 Hawaii Convention Center,Hawaii, USA:
   lat: 21.2897
   lon: -157.8366
@@ -337,6 +589,11 @@ Hengqin, China:
   lon: 113.5449
   matched: 橫琴 Hengqin, 蓮花大橋 Ponte Flor de Lótus, 横琴镇, 横琴粤澳深度合作区, 香洲区, 珠海市, 广东省, 519000,
     中国
+Heraklion, Greece:
+  lat: 35.3391
+  lon: 25.1333
+  matched: 'Ηράκλειο, Δημοτική Ενότητα Ηρακλείου, Δήμος Ηρακλείου, Περιφερειακή Ενότητα
+    Ηρακλείου, Περιφέρεια Κρήτης, Αποκεντρωμένη '
 Hilton Head, United States:
   lat: 32.3836
   lon: -99.7483
@@ -350,23 +607,47 @@ Honolulu, Hawaii:
   lat: 21.3045
   lon: -157.8557
   matched: Honolulu, Honolulu County, Hawaii, United States
+Honolulu, USA:
+  lat: 21.3045
+  lon: -157.8557
+  matched: Honolulu, Honolulu County, Hawaii, United States
 Honolulu, United States:
   lat: 21.3045
   lon: -157.8557
   matched: Honolulu, Honolulu County, Hawaii, United States
+Houston, USA:
+  lat: 29.7589
+  lon: -95.3677
+  matched: Houston, Harris County, Texas, United States
 Hyderabad, India:
   lat: 17.3606
   lon: 78.4741
   matched: Hyderabad, Bahadurpura mandal, Hyderabad, Telangana, India
+Ibaraki, Japan:
+  lat: 36.287
+  lon: 140.4703
+  matched: 茨城県, 日本
 Incheon, South Korea:
   lat: 37.456
   lon: 126.7052
   matched: 인천광역시, 대한민국
 Incheon, South Korea and Online: null
+Indiana, USA:
+  lat: 40.327
+  lon: -86.1747
+  matched: Indiana, United States
+Irvine, USA:
+  lat: 33.6857
+  lon: -117.826
+  matched: Irvine, Orange County, California, United States
 Irvine, United States:
   lat: 33.6857
   lon: -117.826
   matched: Irvine, Orange County, California, United States
+Istanbul, Turkey:
+  lat: 41.0064
+  lon: 28.9759
+  matched: İstanbul, Fatih, İstanbul, Marmara Bölgesi, 34122, Türkiye
 Ithaca, United States:
   lat: 42.4374
   lon: -76.5484
@@ -383,18 +664,48 @@ Jeju, Korea:
   lat: 33.4888
   lon: 126.4987
   matched: 제주특별자치도, 대한민국
+Jeju, South Korea:
+  lat: 33.4888
+  lon: 126.4987
+  matched: 제주특별자치도, 대한민국
+Karlsruhe, Germany:
+  lat: 49.0069
+  lon: 8.4034
+  matched: Karlsruhe, Baden-Württemberg, Deutschland
 Kauai, United States:
   lat: 22.0504
   lon: -159.5589
   matched: Kauaʻi, Kauaʻi County, Hawaii, United States
+Key West, USA:
+  lat: 24.5548
+  lon: -81.8021
+  matched: Key West, Monroe County, Florida, United States
 Kigali, Rwanda:
   lat: -1.9534
   lon: 30.114
   matched: City of Kigali, Rwanda
+Knoxville, USA:
+  lat: 35.9604
+  lon: -83.921
+  matched: Knoxville, Knox County, East Tennessee, Tennessee, United States
+Kobe, Japan:
+  lat: 34.6932
+  lon: 135.1944
+  matched: 神戸市, 兵庫県, 日本
+Kona, USA:
+  lat: 37.1576
+  lon: -82.7388
+  matched: Kona, Letcher County, Kentucky, 41849, United States
 Korea:
   lat: 36.6384
   lon: 127.6961
   matched: 대한민국
+Kos Island, Greece:
+  lat: 36.7937
+  lon: 27.0848
+  matched: Κως, Περιφερειακή Ενότητα Κω, Περιφέρεια Νοτίου Αιγαίου, Αποκεντρωμένη
+    Διοίκηση Αιγαίου, Ελλάς
+Kyongju, Korea: null
 Kyoto, Japan:
   lat: 35.0116
   lon: 135.7681
@@ -405,18 +716,47 @@ La Jolla, USA:
   lat: 32.8459
   lon: -117.2576
   matched: La Jolla, San Diego, San Diego County, California, United States
+La Palma, Spain:
+  lat: 28.6551
+  lon: -17.8573
+  matched: La Palma, Santa Cruz de Tenerife, Canarias, España
 Lahaina, United States:
   lat: 20.8872
   lon: -156.6748
   matched: Lahaina, Maui County, Hawaii, United States
+Lake Placid, USA:
+  lat: 44.2831
+  lon: -73.9828
+  matched: Village of Lake Placid, Town of North Elba, Essex County, New York, 12946,
+    United States
+Lake Tahoe, USA:
+  lat: 39.0885
+  lon: -120.0504
+  matched: Lake Tahoe, Placer County, California, United States
 Las Cruces, USA:
   lat: 32.314
   lon: -106.7798
   matched: Las Cruces, Doña Ana County, New Mexico, United States
+Las Vegas, USA:
+  lat: 36.1674
+  lon: -115.1484
+  matched: Las Vegas, Clark County, Nevada, United States
 Las Vegas, United States:
   lat: 36.1674
   lon: -115.1484
   matched: Las Vegas, Clark County, Nevada, United States
+Lausanne, Switzerland:
+  lat: 46.5218
+  lon: 6.6327
+  matched: Lausanne, District de Lausanne, Vaud, Schweiz/Suisse/Svizzera/Svizra
+Leipzig, Germany:
+  lat: 51.3406
+  lon: 12.3747
+  matched: Leipzig, Sachsen, Deutschland
+Leuven, Belgium:
+  lat: 50.8792
+  lon: 4.7012
+  matched: Leuven, Vlaams-Brabant, Vlaanderen, België / Belgique / Belgien
 Lille, France:
   lat: 50.6366
   lon: 3.0635
@@ -430,6 +770,10 @@ London, UK:
   lon: -0.1278
   matched: Greater London, England, United Kingdom
 London, UK (Hybrid): null
+Long Beach, USA:
+  lat: 33.769
+  lon: -118.1916
+  matched: Long Beach, Los Angeles County, California, United States
 Long Beach, United States:
   lat: 33.769
   lon: -118.1916
@@ -455,6 +799,14 @@ Macao, China:
   lat: 22.1758
   lon: 113.5514
   matched: 澳門 Macau, 中国
+Macau, China:
+  lat: 22.1758
+  lon: 113.5514
+  matched: 澳門 Macau, 中国
+Madison, USA:
+  lat: 43.0747
+  lon: -89.3842
+  matched: Madison, Dane County, Wisconsin, United States
 Madison, United States:
   lat: 43.0747
   lon: -89.3842
@@ -467,6 +819,10 @@ Mai Khao, Thailand:
   lat: 8.1256
   lon: 98.308
   matched: ตำบลไม้ขาว, ศรีสุนทร, อำเภอถลาง, จังหวัดภูเก็ต, ประเทศไทย
+Makuhari, Japan:
+  lat: 35.6593
+  lon: 140.058
+  matched: 幕張, 幕張停車場線, 幕張町六丁目, 花見川区, 千葉市, 千葉県, 262-0032, 日本
 Malmö, Sweden:
   lat: 55.6053
   lon: 13.0002
@@ -476,6 +832,15 @@ Marrakesh, Morocco:
   lon: -7.9892
   matched: Marrakech ⵎⵕⵕⴰⴽⵯⵛ مراكش, Pachalik de Marrakech, Préfecture de Marrakech
     عمالة مراكش, Marrakech-Safi ⵎⵕⵕⴰⴽⵛ-ⴰⵙⴼⵉ مراكش-أس
+Marseille, France:
+  lat: 43.2964
+  lon: 5.3778
+  matched: Marseille, Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France métropolitaine,
+    France
+Maui, USA:
+  lat: 20.803
+  lon: -156.3107
+  matched: Maui, Maui County, Hawaii, United States
 Melbourne, Australia:
   lat: -37.8142
   lon: 144.9632
@@ -497,7 +862,15 @@ MiCo Milano, Italy:
   lon: 9.1531
   matched: Allianz MiCo, Viale Eginardo, Bolla, Tre Torri, Municipio 8 di Milano,
     Milano, Lombardia, 20149, Italia
+Miami Beach, USA:
+  lat: 25.7929
+  lon: -80.1353
+  matched: Miami Beach, Miami-Dade County, Florida, United States
 Miami, Florida, USA:
+  lat: 25.7742
+  lon: -80.1936
+  matched: Miami, Miami-Dade County, Florida, United States
+Miami, USA:
   lat: 25.7742
   lon: -80.1936
   matched: Miami, Miami-Dade County, Florida, United States
@@ -505,6 +878,14 @@ Miami, United States:
   lat: 25.7742
   lon: -80.1936
   matched: Miami, Miami-Dade County, Florida, United States
+Milan, Italy:
+  lat: 45.4642
+  lon: 9.1896
+  matched: Milano, Rodano, Milano, Lombardia, Italia
+Minneapolis, USA:
+  lat: 44.9773
+  lon: -93.2655
+  matched: Minneapolis, Hennepin County, Minnesota, United States
 Minneapolis, United States:
   lat: 44.9773
   lon: -93.2655
@@ -513,6 +894,10 @@ Mont-Tremblant, Canada:
   lat: 46.1159
   lon: -74.5891
   matched: Mont-Tremblant, Les Laurentides, Laurentides, Québec, Canada
+Monterey, USA:
+  lat: 36.2231
+  lon: -121.3877
+  matched: Monterey County, California, United States
 Monticello, United States:
   lat: 38.0103
   lon: -78.4523
@@ -532,11 +917,35 @@ Montréal, Canada:
   lon: -73.5698
   matched: Montréal, Agglomération de Montréal, Montréal (région administrative),
     Québec, Canada
+Mountain View, USA:
+  lat: 37.3894
+  lon: -122.0832
+  matched: Mountain View, Santa Clara County, California, United States
+Mumbai, India:
+  lat: 19.055
+  lon: 72.8692
+  matched: Mumbai, Mumbai Suburban District, Maharashtra, 400051, India
 Munich, Germany:
   lat: 48.1371
   lon: 11.5754
   matched: München, Bayern, Deutschland
+Nagoya, Japan:
+  lat: 35.1851
+  lon: 136.8998
+  matched: 名古屋市, 愛知県, 日本
+Naha, Japan:
+  lat: 26.2122
+  lon: 127.6791
+  matched: 那覇市, 沖縄県, 900-8585, 日本
+Naples, USA:
+  lat: 26.1422
+  lon: -81.7943
+  matched: Naples, Collier County, Florida, United States
 Nashville, Tennessee:
+  lat: 36.1623
+  lon: -86.7743
+  matched: Nashville, Davidson County, Middle Tennessee, Tennessee, United States
+Nashville, USA:
   lat: 36.1623
   lon: -86.7743
   matched: Nashville, Davidson County, Middle Tennessee, Tennessee, United States
@@ -544,6 +953,14 @@ Nashville, United States:
   lat: 36.1623
   lon: -86.7743
   matched: Nashville, Davidson County, Middle Tennessee, Tennessee, United States
+Natal, Brazil:
+  lat: -5.8054
+  lon: -35.2081
+  matched: Natal, Rio Grande do Norte, Região Nordeste, Brasil
+New Brunswick, USA:
+  lat: 40.4936
+  lon: -74.4436
+  matched: New Brunswick, Middlesex County, New Jersey, United States
 New Brunswick, United States:
   lat: 40.4936
   lon: -74.4436
@@ -590,7 +1007,40 @@ Newark, USA:
   lat: 40.7357
   lon: -74.1724
   matched: Newark, Essex County, New Jersey, United States
+Newport Beach, USA:
+  lat: 33.617
+  lon: -117.9294
+  matched: Newport Beach, Orange County, California, United States
+Nice, France:
+  lat: 43.7009
+  lon: 7.2684
+  matched: Nice, Alpes-Maritimes, Provence-Alpes-Côte d'Azur, France métropolitaine,
+    France
+North Plains, USA:
+  lat: 45.5973
+  lon: -122.9936
+  matched: North Plains, Washington County, Oregon, 97133, United States
 Online: null
+Orlando, USA:
+  lat: 28.5421
+  lon: -81.379
+  matched: Orlando, Orange County, Florida, United States
+Osaka, Japan:
+  lat: 34.6938
+  lon: 135.5015
+  matched: 大阪市, 大阪府, 日本
+Oxford, UK:
+  lat: 51.752
+  lon: -1.2578
+  matched: Oxford, Oxfordshire, England, United Kingdom
+Palm Springs, USA:
+  lat: 33.8246
+  lon: -116.5403
+  matched: Palm Springs, Riverside County, California, United States
+Palo Alto, USA:
+  lat: 37.4443
+  lon: -122.1598
+  matched: Palo Alto, Santa Clara County, California, United States
 Paris:
   lat: 48.8535
   lon: 2.3484
@@ -599,6 +1049,10 @@ Paris, France:
   lat: 48.8589
   lon: 2.32
   matched: Paris, Île-de-France, France métropolitaine, France
+Pasadena, USA:
+  lat: 34.1477
+  lon: -118.1442
+  matched: Pasadena, Los Angeles County, California, United States
 Philadelphia (PA), USA:
   lat: 39.9116
   lon: -75.2353
@@ -616,6 +1070,10 @@ Philadelphia, USA:
   lat: 39.9527
   lon: -75.1635
   matched: Philadelphia, Philadelphia County, Pennsylvania, United States
+Phoenix, USA:
+  lat: 33.4484
+  lon: -112.0741
+  matched: Phoenix, Maricopa County, Arizona, United States
 Pittsburgh, PA, USA:
   lat: 40.4407
   lon: -80.0026
@@ -628,6 +1086,10 @@ Pittsburgh, United States:
   lat: 40.4407
   lon: -80.0026
   matched: Pittsburgh, Allegheny County, Pennsylvania, United States
+Playa Blanca, Spain:
+  lat: 28.8632
+  lon: -13.8299
+  matched: Playa Blanca, Yaiza, Las Palmas, Canarias, 35580, España
 Portland, USA:
   lat: 45.5202
   lon: -122.6742
@@ -645,6 +1107,14 @@ Prague, Czechia:
   lon: 14.4213
   matched: Praha, Česko
 Prague, Czechia and Online: null
+Princeton, USA:
+  lat: 40.3497
+  lon: -74.6597
+  matched: Princeton, Mercer County, New Jersey, United States
+Providence, USA:
+  lat: 41.824
+  lon: -71.4128
+  matched: Providence, Providence County, Rhode Island, United States
 Providence, United States:
   lat: 41.824
   lon: -71.4128
@@ -654,22 +1124,74 @@ Punta Cana, Dominican Republic:
   lon: -68.3692
   matched: Punta Cana, Higüey, La Altagracia, 41201, República Dominicana
 Punta Cana, Dominican Republic (Hybrid): null
+Qingdao, China:
+  lat: 36.0663
+  lon: 120.3778
+  matched: 青岛市, 山东省, 266000, 中国
+Quebec City, Canada:
+  lat: 46.8137
+  lon: -71.2084
+  matched: Québec, Agglomération de Québec, Capitale-Nationale, Québec, Canada
+Québec City, Canada:
+  lat: 46.8137
+  lon: -71.2084
+  matched: Québec, Agglomération de Québec, Capitale-Nationale, Québec, Canada
+Raleigh, USA:
+  lat: 35.7804
+  lon: -78.6391
+  matched: Raleigh, Wake County, North Carolina, United States
+Reykjavik, Iceland:
+  lat: 64.146
+  lon: -21.9422
+  matched: Reykjavíkurborg, Höfuðborgarsvæðið, Ísland
 Rhodes Island, Greece:
   lat: 36.1725
   lon: 27.9194
+  matched: Ρόδος, Αποκεντρωμένη Διοίκηση Αιγαίου, Ελλάς
+Rhodes, Greece:
+  lat: 36.1724
+  lon: 27.9195
   matched: Ρόδος, Αποκεντρωμένη Διοίκηση Αιγαίου, Ελλάς
 Rio de Janeiro, Brazil:
   lat: -22.911
   lon: -43.2094
   matched: Rio de Janeiro, Região Sudeste, Brasil
+Rochester, USA:
+  lat: 43.1573
+  lon: -77.6152
+  matched: City of Rochester, Monroe County, New York, United States
+Rome, Italy:
+  lat: 41.8933
+  lon: 12.4829
+  matched: Roma, Roma Capitale, Lazio, Italia
 Rotterdam, Netherlands:
   lat: 51.9244
   lon: 4.4778
   matched: Rotterdam, Zuid-Holland, Nederland
+Sacramento, USA:
+  lat: 38.5811
+  lon: -121.4939
+  matched: Sacramento, Sacramento County, California, United States
+Saint Paul, USA:
+  lat: 44.9497
+  lon: -93.0931
+  matched: Saint Paul, Ramsey County, Minnesota, United States
+Saint-Malo, France:
+  lat: 48.6495
+  lon: -2.026
+  matched: Saint-Malo, Ille-et-Vilaine, Bretagne, France métropolitaine, 35400, France
+Salt Lake City, USA:
+  lat: 40.7596
+  lon: -111.8868
+  matched: Salt Lake City, Salt Lake County, Utah, United States
 Salt Lake City, United States:
   lat: 40.7596
   lon: -111.8868
   matched: Salt Lake City, Salt Lake County, Utah, United States
+San Antonio, USA:
+  lat: 29.4246
+  lon: -98.4951
+  matched: San Antonio, Bexar County, Texas, United States
 San Diego Convention Center:
   lat: 32.7064
   lon: -117.1619
@@ -691,10 +1213,18 @@ San Francisco, United States:
   lat: 37.7879
   lon: -122.4075
   matched: San Francisco, California, United States
+San Jose, USA:
+  lat: 37.3362
+  lon: -121.8906
+  matched: San Jose, Santa Clara County, California, United States
 San Juan, Puerto Rico:
   lat: 18.3842
   lon: -66.0534
   matched: San Juan, Puerto Rico, United States
+Santa Barbara, USA:
+  lat: 34.4221
+  lon: -119.7027
+  matched: Santa Barbara, Santa Barbara County, California, United States
 Santa Barbara, United States:
   lat: 34.4221
   lon: -119.7027
@@ -703,10 +1233,31 @@ Santa Cruz, USA:
   lat: 37.0501
   lon: -121.9906
   matched: Santa Cruz County, California, United States
+Santa Fe, USA:
+  lat: 35.6876
+  lon: -105.9385
+  matched: Santa Fe, Santa Fe County, New Mexico, United States
+Santa Margherita Ligure, Italy:
+  lat: 44.3281
+  lon: 9.1927
+  matched: Santa Margherita Ligure, Genova, Liguria, 16038, Italia
+Santa Rosa, USA:
+  lat: 38.4405
+  lon: -122.7141
+  matched: Santa Rosa, Sonoma County, California, United States
+Santiago, Chile:
+  lat: -33.4377
+  lon: -70.6511
+  matched: Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8320000,
+    Chile
 Sapporo, Japan:
   lat: 43.0619
   lon: 141.3543
   matched: 札幌市, 石狩振興局, 北海道, 北海道地方, 日本
+Sarasota, USA:
+  lat: 27.3366
+  lon: -82.5309
+  matched: Sarasota, Sarasota County, Florida, United States
 Scottsdale, USA:
   lat: 33.4942
   lon: -111.926
@@ -724,6 +1275,10 @@ Seattle, Washington, USA:
   lon: -122.3301
   matched: Seattle, King County, Washington, United States
 Seattle, Washington, USA (Hybrid): null
+Sendai, Japan:
+  lat: 38.2678
+  lon: 140.8691
+  matched: 仙台市, 宮城県, 日本
 Seoul, Korea:
   lat: 37.5667
   lon: 126.9783
@@ -732,6 +1287,14 @@ Seoul, South Korea:
   lat: 37.5667
   lon: 126.9783
   matched: 서울특별시, 대한민국
+Shanghai, China:
+  lat: 31.2313
+  lon: 121.47
+  matched: 上海市, 中国
+Shenzhen, China:
+  lat: 22.5446
+  lon: 114.0545
+  matched: 深圳市, 广东省, 中国
 Singapore:
   lat: 1.3571
   lon: 103.8195
@@ -745,10 +1308,26 @@ Skytop, United States:
   lat: 41.228
   lon: -75.2385
   matched: Skytop, Barrett Township, Monroe County, Pennsylvania, 18357, United States
+Snowbird, USA:
+  lat: 40.5808
+  lon: -111.6573
+  matched: Snowbird, Salt Lake County, Utah, 85092, United States
+Snowmass, USA:
+  lat: 39.331
+  lon: -106.9846
+  matched: Snowmass, Pitkin County, Colorado, 81654, United States
 Sofia, Bulgaria:
   lat: 42.6977
   lon: 23.3217
   matched: София, Средец, Столична, София-град, България
+St. Louis, USA:
+  lat: 38.6254
+  lon: -90.19
+  matched: Saint Louis, Missouri, United States
+St. Pete Beach, USA:
+  lat: 27.7253
+  lon: -82.7412
+  matched: Saint Pete Beach, Pinellas County, Florida, 33706, United States
 Stanford, USA:
   lat: 37.4265
   lon: -122.1703
@@ -761,6 +1340,10 @@ Stateline (Lake Tahoe), United States:
   lat: 38.9668
   lon: -119.9443
   matched: Stateline, Douglas County, Nevada, United States
+Steamboat Springs, USA:
+  lat: 40.4848
+  lon: -106.8317
+  matched: Steamboat Springs, Routt County, Colorado, United States
 Stockholm, Sweden:
   lat: 59.3251
   lon: 18.0711
@@ -770,6 +1353,10 @@ Strasbourg, France:
   lon: 7.7507
   matched: Strasbourg, Bas-Rhin, Collectivité européenne d'Alsace, Grand Est, France
     métropolitaine, France
+Stresa, Italy:
+  lat: 45.8837
+  lon: 8.539
+  matched: Stresa, Verbano-Cusio-Ossola, Piemonte, Italia
 Suzhou, China:
   lat: 31.3111
   lon: 120.6213
@@ -786,11 +1373,31 @@ Tahoe City, United States:
   lat: 39.1689
   lon: -120.1435
   matched: Tahoe City, Placer County, California, 96145, United States
+Taipei, Taiwan:
+  lat: 25.0375
+  lon: 121.5637
+  matched: 臺北市, 臺灣
+Takamatsu, Japan:
+  lat: 34.3426
+  lon: 134.0465
+  matched: 高松市, 香川県, Takamatsu-shi, 日本
+Tampa, USA:
+  lat: 27.945
+  lon: -82.4583
+  matched: Tampa, Hillsborough County, Florida, United States
 Tangier, Morocco:
   lat: 35.7696
   lon: -5.8034
   matched: Tanger طنجة, Pachalik de Tanger باشوية طنجة, Préfecture de Tanger-Assilah
     عمالة طنجة-أصيلة, Tanger-Tétouan-Al Hoceïma ⵟⴰ
+Tbilisi, Georgia:
+  lat: 41.6935
+  lon: 44.8014
+  matched: თბილისი, საქართველო
+Tel Aviv, Israel:
+  lat: 32.0853
+  lon: 34.7818
+  matched: תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, ישראל
 Tel-Aviv, Israel:
   lat: 32.0853
   lon: 34.7818
@@ -816,6 +1423,10 @@ Toulouse, France:
   lat: 43.6045
   lon: 1.4442
   matched: Toulouse, Haute-Garonne, Occitanie, France métropolitaine, France
+Tsukuba, Japan:
+  lat: 36.0833
+  lon: 140.0773
+  matched: つくば市, 茨城県, 日本
 Tucson, Arizona, USA:
   lat: 32.2229
   lon: -110.9748
@@ -824,10 +1435,22 @@ Tucson, USA:
   lat: 32.2229
   lon: -110.9748
   matched: Tucson, Pima County, Arizona, United States
+Tulsa, USA:
+  lat: 36.1563
+  lon: -95.9928
+  matched: Tulsa, Oklahoma, United States
+Tübingen, Germany:
+  lat: 48.5203
+  lon: 9.0536
+  matched: Tübingen, Landkreis Tübingen, Baden-Württemberg, Deutschland
 Uppsala, Sweden:
   lat: 59.8586
   lon: 17.6387
   matched: Uppsala, Uppsala kommun, Uppsala län, 753 20, Sverige
+Utrecht, Netherlands:
+  lat: 52.0907
+  lon: 5.1216
+  matched: Utrecht, Nederland
 Valencia, Spain:
   lat: 39.4697
   lon: -0.3763
@@ -849,6 +1472,18 @@ Vancouver, Canada:
   lat: 49.2609
   lon: -123.114
   matched: Vancouver, Metro Vancouver Regional District, British Columbia, Canada
+Venice, Italy:
+  lat: 45.4372
+  lon: 12.3346
+  matched: Venezia, Veneto, 30121-30176, Italia
+Verona, Italy:
+  lat: 45.4425
+  lon: 10.9857
+  matched: Verona, Veneto, Italia
+Victoria, Canada:
+  lat: 48.4283
+  lon: -123.365
+  matched: Victoria, Capital Regional District, British Columbia, Canada
 Vienna, Austria:
   lat: 48.2084
   lon: 16.3725
@@ -857,9 +1492,17 @@ Vienna, Austria.:
   lat: 48.2084
   lon: 16.3725
   matched: Wien, Österreich
+Vilamoura, Portugal:
+  lat: 37.076
+  lon: -8.1165
+  matched: Vilamoura, Quarteira, Loulé, Faro, 8125-410, Portugal
 Virtual: null
 Virtual conference: null
 Waikoloa, Hawaii, USA:
+  lat: 19.9469
+  lon: -155.7874
+  matched: Waikoloa, Hawaiʻi County, Hawaii, United States
+Waikoloa, USA:
   lat: 19.9469
   lon: -155.7874
   matched: Waikoloa, Hawaiʻi County, Hawaii, United States
@@ -879,6 +1522,10 @@ Washington, DC, USA:
   lat: 38.8951
   lon: -77.0364
   matched: Washington, District of Columbia, United States
+Washington, USA:
+  lat: 38.8951
+  lon: -77.0364
+  matched: Washington, District of Columbia, United States
 Washington, United States:
   lat: 38.8951
   lon: -77.0364
@@ -887,6 +1534,10 @@ Williamstown, United States:
   lat: 42.7135
   lon: -73.2095
   matched: Williamstown, Berkshire County, Massachusetts, 01267, United States
+Windsor, Canada:
+  lat: 42.2859
+  lon: -82.9781
+  matched: Windsor, Southwestern Ontario, Ontario, Canada
 Xi'an, China:
   lat: 34.261
   lon: 108.9423
@@ -895,6 +1546,14 @@ Yokohama, Japan:
   lat: 35.4503
   lon: 139.6344
   matched: 横浜市, 神奈川県, 231-0017, 日本
+Zaragoza, Spain:
+  lat: 41.6916
+  lon: -0.9101
+  matched: Zaragoza, Aragón, España
+Zurich, Switzerland:
+  lat: 47.3744
+  lon: 8.541
+  matched: Zürich, Bezirk Zürich, Zürich, Schweiz/Suisse/Svizzera/Svizra
 online: null
 대구, Korea:
   lat: 35.8713

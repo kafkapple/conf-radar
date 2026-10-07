@@ -32,5 +32,5 @@ def load(geo: dict) -> dict:
             eds.append({"year": e["year"], "sites": sites, "submitted": sub, "accepted": acc,
                         "rate": round(acc / sub, 4) if sub and acc else None,
                         "source": e.get("num_source") or e.get("loc_source", "")})
-        out[conf] = {"first_year": h["first_year"], "first_source": h["first_year_source"], "editions": eds}
+        out[conf] = {"basis": h.get("basis", []), "no_override_from": h.get("no_override_from"), "first_year": h["first_year"], "first_source": h["first_year_source"], "editions": eds}
     return out

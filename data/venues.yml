@@ -8,9 +8,10 @@
 # note 로 왜 비었는지 적는다. "미공개"와 "0"은 다른 말이다.
 #
 # 🔴 업스트림과 어긋나는 값 (2026-09-10).
-#   - ICML 2024: 업스트림(csconfstats) accepted 2,609 · 우리 값 2,944.
-#     2,609 는 papercopilot 의 **poster 수**와 정확히 일치한다. 업스트림이 오랄·스포트라이트를
-#     빠뜨린 것으로 보인다. 총 채택은 2,944(오랄 144 + 스포트라이트 191 + 포스터 2,609).
+#   - ICML 2024: **2,609 / 9,473 (27.5%) 로 정정(261007).** 이전에는 우리 값 2,944 였다 — papercopilot 의
+#     「Poster 2,609」가 사실은 총 채택이라 오랄 144 + 스포트라이트 191 을 또 더한 이중 합산이었다.
+#     근거: 승인율 27.5% = 2609/9473 (csconfstats·openaccept·공식 fact sheet 「Over 2600, 27.5%」 일치),
+#     스포트라이트 335 = 191 + 144 (오랄 포함 중첩 집계).
 #   - ACL 2024: 업스트림 943 · 논문(arXiv 2512.04448) 865 → **943 으로 종결(260910)**.
 #     독립 집계 두 곳(csconfstats·openaccept.org)이 4,407/943/21.40% 로 일치한다. 논문 쪽 계열은
 #     "692 long-paper submissions" 로 시작하는 long 전용 시계열이라 865 는 long 만으로 읽힌다.
@@ -237,14 +238,14 @@ ICML:
       poster: 2947
       source: https://papercopilot.com/statistics/icml-statistics/
     - year: 2024
-      submitted: 9653
-      accepted: 2944
-      rate: 0.3050
+      submitted: 9473
+      accepted: 2609
+      rate: 0.2754
       oral: 144
       spotlight: 191
-      poster: 2609
-      source: https://papercopilot.com/statistics/icml-statistics/
-      note: 업스트림은 이 해 채택을 2,609(=포스터만)로 갖고 있다. 파일 머리말 참조.
+      poster: 2274   # 261007 정정: 2,609 가 오랄·스포트라이트 포함 총 채택(승인율 27.5% = 2609/9473). 2,944 는 이중 합산이었다
+      source: https://csconfstats.xoveexu.com/conferences/icml/2024/
+      note: 261007 정정 — 총 채택 2,609(승인율 27.5%). 공식 fact sheet 「Over 2600, 27.5%」, 오랄 144 + 스포트라이트 191 + 포스터 2,274. papercopilot 의 2,944 는 포스터 열이 이미 총계라 이중 합산.
   tracks:
     - name: Position Paper 트랙
       kind: position

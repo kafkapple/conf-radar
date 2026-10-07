@@ -219,6 +219,7 @@ def build(offline: bool = False) -> dict:
     rates = rates_from_ccf(ccf_tf)
     programs = {canon(k): v for k, v in (yaml.safe_load((DATA / "programs.yml").read_text()) or {}).items()}
     geo = yaml.safe_load((DATA / "geo.yml").read_text()) or {}
+    fullhist = load_history(geo)
 
     series = []
     for slug, tier in sorted(TRACKED_AI.items()):
@@ -306,6 +307,15 @@ def build(offline: bool = False) -> dict:
                    "rate": tc.get("rate") or round(tc["accepted"] / tc["submitted"], 4),
                    "source": tc["source"]}
             s["history"] = [h for h in s["history"] if h["year"] != row["year"]] + [row]
+        # 전체 이력(data/history.yml)도 같은 자격이다 — 수치마다 출처가 강제돼 있다. 겹치는 해는 이쪽이 이긴다.
+        # 목록 화면(업스트림 값)과 통계 탭(전체 이력)이 서로 다른 숫자를 보이면 안 되기 때문이다.
+        fh = fullhist.get(s["title"]) or {}
+        for fe in fh.get("editions", []):
+            # no_override_from = 이 해부터는 전체 이력의 집계 기준이 카드와 달라 덮지 않는다(SIGGRAPH 2022-: 학회 트랙만)
+            if fe["submitted"] and fe["accepted"] and fe["year"] < (fh.get("no_override_from") or 9999):
+                s["history"] = [h for h in s["history"] if h["year"] != fe["year"]] + [
+                    {"year": fe["year"], "submitted": fe["submitted"], "accepted": fe["accepted"],
+                     "rate": fe["rate"], "source": fe["source"]}]
         s["history"].sort(key=lambda h: h["year"])
         # 규모 막대는 history 의 최신 해를 쓴다. 위에서 해를 더했으면 다시 잡아야 한다.
         if s["history"] and s["group"] == "ai":
@@ -337,7 +347,7 @@ def build(offline: bool = False) -> dict:
 
     data = {"generated": today.isoformat(), "series": series,
             "world": json.loads((DATA / "world.json").read_text()),
-            "fullhist": load_history(geo),
+            "fullhist": fullhist,
             "sources": yaml.safe_load((DATA / "sources.yml").read_text()),
             "counts": {"hf": len(hf_eds), "ccf": len(ccf_eds), "rates": len(rates)}}
     # 날짜 단위로 찍는다. 초 단위면 데이터가 그대로여도 .ics 가 매 빌드 달라져서, Actions 가
