@@ -1,0 +1,15 @@
+{
+  "name": "학회 레이더",
+  "short_name": "학회",
+  "description": "AI · 뇌과학 학회 제출 마감과 개최 일정",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1014",
+  "theme_color": "#0d1014",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
